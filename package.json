@@ -1,6 +1,6 @@
 {
-  "name": "resend-cli",
-  "version": "0.1.0",
+  "name": "@shubh/resend-cli",
+  "version": "0.0.1",
   "type": "module",
   "description": "CLI for Resend",
   "main": "./dist/index.cjs",
@@ -37,7 +37,10 @@
     "lint": "biome check .",
     "lint:fix": "biome check . --write",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "changeset": "changeset",
+    "version-packages": "pnpm changeset version && pnpm install --no-frozen-lockfile",
+    "release": "pnpm run version-packages && pnpm publish --access public"
   },
   "dependencies": {
     "@clack/prompts": "0.2.2",
@@ -52,6 +55,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@changesets/cli": "^2.29.8",
     "@types/node": "22.13.1",
     "tsdown": "0.20.1",
     "typescript": "5.7.3",

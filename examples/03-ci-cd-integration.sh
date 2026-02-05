@@ -193,7 +193,7 @@ check_bounce_rate() {
 #       - uses: actions/checkout@v3
 #       
 #       - name: Install Resend CLI
-#         run: npm install -g resend-cli
+#         run: npm install -g @shubh/resend-cli
 #       
 #       - name: Test Email Delivery
 #         env:
@@ -224,7 +224,7 @@ check_bounce_rate() {
 #   stage: test
 #   image: node:20
 #   before_script:
-#     - npm install -g resend-cli
+#     - npm install -g @shubh/resend-cli
 #   script:
 #     - resend domains list
 #     - |

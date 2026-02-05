@@ -2,7 +2,7 @@
 
 > **Community-driven CLI for Resend** - Power your emails with code. Built for developers, designed for AI agents.
 
-[![npm version](https://img.shields.io/npm/v/resend-cli.svg)](https://www.npmjs.com/package/resend-cli)
+[![npm version](https://img.shields.io/npm/v/@shubh/resend-cli.svg)](https://www.npmjs.com/package/@shubh.resend-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Why Resend CLI?
@@ -25,12 +25,12 @@ The Resend CLI brings the power of Resend's email API to your terminal. Perfect 
 ## Installation
 
 ```bash
-npm install -g resend-cli
+npm install -g @shubh/resend-cli
 ```
 
 Or use with `npx`:
 ```bash
-npx resend-cli emails list --json
+npx @shubh/resend-cli emails list --json
 ```
 
 ## Quick Start
