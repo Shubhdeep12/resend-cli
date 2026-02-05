@@ -6,6 +6,7 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
+  "access": "public",
   "bin": {
     "resend-cli": "dist/index.cjs",
     "resend": "dist/index.cjs"
