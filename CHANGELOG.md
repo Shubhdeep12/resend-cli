@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.1.1
+
+### Patch Changes
+
+- 43b9893: - CLI for resend init
+
 ## 0.1.0
 
 ### Minor Changes
