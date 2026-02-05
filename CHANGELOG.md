@@ -1,4 +1,4 @@
-# @shubh/resend-cli
+# @shubhdeep12/resend-cli
 
 ## 0.1.0
 
