@@ -1,7 +1,7 @@
 import * as p from '@clack/prompts';
 import { buildCommand, buildRouteMap } from '@stricli/core';
 import pc from 'picocolors';
-import type { ListBroadcastsResponseSuccess } from 'resend';
+import type { Broadcast, ListBroadcastsResponseSuccess } from 'resend';
 import { ResendClient } from '../lib/api.js';
 import { formatError, formatTable } from '../lib/output.js';
 
@@ -32,11 +32,12 @@ export const broadcastsRouteMap = buildRouteMap({
             return;
           }
           if (data?.data) {
+            type ListBroadcastItem = ListBroadcastsResponseSuccess['data'][number];
             const table = formatTable(
-              ['ID', 'Subject', 'Status', 'Segment'],
-              data.data.map((b: ListBroadcastsResponseSuccess['data'][number]) => [
+              ['ID', 'Name', 'Status', 'Segment'],
+              data.data.map((b: ListBroadcastItem) => [
                 b.id,
-                (b as ListBroadcastsResponseSuccess['data'][number] & { subject?: string | null }).subject ?? '-',
+                b.name,
                 b.status,
                 b.segment_id ?? 'All',
               ])
@@ -75,10 +76,12 @@ export const broadcastsRouteMap = buildRouteMap({
             console.log(JSON.stringify(data, null, 2));
             return;
           }
+          const broadcast = data as Broadcast;
           console.log(pc.cyan('\nBroadcast Details:'));
-          console.log(`${pc.bold('ID:')} ${data?.id}`);
-          console.log(`${pc.bold('Subject:')} ${data?.subject}`);
-          console.log(`${pc.bold('Status:')} ${data?.status}`);
+          console.log(`${pc.bold('ID:')} ${broadcast.id}`);
+          console.log(`${pc.bold('Name:')} ${broadcast.name}`);
+          console.log(`${pc.bold('Subject:')} ${broadcast.subject ?? '-'}`);
+          console.log(`${pc.bold('Status:')} ${broadcast.status}`);
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;

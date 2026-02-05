@@ -2,6 +2,8 @@ import * as p from '@clack/prompts';
 import { buildCommand, buildRouteMap } from '@stricli/core';
 import pc from 'picocolors';
 import type { CreateEmailOptions, GetEmailResponseSuccess } from 'resend';
+
+type ListEmailItem = Omit<GetEmailResponseSuccess, 'html' | 'text' | 'tags' | 'object'>;
 import { ResendClient } from '../lib/api.js';
 import { formatError, formatSuccess, formatTable } from '../lib/output.js';
 
@@ -36,13 +38,14 @@ export const emailsRouteMap = buildRouteMap({
         s.start('Sending email...');
         try {
           const resend = ResendClient.getInstance();
-          const payload: Record<string, string | undefined> = {};
-          if (flags.from) payload.from = flags.from;
-          if (flags.to) payload.to = flags.to;
-          if (flags.subject) payload.subject = flags.subject;
-          if (flags.html) payload.html = flags.html;
-          if (flags.text) payload.text = flags.text;
-          const { data, error } = await resend.emails.send(payload as unknown as CreateEmailOptions);
+          const payload = {
+            ...(flags.from && { from: flags.from }),
+            ...(flags.to && { to: flags.to }),
+            ...(flags.subject && { subject: flags.subject }),
+            ...(flags.html && { html: flags.html }),
+            ...(flags.text && { text: flags.text }),
+          };
+          const { data, error } = await resend.emails.send(payload as CreateEmailOptions);
           if (error) {
             s.stop(formatError(error.message));
             if (flags.json) console.log(JSON.stringify({ error }, null, 2));
@@ -80,11 +83,11 @@ export const emailsRouteMap = buildRouteMap({
           }
           if (data?.data) {
             const table = formatTable(
-              ['ID', 'Subject', 'Status', 'Created At'],
-              data.data.map((e: { id: string; subject: string; created_at: string; status?: string }) => [
+              ['ID', 'Subject', 'Last Event', 'Created At'],
+              data.data.map((e: ListEmailItem) => [
                 e.id,
                 e.subject,
-                e.status ?? '-',
+                e.last_event,
                 new Date(e.created_at).toLocaleString(),
               ])
             );
@@ -124,12 +127,13 @@ export const emailsRouteMap = buildRouteMap({
             console.log(JSON.stringify(data, null, 2));
             return;
           }
+          const email = data as GetEmailResponseSuccess;
           console.log(pc.cyan('\nEmail Details:'));
-          console.log(`${pc.bold('ID:')} ${data?.id}`);
-          console.log(`${pc.bold('Subject:')} ${data?.subject}`);
-          console.log(`${pc.bold('Status:')} ${(data as GetEmailResponseSuccess & { status?: string })?.status}`);
-          console.log(`${pc.bold('From:')} ${data?.from}`);
-          console.log(`${pc.bold('To:')} ${data?.to}`);
+          console.log(`${pc.bold('ID:')} ${email.id}`);
+          console.log(`${pc.bold('Subject:')} ${email.subject}`);
+          console.log(`${pc.bold('From:')} ${email.from}`);
+          console.log(`${pc.bold('To:')} ${email.to}`);
+          console.log(`${pc.bold('Last event:')} ${email.last_event}`);
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;

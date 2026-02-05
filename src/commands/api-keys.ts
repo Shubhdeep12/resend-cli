@@ -1,7 +1,7 @@
 import * as p from '@clack/prompts';
 import { buildCommand, buildRouteMap } from '@stricli/core';
 import pc from 'picocolors';
-import type { CreateApiKeyOptions, CreateApiKeyResponseSuccess } from 'resend';
+import type { ApiKey, CreateApiKeyOptions, CreateApiKeyResponseSuccess } from 'resend';
 import { ResendClient } from '../lib/api.js';
 import { formatError, formatSuccess, formatTable } from '../lib/output.js';
 
@@ -35,7 +35,7 @@ export const apiKeysRouteMap = buildRouteMap({
           if (data?.data?.length) {
             const table = formatTable(
               ['ID', 'Name', 'Created At'],
-              data.data.map((k: { id: string; name: string; created_at: string }) => [
+              data.data.map((k: ApiKey) => [
                 k.id,
                 k.name,
                 new Date(k.created_at).toLocaleString(),
@@ -84,11 +84,11 @@ export const apiKeysRouteMap = buildRouteMap({
           if (flags.json) {
             console.log(JSON.stringify(data, null, 2));
           } else {
-            const details = data as CreateApiKeyResponseSuccess & { name?: string };
+            const details = data as CreateApiKeyResponseSuccess;
             console.log(pc.cyan('\nAPI Key Details:'));
             console.log(`${pc.bold('ID:')} ${details.id}`);
-            console.log(`${pc.bold('Name:')} ${details.name ?? flags.name}`);
-            console.log(`${pc.bold('Token:')} ${pc.red(details.token ?? 'N/A')}`);
+            console.log(`${pc.bold('Name:')} ${flags.name}`);
+            console.log(`${pc.bold('Token:')} ${pc.red(details.token)}`);
             console.log(pc.yellow("\nImportant: save this token now - it won't be shown again."));
           }
         } catch (err: unknown) {

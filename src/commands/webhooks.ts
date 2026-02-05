@@ -1,7 +1,7 @@
 import * as p from '@clack/prompts';
 import { buildCommand, buildRouteMap } from '@stricli/core';
 import pc from 'picocolors';
-import type { CreateWebhookOptions, UpdateWebhookOptions, WebhookEvent } from 'resend';
+import type { CreateWebhookOptions, GetWebhookResponseSuccess, UpdateWebhookOptions, Webhook, WebhookEvent } from 'resend';
 import { ResendClient } from '../lib/api.js';
 import { formatError, formatSuccess, formatTable } from '../lib/output.js';
 
@@ -35,10 +35,10 @@ export const webhooksRouteMap = buildRouteMap({
           if (data?.data?.length) {
             const table = formatTable(
               ['ID', 'Endpoint', 'Status', 'Created At'],
-              data.data.map((w: { id: string; endpoint: string; status?: string; created_at: string }) => [
+              data.data.map((w: Webhook) => [
                 w.id,
-                w.endpoint.substring(0, 50) + (w.endpoint.length > 50 ? '...' : ''),
-                w.status ?? 'active',
+                w.endpoint.length > 50 ? `${w.endpoint.substring(0, 50)}...` : w.endpoint,
+                w.status,
                 new Date(w.created_at).toLocaleString(),
               ])
             );
@@ -79,11 +79,12 @@ export const webhooksRouteMap = buildRouteMap({
             console.log(JSON.stringify(data, null, 2));
             return;
           }
+          const webhook = data as GetWebhookResponseSuccess;
           console.log(pc.cyan('\nWebhook Details:'));
-          console.log(`${pc.bold('ID:')} ${data?.id}`);
-          console.log(`${pc.bold('Endpoint:')} ${data?.endpoint}`);
-          console.log(`${pc.bold('Status:')} ${data?.status ?? 'active'}`);
-          console.log(`${pc.bold('Events:')} ${data?.events?.join(', ') ?? 'all'}`);
+          console.log(`${pc.bold('ID:')} ${webhook.id}`);
+          console.log(`${pc.bold('Endpoint:')} ${webhook.endpoint}`);
+          console.log(`${pc.bold('Status:')} ${webhook.status}`);
+          console.log(`${pc.bold('Events:')} ${webhook.events?.join(', ') ?? 'all'}`);
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;
