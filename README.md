@@ -16,11 +16,11 @@ The Resend CLI brings the power of Resend's email API to your terminal. Perfect 
 
 ## Features
 
--Full coverage of Resend APIs: emails, domains, contacts, broadcasts, webhooks, API keys
--Built for scripts and AI: every command supports `--json`
--Fast to use: interactive prompts or flags for automation
--Secure by default: init flow, environment variables, or inline auth
--Documented examples for common workflows
+- Full coverage of Resend APIs: emails, domains, contacts, broadcasts, webhooks, API keys
+- Built for scripts and AI: every command supports `--json`
+- Fast to use: interactive prompts or flags for automation
+- Secure by default: init flow, environment variables, or inline auth
+- Documented examples for common workflows
 
 ## Installation
 
@@ -372,10 +372,7 @@ MIT © [Shubhdeep](https://github.com/Shubhdeep12)
 ## Links
 
 - [GitHub Repository](https://github.com/Shubhdeep12/resend-cli)
-- [npm Package](https://www.npmjs.com/package/resend-cli)
+- [npm Package](https://www.npmjs.com/package/@shubhdeep12/resend-cli)
 - [Resend Documentation](https://resend.com/docs)
 - [Report Issues](https://github.com/Shubhdeep12/resend-cli/issues)
 
-## Acknowledgments
-
-Built with ❤️ using the [Resend Node.js SDK](https://github.com/resend/resend-node).
