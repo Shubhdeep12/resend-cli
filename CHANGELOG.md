@@ -4,4 +4,10 @@
 
 ### Minor Changes
 
+- 6be3c10: npm package for resend-cli init
+
+## 0.1.0
+
+### Minor Changes
+
 - npm package init
