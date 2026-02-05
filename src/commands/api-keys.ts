@@ -3,6 +3,7 @@ import { buildCommand, buildRouteMap } from '@stricli/core';
 import pc from 'picocolors';
 import type { ApiKey, CreateApiKeyOptions, CreateApiKeyResponseSuccess } from 'resend';
 import { ResendClient } from '../lib/api.js';
+import { stdout } from '../lib/logger.js';
 import { formatError, formatSuccess, formatTable } from '../lib/output.js';
 
 const stringParse = (s: string) => s;
@@ -24,12 +25,12 @@ export const apiKeysRouteMap = buildRouteMap({
           const { data, error } = await resend.apiKeys.list();
           if (error) {
             s.stop(formatError(error.message));
-            if (flags.json) console.log(JSON.stringify({ error }, null, 2));
+            if (flags.json) stdout(JSON.stringify({ error }, null, 2));
             return;
           }
           s.stop('API keys fetched');
           if (flags.json) {
-            console.log(JSON.stringify(data, null, 2));
+            stdout(JSON.stringify(data, null, 2));
             return;
           }
           if (data?.data?.length) {
@@ -41,9 +42,9 @@ export const apiKeysRouteMap = buildRouteMap({
                 new Date(k.created_at).toLocaleString(),
               ])
             );
-            console.log(table);
+            stdout(table);
           } else {
-            console.log(pc.yellow('No API keys found'));
+            stdout(pc.yellow('No API keys found'));
           }
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
@@ -77,19 +78,19 @@ export const apiKeysRouteMap = buildRouteMap({
           const { data, error } = await resend.apiKeys.create(payload);
           if (error) {
             s.stop(formatError(error.message));
-            if (flags.json) console.log(JSON.stringify({ error }, null, 2));
+            if (flags.json) stdout(JSON.stringify({ error }, null, 2));
             return;
           }
           s.stop(formatSuccess(`API key created! ID: ${data?.id}`));
           if (flags.json) {
-            console.log(JSON.stringify(data, null, 2));
+            stdout(JSON.stringify(data, null, 2));
           } else {
             const details = data as CreateApiKeyResponseSuccess;
-            console.log(pc.cyan('\nAPI Key Details:'));
-            console.log(`${pc.bold('ID:')} ${details.id}`);
-            console.log(`${pc.bold('Name:')} ${flags.name}`);
-            console.log(`${pc.bold('Token:')} ${pc.red(details.token)}`);
-            console.log(pc.yellow("\nImportant: save this token now - it won't be shown again."));
+            stdout(pc.cyan('\nAPI Key Details:'));
+            stdout(`${pc.bold('ID:')} ${details.id}`);
+            stdout(`${pc.bold('Name:')} ${flags.name}`);
+            stdout(`${pc.bold('Token:')} ${pc.red(details.token)}`);
+            stdout(pc.yellow("\nImportant: save this token now - it won't be shown again."));
           }
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
@@ -116,11 +117,11 @@ export const apiKeysRouteMap = buildRouteMap({
           const { data, error } = await resend.apiKeys.remove(id);
           if (error) {
             s.stop(formatError(error.message));
-            if (flags.json) console.log(JSON.stringify({ error }, null, 2));
+            if (flags.json) stdout(JSON.stringify({ error }, null, 2));
             return;
           }
           s.stop(formatSuccess('API key deleted!'));
-          if (flags.json) console.log(JSON.stringify(data, null, 2));
+          if (flags.json) stdout(JSON.stringify(data, null, 2));
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;

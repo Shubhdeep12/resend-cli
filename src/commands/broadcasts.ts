@@ -3,6 +3,7 @@ import { buildCommand, buildRouteMap } from '@stricli/core';
 import pc from 'picocolors';
 import type { Broadcast, ListBroadcastsResponseSuccess } from 'resend';
 import { ResendClient } from '../lib/api.js';
+import { stdout } from '../lib/logger.js';
 import { formatError, formatTable } from '../lib/output.js';
 
 const stringParse = (s: string) => s;
@@ -28,7 +29,7 @@ export const broadcastsRouteMap = buildRouteMap({
           }
           s.stop('Broadcasts fetched');
           if (flags.json) {
-            console.log(JSON.stringify(data, null, 2));
+            stdout(JSON.stringify(data, null, 2));
             return;
           }
           if (data?.data) {
@@ -42,7 +43,7 @@ export const broadcastsRouteMap = buildRouteMap({
                 b.segment_id ?? 'All',
               ])
             );
-            console.log(table);
+            stdout(table);
           }
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
@@ -73,15 +74,15 @@ export const broadcastsRouteMap = buildRouteMap({
           }
           s.stop('Broadcast details fetched');
           if (flags.json) {
-            console.log(JSON.stringify(data, null, 2));
+            stdout(JSON.stringify(data, null, 2));
             return;
           }
           const broadcast = data as Broadcast;
-          console.log(pc.cyan('\nBroadcast Details:'));
-          console.log(`${pc.bold('ID:')} ${broadcast.id}`);
-          console.log(`${pc.bold('Name:')} ${broadcast.name}`);
-          console.log(`${pc.bold('Subject:')} ${broadcast.subject ?? '-'}`);
-          console.log(`${pc.bold('Status:')} ${broadcast.status}`);
+          stdout(pc.cyan('\nBroadcast Details:'));
+          stdout(`${pc.bold('ID:')} ${broadcast.id}`);
+          stdout(`${pc.bold('Name:')} ${broadcast.name}`);
+          stdout(`${pc.bold('Subject:')} ${broadcast.subject ?? '-'}`);
+          stdout(`${pc.bold('Status:')} ${broadcast.status}`);
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;

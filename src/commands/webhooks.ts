@@ -3,6 +3,7 @@ import { buildCommand, buildRouteMap } from '@stricli/core';
 import pc from 'picocolors';
 import type { CreateWebhookOptions, GetWebhookResponseSuccess, UpdateWebhookOptions, Webhook, WebhookEvent } from 'resend';
 import { ResendClient } from '../lib/api.js';
+import { stdout } from '../lib/logger.js';
 import { formatError, formatSuccess, formatTable } from '../lib/output.js';
 
 const stringParse = (s: string) => s;
@@ -24,12 +25,12 @@ export const webhooksRouteMap = buildRouteMap({
           const { data, error } = await resend.webhooks.list();
           if (error) {
             s.stop(formatError(error.message));
-            if (flags.json) console.log(JSON.stringify({ error }, null, 2));
+            if (flags.json) stdout(JSON.stringify({ error }, null, 2));
             return;
           }
           s.stop('Webhooks fetched');
           if (flags.json) {
-            console.log(JSON.stringify(data, null, 2));
+            stdout(JSON.stringify(data, null, 2));
             return;
           }
           if (data?.data?.length) {
@@ -42,9 +43,9 @@ export const webhooksRouteMap = buildRouteMap({
                 new Date(w.created_at).toLocaleString(),
               ])
             );
-            console.log(table);
+            stdout(table);
           } else {
-            console.log(pc.yellow('No webhooks found'));
+            stdout(pc.yellow('No webhooks found'));
           }
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
@@ -71,20 +72,20 @@ export const webhooksRouteMap = buildRouteMap({
           const { data, error } = await resend.webhooks.get(id);
           if (error) {
             s.stop(formatError(error.message));
-            if (flags.json) console.log(JSON.stringify({ error }, null, 2));
+            if (flags.json) stdout(JSON.stringify({ error }, null, 2));
             return;
           }
           s.stop('Webhook details fetched');
           if (flags.json) {
-            console.log(JSON.stringify(data, null, 2));
+            stdout(JSON.stringify(data, null, 2));
             return;
           }
           const webhook = data as GetWebhookResponseSuccess;
-          console.log(pc.cyan('\nWebhook Details:'));
-          console.log(`${pc.bold('ID:')} ${webhook.id}`);
-          console.log(`${pc.bold('Endpoint:')} ${webhook.endpoint}`);
-          console.log(`${pc.bold('Status:')} ${webhook.status}`);
-          console.log(`${pc.bold('Events:')} ${webhook.events?.join(', ') ?? 'all'}`);
+          stdout(pc.cyan('\nWebhook Details:'));
+          stdout(`${pc.bold('ID:')} ${webhook.id}`);
+          stdout(`${pc.bold('Endpoint:')} ${webhook.endpoint}`);
+          stdout(`${pc.bold('Status:')} ${webhook.status}`);
+          stdout(`${pc.bold('Events:')} ${webhook.events?.join(', ') ?? 'all'}`);
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;
@@ -113,11 +114,11 @@ export const webhooksRouteMap = buildRouteMap({
           const { data, error } = await resend.webhooks.create(createPayload);
           if (error) {
             s.stop(formatError(error.message));
-            if (flags.json) console.log(JSON.stringify({ error }, null, 2));
+            if (flags.json) stdout(JSON.stringify({ error }, null, 2));
             return;
           }
           s.stop(formatSuccess(`Webhook created! ID: ${data?.id}`));
-          if (flags.json) console.log(JSON.stringify(data, null, 2));
+          if (flags.json) stdout(JSON.stringify(data, null, 2));
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;
@@ -148,11 +149,11 @@ export const webhooksRouteMap = buildRouteMap({
           const { data, error } = await resend.webhooks.update(id, updatePayload);
           if (error) {
             s.stop(formatError(error.message));
-            if (flags.json) console.log(JSON.stringify({ error }, null, 2));
+            if (flags.json) stdout(JSON.stringify({ error }, null, 2));
             return;
           }
           s.stop(formatSuccess('Webhook updated!'));
-          if (flags.json) console.log(JSON.stringify(data, null, 2));
+          if (flags.json) stdout(JSON.stringify(data, null, 2));
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;
@@ -178,11 +179,11 @@ export const webhooksRouteMap = buildRouteMap({
           const { data, error } = await resend.webhooks.remove(id);
           if (error) {
             s.stop(formatError(error.message));
-            if (flags.json) console.log(JSON.stringify({ error }, null, 2));
+            if (flags.json) stdout(JSON.stringify({ error }, null, 2));
             return;
           }
           s.stop(formatSuccess('Webhook deleted!'));
-          if (flags.json) console.log(JSON.stringify(data, null, 2));
+          if (flags.json) stdout(JSON.stringify(data, null, 2));
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;

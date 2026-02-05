@@ -99,18 +99,20 @@ function runCli(args: string[]): {
 
 const runApp = (argv: string[]) => run(app, argv, { process });
 
-/** Runs the app and returns the last JSON output from console.log (for --json commands). */
+/** Runs the app and returns the last JSON output from stdout (for --json commands). */
 async function runAppWithOutput(argv: string[]): Promise<{ output: unknown }> {
-  const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+  const writeSpy = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
   await run(app, argv, { process });
-  const calls = logSpy.mock.calls;
-  logSpy.mockRestore();
+  const calls = writeSpy.mock.calls;
+  writeSpy.mockRestore();
   // Last argument that is a JSON string is the CLI --json output
   for (let i = calls.length - 1; i >= 0; i--) {
     const arg = calls[i]?.[0];
-    if (typeof arg === "string") {
+    const str = typeof arg === "string" ? arg : (arg as Buffer | Uint8Array)?.toString?.();
+    if (typeof str === "string") {
+      const trimmed = str.trimEnd();
       try {
-        const parsed = JSON.parse(arg) as unknown;
+        const parsed = JSON.parse(trimmed) as unknown;
         return { output: parsed };
       } catch {
         // not JSON, continue

@@ -2,6 +2,7 @@ import * as p from '@clack/prompts';
 import { buildCommand, buildRouteMap } from '@stricli/core';
 import type { CreateDomainOptions, Domain, DomainRegion } from 'resend';
 import { ResendClient } from '../lib/api.js';
+import { stdout } from '../lib/logger.js';
 import { formatError, formatSuccess, formatTable } from '../lib/output.js';
 
 const stringParse = (s: string) => s;
@@ -27,7 +28,7 @@ export const domainsRouteMap = buildRouteMap({
           }
           s.stop('Domains fetched');
           if (flags.json) {
-            console.log(JSON.stringify(data, null, 2));
+            stdout(JSON.stringify(data, null, 2));
             return;
           }
           if (data?.data) {
@@ -35,7 +36,7 @@ export const domainsRouteMap = buildRouteMap({
               ['ID', 'Name', 'Status', 'Region'],
               data.data.map((d: Domain) => [d.id, d.name, d.status, d.region])
             );
-            console.log(table);
+            stdout(table);
           }
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
@@ -67,7 +68,7 @@ export const domainsRouteMap = buildRouteMap({
             return;
           }
           s.stop(formatSuccess(`Domain ${name} added! ID: ${data?.id}`));
-          if (flags.json) console.log(JSON.stringify(data, null, 2));
+          if (flags.json) stdout(JSON.stringify(data, null, 2));
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;
@@ -96,7 +97,7 @@ export const domainsRouteMap = buildRouteMap({
             return;
           }
           s.stop(formatSuccess('Domain verification triggered!'));
-          if (flags.json) console.log(JSON.stringify(data, null, 2));
+          if (flags.json) stdout(JSON.stringify(data, null, 2));
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;

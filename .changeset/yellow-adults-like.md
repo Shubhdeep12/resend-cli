@@ -2,4 +2,4 @@
 "@shubhdeep12/resend-cli": patch
 ---
 
-test
+- added logger

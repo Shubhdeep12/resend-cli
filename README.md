@@ -227,8 +227,17 @@ resend config use-profile production
 
 ### Environment Variables
 
-- `RESEND_API_KEY` - API key (overrides config file)
-- `RESEND_PROFILE` - Profile name to use
+- `RESEND_API_KEY` - API key (overrides config file when set)
+
+### Logging
+
+The CLI uses [pino](https://github.com/pinojs/pino) for structured logging. Logs go to **stderr** so stdout stays clean for `--json` and tables.
+
+- **`LOG_LEVEL`** – `trace` | `debug` | `info` | `warn` | `error` | `fatal` (default: `info`)
+- **`DEBUG`** – set to `1` (or any value) to enable `debug` level
+- **`LOG_FORMAT`** – set to `json` to force JSON lines (e.g. for scripts); otherwise logs are pretty-printed when the output is a TTY
+
+Example: `DEBUG=1 resend emails list` prints debug logs to stderr.
 
 ## Use Cases
 
@@ -308,6 +317,7 @@ resend-cli/
 │   ├── lib/
 │   │   ├── api.ts         # Resend client wrapper
 │   │   ├── config.ts      # Configuration management
+│   │   ├── logger.ts      # Structured logging (pino)
 │   │   └── output.ts      # Formatting utilities
 │   └── index.ts           # CLI entry point
 └── examples/              # Usage examples

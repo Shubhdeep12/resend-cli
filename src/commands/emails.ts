@@ -5,6 +5,7 @@ import type { CreateEmailOptions, GetEmailResponseSuccess } from 'resend';
 
 type ListEmailItem = Omit<GetEmailResponseSuccess, 'html' | 'text' | 'tags' | 'object'>;
 import { ResendClient } from '../lib/api.js';
+import { stdout } from '../lib/logger.js';
 import { formatError, formatSuccess, formatTable } from '../lib/output.js';
 
 const stringParse = (s: string) => s;
@@ -48,11 +49,11 @@ export const emailsRouteMap = buildRouteMap({
           const { data, error } = await resend.emails.send(payload as CreateEmailOptions);
           if (error) {
             s.stop(formatError(error.message));
-            if (flags.json) console.log(JSON.stringify({ error }, null, 2));
+            if (flags.json) stdout(JSON.stringify({ error }, null, 2));
             return;
           }
           s.stop(formatSuccess(`Email sent! ID: ${data?.id}`));
-          if (flags.json) console.log(JSON.stringify({ data }, null, 2));
+          if (flags.json) stdout(JSON.stringify({ data }, null, 2));
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;
@@ -78,7 +79,7 @@ export const emailsRouteMap = buildRouteMap({
           }
           s.stop('Emails fetched successfully');
           if (flags.json) {
-            console.log(JSON.stringify(data, null, 2));
+            stdout(JSON.stringify(data, null, 2));
             return;
           }
           if (data?.data) {
@@ -91,7 +92,7 @@ export const emailsRouteMap = buildRouteMap({
                 new Date(e.created_at).toLocaleString(),
               ])
             );
-            console.log(table);
+            stdout(table);
           }
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
@@ -124,16 +125,16 @@ export const emailsRouteMap = buildRouteMap({
           }
           s.stop('Email details fetched');
           if (flags.json) {
-            console.log(JSON.stringify(data, null, 2));
+            stdout(JSON.stringify(data, null, 2));
             return;
           }
           const email = data as GetEmailResponseSuccess;
-          console.log(pc.cyan('\nEmail Details:'));
-          console.log(`${pc.bold('ID:')} ${email.id}`);
-          console.log(`${pc.bold('Subject:')} ${email.subject}`);
-          console.log(`${pc.bold('From:')} ${email.from}`);
-          console.log(`${pc.bold('To:')} ${email.to}`);
-          console.log(`${pc.bold('Last event:')} ${email.last_event}`);
+          stdout(pc.cyan('\nEmail Details:'));
+          stdout(`${pc.bold('ID:')} ${email.id}`);
+          stdout(`${pc.bold('Subject:')} ${email.subject}`);
+          stdout(`${pc.bold('From:')} ${email.from}`);
+          stdout(`${pc.bold('To:')} ${email.to}`);
+          stdout(`${pc.bold('Last event:')} ${email.last_event}`);
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;

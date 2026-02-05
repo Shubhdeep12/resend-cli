@@ -2,6 +2,7 @@ import * as p from '@clack/prompts';
 import { buildCommand, buildRouteMap } from '@stricli/core';
 import type { Contact, LegacyCreateContactOptions } from 'resend';
 import { ResendClient } from '../lib/api.js';
+import { stdout } from '../lib/logger.js';
 import { formatError, formatSuccess, formatTable } from '../lib/output.js';
 
 const stringParse = (s: string) => s;
@@ -29,7 +30,7 @@ export const contactsRouteMap = buildRouteMap({
           }
           s.stop('Contacts fetched');
           if (flags.json) {
-            console.log(JSON.stringify(data, null, 2));
+            stdout(JSON.stringify(data, null, 2));
             return;
           }
           if (data?.data) {
@@ -43,7 +44,7 @@ export const contactsRouteMap = buildRouteMap({
                 new Date(c.created_at).toLocaleString(),
               ])
             );
-            console.log(table);
+            stdout(table);
           }
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
