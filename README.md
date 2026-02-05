@@ -1,7 +1,5 @@
 # Resend CLI
 
-> **Community-driven CLI for Resend** - Power your emails with code. Built for developers, designed for AI agents.
-
 [![npm version](https://img.shields.io/npm/v/@shubhdeep12/resend-cli.svg)](https://www.npmjs.com/package/@shubhdeep12/resend-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
