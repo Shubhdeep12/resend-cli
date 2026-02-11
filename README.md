@@ -1,80 +1,39 @@
 # Resend CLI
 
+**Unofficial** CLI for [Resend](https://resend.com).
+
 [![npm version](https://img.shields.io/npm/v/@shubhdeep12/resend-cli.svg)](https://www.npmjs.com/package/@shubhdeep12/resend-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Why Resend CLI?
+Use Resend from the terminal: send emails, manage domains, contacts, webhooks, API keys, broadcasts, templates, and more. List/get/create/update commands support `--json`; list commands support `--limit`, `--after`, and `--before` for pagination.
 
-The Resend CLI brings the power of Resend's email API to your terminal. Perfect for:
-
-- **Developers**: Test emails during development without leaving the terminal
-- **AI Agents**: Claude Code, Cursor, and other coding agents can manage emails autonomously
-- **DevOps**: Monitor email health, automate domain setup, and integrate with CI/CD pipelines
-- **Analytics**: Query email logs, track bounce rates, and export metrics
-
-## Features
-
-- **Full Resend API coverage**: emails (send, list, get, update, cancel, batch; attachments; receiving + forward), domains, contacts (with segments/topics), contact-properties, segments, topics, broadcasts, templates, webhooks, API keys
-- **Script- and AI-friendly**: list/get/create/update commands support `--json` for parsing
-- **Pagination**: list commands support `--limit` (1–100), `--after <id>`, and `--before <id>` (use only one of `--after` or `--before` for cursor-based paging)
-- Secure by default: `resend init`, environment variables, or inline auth
-- Documented examples for common workflows
-
-## Installation
+## Install
 
 ```bash
 npm install -g @shubhdeep12/resend-cli
 ```
 
-Or use with `npx`:
+Or with npx: `npx @shubhdeep12/resend-cli emails list --json`
+
+## Auth
+
 ```bash
-npx @shubhdeep12/resend-cli emails list --json
-```
-
-## Quick Start
-
-### 1. Authenticate
-
-Choose your preferred authentication method:
-
-#### Option 1: Interactive setup (recommended)
-```bash
+# Interactive (saves to config)
 resend init
-# Follow the prompts to enter your API key (saved to config)
-
-# Optionally write to .env in current directory
+# Optional: write to .env
 resend init --write-env
 ```
 
-#### Option 2: Environment variable
-```bash
-export RESEND_API_KEY="re_your_api_key_here"
-```
+Or set `RESEND_API_KEY`. For CI: `RESEND_API_KEY="re_xxx" resend emails list`.
 
-#### Option 3: Inline (CI/CD)
-```bash
-RESEND_API_KEY="re_xxx" resend emails list
-```
-
-After `resend init`, the CLI prints available env vars: `RESEND_API_KEY`, optional `RESEND_BASE_URL`, `RESEND_USER_AGENT`.
-
-### 2. Send Your First Email
+## Quick start
 
 ```bash
-resend emails send \
-  --from "onboarding@yourdomain.com" \
-  --to "user@example.com" \
-  --subject "Hello from CLI" \
-  --html "<strong>It works!</strong>"
-```
+# Send
+resend emails send --from "onboarding@yourdomain.com" --to "user@example.com" --subject "Hi" --html "<strong>Hi</strong>"
 
-### 3. List Recent Emails
-
-```bash
-# Pretty table output
+# List (table or JSON)
 resend emails list
-
-# JSON output for scripts/AI agents
 resend emails list --json
 ```
 
@@ -82,40 +41,26 @@ resend emails list --json
 
 ### Emails
 
-Send, list, manage, and batch transactional emails; list/get attachments; manage receiving (inbound) emails.
-
 ```bash
-# Send email (supports cc, bcc, reply-to, tags, schedule, attachments, template)
 resend emails send --from "..." --to "..." --subject "..." --html "..."
-# Optional: --tags '[{"name":"campaign","value":"welcome"}]' --headers '{"X-Custom":"val"}'
-
-# List / get / update / cancel
 resend emails list [--limit 20] [--after <id> | --before <id>]
 resend emails get <email_id>
 resend emails update <email_id> --scheduled-at "2025-01-15T10:00:00Z"
 resend emails cancel <email_id>
-
-# Batch send (JSON array from file or stdin)
 resend emails batch --file payloads.json [--validation permissive] [--idempotency-key key]
-cat payloads.json | resend emails batch
 
-# Sent email attachments (metadata + download URL)
 resend emails attachments list <email_id>
 resend emails attachments get <email_id> <attachment_id>
 
-# Receiving (inbound) emails
 resend emails receiving list
 resend emails receiving get <id>
-resend emails receiving forward --email-id <id> --to "..." --from "..." [--passthrough false --html "..."]
+resend emails receiving forward --email-id <id> --to "..." --from "..."
 
-# Receiving attachments
 resend emails receiving attachments list <email_id>
 resend emails receiving attachments get <email_id> <attachment_id>
 ```
 
 ### Domains
-
-Manage and verify sending domains.
 
 ```bash
 resend domains list [--limit 20] [--after <id> | --before <id>]
@@ -128,15 +73,13 @@ resend domains verify <domain_id>
 
 ### Contacts
 
-Manage contacts, segments, and topics.
-
 ```bash
 resend contacts list [--segment-id <id>] [--limit 20] [--after <id> | --before <id>]
 resend contacts create --email "..." [--segments <id1,id2>] [--topics <id1,id2>] [--properties '{}']
 resend contacts get <id_or_email>
 resend contacts update <id_or_email> [--first-name ...] [--unsubscribed] [--properties '{}']
 resend contacts remove <id_or_email>
-# Nested: segments add/list/remove; topics list/update
+
 resend contacts segments list [--limit 20] [--after <id> | --before <id>]
 resend contacts topics list [--limit 20] [--after <id> | --before <id>]
 resend contacts topics update <id_or_email> --topics '[{"id":"..."}]'
@@ -165,8 +108,6 @@ resend topics remove <id>
 
 ### Broadcasts
 
-Create and manage marketing broadcasts.
-
 ```bash
 resend broadcasts list [--limit 20] [--after <id> | --before <id>]
 resend broadcasts create --name "..." --segment-id <id> --from "..." --subject "..." --html "..."
@@ -177,8 +118,6 @@ resend broadcasts remove <id>
 ```
 
 ### Templates
-
-Manage email templates (HTML only; no React).
 
 ```bash
 resend templates list [--limit 20] [--after <id> | --before <id>]
@@ -191,8 +130,6 @@ resend templates publish <id>
 ```
 
 ### Webhooks
-
-Configure webhooks for email events.
 
 ```bash
 resend webhooks list [--limit 20] [--after <id> | --before <id>]
@@ -210,211 +147,48 @@ resend keys create --name "CI/CD" [--permission sending_access] [--domain-id <id
 resend keys delete <key_id>
 ```
 
-### Pagination and JSON
-
-- **Pagination**: Use `--limit` (1–100) and either `--after <id>` (next page) or `--before <id>` (previous page). Do not use `--after` and `--before` together.
-- **JSON**: Add `--json` to any command that returns data for script-friendly output.
+Pagination: `--limit` (1–100), `--after <id>` or `--before <id>` (don’t use both). Use `--json` on any data command for script output.
 
 ## Examples
 
-The [`examples/`](./examples) folder contains guides and scripts:
+- [Basic email](./examples/01-basic-email.md) – send, attachments, scheduling
+- [AI / scripts](./examples/02-ai-agent-debugging.md) – `--json` and jq
+- [CI/CD](./examples/03-ci-cd-integration.sh)
+- [Monitoring](./examples/04-monitoring.md)
+- [Bulk ops](./examples/05-bulk-operations.md)
 
-1. **[Basic Email](./examples/01-basic-email.md)** – Sending emails (HTML, attachments, scheduling)
-2. **[AI Agent Debugging](./examples/02-ai-agent-debugging.md)** – Using `--json` for autonomous debugging
-3. **[CI/CD Integration](./examples/03-ci-cd-integration.sh)** – Email testing in pipelines
-4. **[Monitoring](./examples/04-monitoring.md)** – Email health and metrics
-5. **[Bulk Operations](./examples/05-bulk-operations.md)** – Contacts, segments, broadcasts at scale
+`resend <group> --help` for full options (e.g. `resend emails --help`).
 
-For more CLI surface (batch, templates, segments, topics, contact-properties, receiving, attachments), see the [Commands](#commands) section and run `resend <group> --help` (e.g. `resend emails --help`, `resend templates --help`).
+## Config
 
-## AI Agent Integration
+- **Config file**: After `resend init`, key is in `~/.config/resend-cli/config.json` (Linux/macOS).
+- **Env**: `RESEND_API_KEY` (required unless from init), optional `RESEND_BASE_URL`, `RESEND_USER_AGENT`.
+- **Logs**: Pino to stderr. `LOG_LEVEL`, `DEBUG=1`, `LOG_FORMAT=json`.
 
-Every command supports `--json` for easy parsing:
-
-```bash
-# Get email status
-result=$(resend emails get <id> --json)
-status=$(echo $result | jq -r '.status')
-
-# List and filter
-resend emails list --json | jq '.data[] | select(.status == "bounced")'
-
-# Chain commands
-resend emails list --json | \
-  jq '.data[0].id' | \
-  xargs -I {} resend emails get {} --json
-```
-
-**See the [AI Agent Debugging Guide](./examples/02-ai-agent-debugging.md) for more patterns.**
-
-## Configuration
-
-### Config file
-
-After `resend init`, the API key is stored in the CLI config (e.g. `~/.config/resend-cli/config.json` on Linux/macOS). Use `resend init --write-env` to append `RESEND_API_KEY` to a `.env` file in the current directory.
-
-### Environment variables
-
-- **`RESEND_API_KEY`** – API key (required if not set via init; overrides config when set)
-- **`RESEND_BASE_URL`** – Optional override for API base URL (default: `https://api.resend.com`)
-- **`RESEND_USER_AGENT`** – Optional override for User-Agent
-
-### Logging
-
-The CLI uses [pino](https://github.com/pinojs/pino) for structured logging. Logs go to **stderr** so stdout stays clean for `--json` and tables.
-
-- **`LOG_LEVEL`** – `trace` | `debug` | `info` | `warn` | `error` | `fatal` (default: `info`)
-- **`DEBUG`** – set to `1` (or any value) to enable `debug` level
-- **`LOG_FORMAT`** – set to `json` to force JSON lines (e.g. for scripts); otherwise logs are pretty-printed when the output is a TTY
-
-Example: `DEBUG=1 resend emails list` prints debug logs to stderr.
-
-## Use Cases
-
-### For Developers
+## Dev
 
 ```bash
-# Test password reset email during development
-resend emails send \
-  --from "noreply@app.com" \
-  --to "dev@example.com" \
-  --subject "Password Reset" \
-  --html "<a href='https://app.com/reset/token123'>Reset</a>"
-
-# Verify domain before deploying
-resend domains list --json | jq '.data[] | {name, status}'
-```
-
-### For AI Agents
-
-```bash
-# Claude Code debugging email delivery
-resend emails list --json | \
-  jq '.data[] | select(.to == "user@example.com") | select(.subject | contains("reset"))'
-
-# Automated bounce analysis
-resend emails list --json | \
-  jq '[.data[] | select(.status == "bounced")] | group_by(.bounce_reason)'
-```
-
-### For DevOps
-
-```bash
-# CI/CD: Verify domain is ready
-resend domains list --json | \
-  jq '.data[] | select(.name == "app.com") | .status == "verified"'
-
-# Monitor bounce rate
-resend emails list --json | \
-  jq '(.data | map(select(.status == "bounced")) | length) / (.data | length) * 100'
-```
-
-## Development
-
-### Local Development
-
-```bash
-# Clone repo
-git clone https://github.com/Shubhdeep12/resend-cli.git
-cd resend-cli
-
-# Install dependencies
-pnpm install
-
-# Build
-pnpm run build
-
-# Link globally for testing
+git clone https://github.com/Shubhdeep12/resend-cli.git && cd resend-cli
+pnpm install && pnpm run build
 npm link
-
-# Test
 resend --version
-```
-
-### Commands structure
-
-```
-resend-cli/
-├── src/
-│   ├── commands/
-│   │   ├── emails.ts           # send, list, get, update, cancel, batch; attachments; receiving
-│   │   ├── domains.ts         # list, add, get, update, remove, verify
-│   │   ├── contacts.ts        # list, create, get, update, remove; segments; topics
-│   │   ├── contact-properties.ts
-│   │   ├── segments.ts
-│   │   ├── topics.ts
-│   │   ├── broadcasts.ts
-│   │   ├── templates.ts
-│   │   ├── webhooks.ts
-│   │   ├── api-keys.ts
-│   │   └── init.ts
-│   ├── lib/
-│   │   ├── api.ts
-│   │   ├── config.ts
-│   │   ├── logger.ts
-│   │   └── output.ts
-│   └── app.ts / index.ts
-└── examples/
 ```
 
 ## Troubleshooting
 
-### "API key not found" Error
-
-Make sure you've configured authentication:
-
-```bash
-# Option 1: Run init
-resend init
-
-# Option 2: Set environment variable
-export RESEND_API_KEY="re_your_key"
-```
-
-### "Invalid API Key format" Error
-
-Resend API keys start with `re_`. Double-check your key from the [Resend Dashboard](https://resend.com/api-keys).
-
-### Domain Not Verified
-
-```bash
-# Get DNS records
-resend domains list --json | jq '.data[] | .records'
-
-# Add records to your DNS provider, then verify
-resend domains verify <domain_id>
-```
-
-### Rate Limiting
-
-The CLI respects Resend's rate limits. If you hit limits, add delays between commands:
-
-```bash
-# Example with delay
-for id in $(cat email_ids.txt); do
-  resend emails get $id
-  sleep 0.1  # 100ms delay
-done
-```
+| Issue | Fix |
+|-------|-----|
+| API key not found | `resend init` or `export RESEND_API_KEY="re_..."` |
+| Invalid key format | Keys start with `re_`. Get from [Resend Dashboard](https://resend.com/api-keys). |
+| Domain not verified | `resend domains list --json \| jq '.data[] \| .records'` then add DNS and `resend domains verify <id>` |
+| Rate limits | Add delays between calls in scripts. |
 
 ## Contributing
 
-Contributions are welcome! This is a community project.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+PRs welcome. Fork, branch, push, open a PR.
 
 ## License
 
 MIT © [Shubhdeep](https://github.com/Shubhdeep12)
 
-## Links
-
-- [GitHub Repository](https://github.com/Shubhdeep12/resend-cli)
-- [npm Package](https://www.npmjs.com/package/@shubhdeep12/resend-cli)
-- [Resend Documentation](https://resend.com/docs)
-- [Report Issues](https://github.com/Shubhdeep12/resend-cli/issues)
-
+[Repo](https://github.com/Shubhdeep12/resend-cli) · [npm](https://www.npmjs.com/package/@shubhdeep12/resend-cli) · [Resend docs](https://resend.com/docs) · [Issues](https://github.com/Shubhdeep12/resend-cli/issues)
