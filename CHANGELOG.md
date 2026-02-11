@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.2.0
+
+### Minor Changes
+
+- 1305673: Add pagination support for commands, enhance CLI documentation and usage examples in README, and extend commands (api-keys, broadcasts, contacts, domains, emails, init, webhooks) with improved options and output.
+
 ## 0.1.2
 
 ### Patch Changes
