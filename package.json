@@ -1,6 +1,6 @@
 {
   "name": "@shubhdeep12/resend-cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "description": "CLI for Resend",
   "main": "./dist/index.cjs",

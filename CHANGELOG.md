@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.2.1
+
+### Patch Changes
+
+- 5b6cf4a: Updated readme
+
 ## 0.2.0
 
 ### Minor Changes
