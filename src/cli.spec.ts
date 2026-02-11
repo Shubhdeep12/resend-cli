@@ -21,6 +21,13 @@ import type {
   UpdateWebhookResponseSuccess,
   VerifyDomainsResponseSuccess,
 } from "resend";
+
+/** Resend does not export ListEmailsResponseSuccess; match SDK list response shape */
+type ListEmailsResponseSuccess = {
+  object: "list";
+  has_more: boolean;
+  data: Omit<GetEmailResponseSuccess, "html" | "text" | "tags" | "object">[];
+};
 import {
   afterAll,
   afterEach,
@@ -32,7 +39,6 @@ import {
 } from "vitest";
 import createFetchMock from "vitest-fetch-mock";
 import { app } from "./app.js";
-import type { ListEmailsResponseSuccess } from "./test-utils/api-response-types.js";
 import { mockSuccessResponse } from "./test-utils/mock-fetch.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -101,14 +107,19 @@ const runApp = (argv: string[]) => run(app, argv, { process });
 
 /** Runs the app and returns the last JSON output from stdout (for --json commands). */
 async function runAppWithOutput(argv: string[]): Promise<{ output: unknown }> {
-  const writeSpy = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+  const writeSpy = vi
+    .spyOn(process.stdout, "write")
+    .mockImplementation(() => true);
   await run(app, argv, { process });
   const calls = writeSpy.mock.calls;
   writeSpy.mockRestore();
   // Last argument that is a JSON string is the CLI --json output
   for (let i = calls.length - 1; i >= 0; i--) {
     const arg = calls[i]?.[0];
-    const str = typeof arg === "string" ? arg : (arg as Buffer | Uint8Array)?.toString?.();
+    const str =
+      typeof arg === "string"
+        ? arg
+        : (arg as Buffer | Uint8Array)?.toString?.();
     if (typeof str === "string") {
       const trimmed = str.trimEnd();
       try {

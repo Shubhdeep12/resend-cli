@@ -14,10 +14,10 @@ The Resend CLI brings the power of Resend's email API to your terminal. Perfect 
 
 ## Features
 
-- Full coverage of Resend APIs: emails, domains, contacts, broadcasts, webhooks, API keys
-- Built for scripts and AI: every command supports `--json`
-- Fast to use: interactive prompts or flags for automation
-- Secure by default: init flow, environment variables, or inline auth
+- **Full Resend API coverage**: emails (send, list, get, update, cancel, batch; attachments; receiving + forward), domains, contacts (with segments/topics), contact-properties, segments, topics, broadcasts, templates, webhooks, API keys
+- **Script- and AI-friendly**: list/get/create/update commands support `--json` for parsing
+- **Pagination**: list commands support `--limit` (1–100), `--after <id>`, and `--before <id>` (use only one of `--after` or `--before` for cursor-based paging)
+- Secure by default: `resend init`, environment variables, or inline auth
 - Documented examples for common workflows
 
 ## Installation
@@ -37,13 +37,16 @@ npx @shubhdeep12/resend-cli emails list --json
 
 Choose your preferred authentication method:
 
-#### Option 1: Interactive Setup (Recommended)
+#### Option 1: Interactive setup (recommended)
 ```bash
 resend init
-# Follow the prompts to enter your API key
+# Follow the prompts to enter your API key (saved to config)
+
+# Optionally write to .env in current directory
+resend init --write-env
 ```
 
-#### Option 2: Environment Variable
+#### Option 2: Environment variable
 ```bash
 export RESEND_API_KEY="re_your_api_key_here"
 ```
@@ -52,6 +55,8 @@ export RESEND_API_KEY="re_your_api_key_here"
 ```bash
 RESEND_API_KEY="re_xxx" resend emails list
 ```
+
+After `resend init`, the CLI prints available env vars: `RESEND_API_KEY`, optional `RESEND_BASE_URL`, `RESEND_USER_AGENT`.
 
 ### 2. Send Your First Email
 
@@ -77,20 +82,35 @@ resend emails list --json
 
 ### Emails
 
-Send, list, and manage transactional emails.
+Send, list, manage, and batch transactional emails; list/get attachments; manage receiving (inbound) emails.
 
 ```bash
-# Send email
+# Send email (supports cc, bcc, reply-to, tags, schedule, attachments, template)
 resend emails send --from "..." --to "..." --subject "..." --html "..."
+# Optional: --tags '[{"name":"campaign","value":"welcome"}]' --headers '{"X-Custom":"val"}'
 
-# List recent emails
-resend emails list
-
-# Get email details
+# List / get / update / cancel
+resend emails list [--limit 20] [--after <id> | --before <id>]
 resend emails get <email_id>
+resend emails update <email_id> --scheduled-at "2025-01-15T10:00:00Z"
+resend emails cancel <email_id>
 
-# All with JSON output
-resend emails list --json
+# Batch send (JSON array from file or stdin)
+resend emails batch --file payloads.json [--validation permissive] [--idempotency-key key]
+cat payloads.json | resend emails batch
+
+# Sent email attachments (metadata + download URL)
+resend emails attachments list <email_id>
+resend emails attachments get <email_id> <attachment_id>
+
+# Receiving (inbound) emails
+resend emails receiving list
+resend emails receiving get <id>
+resend emails receiving forward --email-id <id> --to "..." --from "..." [--passthrough false --html "..."]
+
+# Receiving attachments
+resend emails receiving attachments list <email_id>
+resend emails receiving attachments get <email_id> <attachment_id>
 ```
 
 ### Domains
@@ -98,29 +118,49 @@ resend emails list --json
 Manage and verify sending domains.
 
 ```bash
-# List domains
-resend domains list
-
-# Add domain
-resend domains add yourdomain.com
-
-# Verify domain
+resend domains list [--limit 20] [--after <id> | --before <id>]
+resend domains add <domain> [--region us-east-1] [--open-tracking] [--click-tracking]
+resend domains get <domain_id>
+resend domains update <domain_id> [--open-tracking] [--click-tracking]
+resend domains remove <domain_id>
 resend domains verify <domain_id>
 ```
 
 ### Contacts
 
-Manage audience contacts and segments.
+Manage contacts, segments, and topics.
 
 ```bash
-# List contacts
-resend contacts list --audience <audience_id>
+resend contacts list [--segment-id <id>] [--limit 20] [--after <id> | --before <id>]
+resend contacts create --email "..." [--segments <id1,id2>] [--topics <id1,id2>] [--properties '{}']
+resend contacts get <id_or_email>
+resend contacts update <id_or_email> [--first-name ...] [--unsubscribed] [--properties '{}']
+resend contacts remove <id_or_email>
+# Nested: segments add/list/remove; topics list/update
+resend contacts segments list [--limit 20] [--after <id> | --before <id>]
+resend contacts topics list [--limit 20] [--after <id> | --before <id>]
+resend contacts topics update <id_or_email> --topics '[{"id":"..."}]'
+```
 
-# Create contact
-resend contacts create \
-  --audience <audience_id> \
-  --email "user@example.com" \
-  --first-name "John"
+### Contact properties, segments, topics
+
+```bash
+resend contact-properties list [--limit 20] [--after <id> | --before <id>]
+resend contact-properties create --key "plan" --type string [--fallback-value "free"]
+resend contact-properties get <id>
+resend contact-properties update <id> --fallback-value "pro"
+resend contact-properties remove <id>
+
+resend segments list [--limit 20] [--after <id> | --before <id>]
+resend segments create --name "Newsletter"
+resend segments get <id>
+resend segments remove <id>
+
+resend topics list
+resend topics create --name "Product updates" --default-subscription opt_in [--description "..."]
+resend topics get <id>
+resend topics update <id> [--name ...] [--description ...]
+resend topics remove <id>
 ```
 
 ### Broadcasts
@@ -128,11 +168,26 @@ resend contacts create \
 Create and manage marketing broadcasts.
 
 ```bash
-# List broadcasts
-resend broadcasts list
+resend broadcasts list [--limit 20] [--after <id> | --before <id>]
+resend broadcasts create --name "..." --segment-id <id> --from "..." --subject "..." --html "..."
+resend broadcasts get <id>
+resend broadcasts send <id> [--scheduled-at "..."]
+resend broadcasts update <id> [--subject ...] [--html-file ...]
+resend broadcasts remove <id>
+```
 
-# Get broadcast details
-resend broadcasts get <broadcast_id>
+### Templates
+
+Manage email templates (HTML only; no React).
+
+```bash
+resend templates list [--limit 20] [--after <id> | --before <id>]
+resend templates create --name "Welcome" --html "<p>Hi</p>" [--subject "Welcome"] [--html-file path/to.html]
+resend templates get <id>
+resend templates update <id> [--name ...] [--html ...] [--html-file ...]
+resend templates remove <id>
+resend templates duplicate <id>
+resend templates publish <id>
 ```
 
 ### Webhooks
@@ -140,48 +195,37 @@ resend broadcasts get <broadcast_id>
 Configure webhooks for email events.
 
 ```bash
-# List webhooks
-resend webhooks list
-
-# Create webhook
-resend webhooks create \
-  --url "https://yourapi.com/webhooks" \
-  --events email.delivered email.bounced
-
-# Get webhook details
+resend webhooks list [--limit 20] [--after <id> | --before <id>]
+resend webhooks create --url "https://yourapi.com/webhooks" [--events email.delivered email.bounced]
 resend webhooks get <webhook_id>
-
-# Update webhook
-resend webhooks update <webhook_id> --events email.delivered
-
-# Delete webhook
+resend webhooks update <webhook_id> [--endpoint ...] [--status enabled|disabled] [--events ...]
 resend webhooks delete <webhook_id>
 ```
 
-### API Keys
-
-Manage API keys (requires admin access).
+### API keys
 
 ```bash
-# List API keys
-resend keys list
-
-# Create API key
-resend keys create --name "CI/CD Pipeline" --permission "sending_access"
-
-# Delete API key
+resend keys list [--limit 20] [--after <id> | --before <id>]
+resend keys create --name "CI/CD" [--permission sending_access] [--domain-id <id>]
 resend keys delete <key_id>
 ```
 
+### Pagination and JSON
+
+- **Pagination**: Use `--limit` (1–100) and either `--after <id>` (next page) or `--before <id>` (previous page). Do not use `--after` and `--before` together.
+- **JSON**: Add `--json` to any command that returns data for script-friendly output.
+
 ## Examples
 
-The [`examples/`](./examples) folder contains comprehensive guides:
+The [`examples/`](./examples) folder contains guides and scripts:
 
-1. **[Basic Email Usage](./examples/01-basic-email.md)** - Getting started with sending emails
-2. **[AI Agent Debugging](./examples/02-ai-agent-debugging.md)** - How AI agents can debug email issues autonomously
-3. **[CI/CD Integration](./examples/03-ci-cd-integration.sh)** - Automate email testing in pipelines
-4. **[Monitoring & Alerts](./examples/04-monitoring.md)** - Email health monitoring patterns
-5. **[Bulk Operations](./examples/05-bulk-operations.md)** - Contact and broadcast management at scale
+1. **[Basic Email](./examples/01-basic-email.md)** – Sending emails (HTML, attachments, scheduling)
+2. **[AI Agent Debugging](./examples/02-ai-agent-debugging.md)** – Using `--json` for autonomous debugging
+3. **[CI/CD Integration](./examples/03-ci-cd-integration.sh)** – Email testing in pipelines
+4. **[Monitoring](./examples/04-monitoring.md)** – Email health and metrics
+5. **[Bulk Operations](./examples/05-bulk-operations.md)** – Contacts, segments, broadcasts at scale
+
+For more CLI surface (batch, templates, segments, topics, contact-properties, receiving, attachments), see the [Commands](#commands) section and run `resend <group> --help` (e.g. `resend emails --help`, `resend templates --help`).
 
 ## AI Agent Integration
 
@@ -205,29 +249,15 @@ resend emails list --json | \
 
 ## Configuration
 
-### Config File Location
+### Config file
 
-Config is stored in `~/.config/resend-cli/` (or platform equivalent).
+After `resend init`, the API key is stored in the CLI config (e.g. `~/.config/resend-cli/config.json` on Linux/macOS). Use `resend init --write-env` to append `RESEND_API_KEY` to a `.env` file in the current directory.
 
-### View Current Config
+### Environment variables
 
-```bash
-resend config get
-```
-
-### Switch Profiles
-
-```bash
-# Set API key for current profile
-resend config set api-key <key>
-
-# Use different profile
-resend config use-profile production
-```
-
-### Environment Variables
-
-- `RESEND_API_KEY` - API key (overrides config file when set)
+- **`RESEND_API_KEY`** – API key (required if not set via init; overrides config when set)
+- **`RESEND_BASE_URL`** – Optional override for API base URL (default: `https://api.resend.com`)
+- **`RESEND_USER_AGENT`** – Optional override for User-Agent
 
 ### Logging
 
@@ -301,26 +331,30 @@ npm link
 resend --version
 ```
 
-### Commands Structure
+### Commands structure
 
 ```
 resend-cli/
 ├── src/
-│   ├── commands/          # Command implementations
-│   │   ├── emails.ts      # Email operations
-│   │   ├── domains.ts     # Domain management
-│   │   ├── contacts.ts    # Contact management
-│   │   ├── broadcasts.ts  # Broadcast campaigns
-│   │   ├── webhooks.ts    # Webhook management
-│   │   ├── api-keys.ts    # API key management
-│   │   └── init.ts        # Authentication setup
+│   ├── commands/
+│   │   ├── emails.ts           # send, list, get, update, cancel, batch; attachments; receiving
+│   │   ├── domains.ts         # list, add, get, update, remove, verify
+│   │   ├── contacts.ts        # list, create, get, update, remove; segments; topics
+│   │   ├── contact-properties.ts
+│   │   ├── segments.ts
+│   │   ├── topics.ts
+│   │   ├── broadcasts.ts
+│   │   ├── templates.ts
+│   │   ├── webhooks.ts
+│   │   ├── api-keys.ts
+│   │   └── init.ts
 │   ├── lib/
-│   │   ├── api.ts         # Resend client wrapper
-│   │   ├── config.ts      # Configuration management
-│   │   ├── logger.ts      # Structured logging (pino)
-│   │   └── output.ts      # Formatting utilities
-│   └── index.ts           # CLI entry point
-└── examples/              # Usage examples
+│   │   ├── api.ts
+│   │   ├── config.ts
+│   │   ├── logger.ts
+│   │   └── output.ts
+│   └── app.ts / index.ts
+└── examples/
 ```
 
 ## Troubleshooting

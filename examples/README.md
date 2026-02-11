@@ -50,19 +50,31 @@ RESEND_API_KEY="re_xxx" resend emails list
 ## Example Categories
 
 ### 01 - Basic Email
-Learn how to send emails with various options (HTML, text, attachments, scheduling).
+Send emails with HTML, text, attachments, and scheduling.
 
 ### 02 - AI Agent Debugging
-See how AI agents can autonomously debug email delivery issues by querying logs and suggesting fixes.
+Use `--json` so AI agents can query logs and debug delivery issues.
 
 ### 03 - CI/CD Integration
-Shell scripts for testing emails in continuous integration pipelines.
+Shell scripts for email testing in pipelines.
 
 ### 04 - Monitoring
-Patterns for monitoring email metrics, bounce rates, and delivery health.
+Email metrics, bounce rates, and delivery health.
 
 ### 05 - Bulk Operations
-Managing contacts, segments, and broadcast campaigns at scale.
+Contacts, segments, and broadcast campaigns at scale.
+
+## Full CLI surface
+
+Beyond these examples, the CLI supports:
+
+- **Emails**: batch send (JSON file/stdin), attachments list/get (sent and receiving), receiving list/get/forward
+- **Contact properties, segments, topics**: full CRUD and pagination
+- **Templates**: create (HTML / `--html-file`), list, get, update, remove, duplicate, publish
+- **Pagination**: `--limit`, `--after <id>`, `--before <id>` on list commands (use only one of `--after` or `--before`)
+- **JSON**: add `--json` to any command that returns data
+
+Run `resend <group> --help` (e.g. `resend emails --help`, `resend templates --help`) for options.
 
 ## Contributing
 

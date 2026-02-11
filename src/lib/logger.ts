@@ -1,13 +1,11 @@
-import pino from 'pino';
+import pino from "pino";
 
-const level =
-  process.env.LOG_LEVEL ??
-  (process.env.DEBUG ? 'debug' : 'info');
+const level = process.env.LOG_LEVEL ?? (process.env.DEBUG ? "debug" : "info");
 
 const usePretty =
-  typeof process.stdout?.isTTY === 'boolean' &&
+  typeof process.stdout?.isTTY === "boolean" &&
   process.stdout.isTTY &&
-  process.env.LOG_FORMAT !== 'json';
+  process.env.LOG_FORMAT !== "json";
 
 /**
  * Application logger. Writes to stderr so stdout stays clean for --json and tables.
@@ -19,11 +17,11 @@ export const logger = usePretty
   ? pino({
       level,
       transport: {
-        target: 'pino-pretty',
+        target: "pino-pretty",
         options: {
           destination: 2,
           colorize: true,
-          translateTime: 'SYS:HH:MM:ss',
+          translateTime: "SYS:HH:MM:ss",
         },
       },
     })
@@ -33,5 +31,5 @@ export type Logger = pino.Logger;
 
 /** Command result output (stdout). Use for --json, tables, and detail blocks so all output goes through one place. */
 export function stdout(message: string): void {
-  process.stdout.write(message + (message.endsWith('\n') ? '' : '\n'));
+  process.stdout.write(message + (message.endsWith("\n") ? "" : "\n"));
 }

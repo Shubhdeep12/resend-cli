@@ -1,4 +1,4 @@
-import Conf from 'conf';
+import Conf from "conf";
 
 interface ConfigSchema {
   apiKey?: string;
@@ -11,27 +11,27 @@ export class Config {
 
   constructor() {
     this.conf = new Conf<ConfigSchema>({
-      projectName: 'resend-cli',
+      projectName: "resend-cli",
       defaults: {
-        profile: 'default',
+        profile: "default",
       },
     });
   }
 
   get apiKey(): string | undefined {
-    return this.conf.get('apiKey') || process.env.RESEND_API_KEY;
+    return this.conf.get("apiKey") || process.env.RESEND_API_KEY;
   }
 
   set apiKey(value: string | undefined) {
-    this.conf.set('apiKey', value);
+    this.conf.set("apiKey", value);
   }
 
   get defaultFrom(): string | undefined {
-    return this.conf.get('defaultFrom');
+    return this.conf.get("defaultFrom");
   }
 
   set defaultFrom(value: string | undefined) {
-    this.conf.set('defaultFrom', value);
+    this.conf.set("defaultFrom", value);
   }
 
   clear() {

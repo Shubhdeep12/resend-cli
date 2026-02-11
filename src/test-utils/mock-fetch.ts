@@ -1,4 +1,4 @@
-import type { MockParams } from 'vitest-fetch-mock';
+import type { MockParams } from "vitest-fetch-mock";
 
 export interface MockFetchOptions extends MockParams {}
 
@@ -12,7 +12,7 @@ export function mockSuccessResponse<T>(
   const { headers = {}, status = 200, ...rest } = options;
   fetchMock.mockOnce(JSON.stringify(data), {
     status,
-    headers: { 'content-type': 'application/json', ...headers },
+    headers: { "content-type": "application/json", ...headers },
     ...rest,
   });
 }

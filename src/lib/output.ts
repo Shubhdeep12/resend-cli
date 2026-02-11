@@ -1,7 +1,7 @@
-import Table from 'cli-table3';
-import pc from 'picocolors';
+import Table from "cli-table3";
+import pc from "picocolors";
 
-export const formatTable = (head: string[], rows: any[][]) => {
+export const formatTable = (head: string[], rows: string[][]) => {
   const table = new Table({
     head: head.map((h) => pc.cyan(h)),
     style: {
