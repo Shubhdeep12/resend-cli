@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.3.0
+
+### Minor Changes
+
+- c874b28: - Added tests
+
 ## 0.2.1
 
 ### Patch Changes
