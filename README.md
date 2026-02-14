@@ -7,6 +7,27 @@
 
 Use Resend from the terminal: send emails, manage domains, contacts, webhooks, API keys, broadcasts, templates, and more. List/get/create/update commands support `--json`; list commands support `--limit`, `--after`, and `--before` for pagination.
 
+## AI / Agent usage
+
+Built for use by AI agents (Cursor, Claude, Copilot, etc.):
+
+- **Non-interactive**: Set `RESEND_API_KEY` in the environment; no `resend init` prompts.
+- **Structured output**: Use `--json` on every data command so stdout is a single JSON object (or one JSON line) you can parse.
+- **Discoverable**: Run `resend --help` and `resend <command> --help` for usage and flags.
+- **Exit codes**: `0` on success; non-zero on error. Errors with `--json` include a JSON object with an `error` field (`name`, `message`, `statusCode`).
+
+```bash
+# Agent-friendly examples
+export RESEND_API_KEY="re_xxx"
+
+resend emails list --json --limit 5
+resend emails send --from "noreply@example.com" --to "user@example.com" --subject "Hi" --html "<p>Hi</p>" --json
+resend domains list --json
+resend emails get <email_id> --json
+```
+
+See [examples/02-ai-agent-debugging.md](./examples/02-ai-agent-debugging.md) for full agent workflows (debugging, bounces, webhooks, templates).
+
 ## Install
 
 ```bash

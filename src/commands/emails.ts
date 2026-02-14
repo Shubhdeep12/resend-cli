@@ -514,6 +514,7 @@ export const emailsRouteMap = buildRouteMap({
           const { data, error } = await resend.emails.get(id);
           if (error) {
             s.stop(formatError(error.message));
+            if (flags.json) stdout(JSON.stringify({ error }, null, 2));
             return;
           }
           s.stop("Email details fetched");

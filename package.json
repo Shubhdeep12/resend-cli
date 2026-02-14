@@ -11,18 +11,11 @@
     "resend-cli": "dist/index.cjs",
     "resend": "dist/index.cjs"
   },
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "engines": {
     "node": ">=20"
   },
-  "keywords": [
-    "resend",
-    "email",
-    "cli",
-    "command-line"
-  ],
+  "keywords": ["resend", "email", "cli", "command-line"],
   "author": "Shubhdeep (@shubhdeep12)",
   "repository": {
     "type": "git",
@@ -38,6 +31,8 @@
     "lint": "biome check .",
     "lint:fix": "biome check . --write",
     "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
     "changeset": "changeset",
     "version-packages": "pnpm changeset version && pnpm install --no-frozen-lockfile",
@@ -60,6 +55,7 @@
     "@biomejs/biome": "1.9.4",
     "@changesets/cli": "^2.29.8",
     "@types/node": "22.13.1",
+    "@vitest/coverage-v8": "^3.0.5",
     "tsdown": "0.20.1",
     "typescript": "5.7.3",
     "vitest": "3.0.5",
