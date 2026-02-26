@@ -9,16 +9,7 @@ import type {
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
-
-const stringParse = (s: string) => s;
-
-const limitParse = (s: string) => {
-  const n = Number(s);
-  if (Number.isNaN(n) || n < 1 || n > 100) {
-    throw new Error("--limit must be a number between 1 and 100");
-  }
-  return n;
-};
+import { parseLimit, parseString } from "../lib/validators/index.js";
 
 export const contactsRouteMap = buildRouteMap({
   routes: {
@@ -27,31 +18,31 @@ export const contactsRouteMap = buildRouteMap({
         flags: {
           segmentId: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Segment ID to list contacts in",
             optional: true,
           },
           audience: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "(Deprecated) Audience ID – use --segment-id",
             optional: true,
           },
           limit: {
             kind: "parsed",
-            parse: limitParse,
+            parse: parseLimit,
             brief: "Max items to return (1-100)",
             optional: true,
           },
           after: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items after this ID",
             optional: true,
           },
           before: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items before this ID",
             optional: true,
           },
@@ -144,13 +135,13 @@ export const contactsRouteMap = buildRouteMap({
         flags: {
           id: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Contact ID",
             optional: true,
           },
           email: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Contact email",
             optional: true,
           },
@@ -164,7 +155,7 @@ export const contactsRouteMap = buildRouteMap({
           kind: "tuple",
           parameters: [
             {
-              parse: stringParse,
+              parse: parseString,
               brief: "Contact ID or email",
               placeholder: "id-or-email",
               optional: true,
@@ -219,20 +210,20 @@ export const contactsRouteMap = buildRouteMap({
         flags: {
           audience: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "(Deprecated) Audience ID – use segments",
             optional: true,
           },
-          email: { kind: "parsed", parse: stringParse, brief: "Contact email" },
+          email: { kind: "parsed", parse: parseString, brief: "Contact email" },
           firstName: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "First name",
             optional: true,
           },
           lastName: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Last name",
             optional: true,
           },
@@ -243,19 +234,19 @@ export const contactsRouteMap = buildRouteMap({
           },
           properties: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: 'Custom properties JSON e.g. {"key":"value"}',
             optional: true,
           },
           segments: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: 'Segment IDs JSON array e.g. ["seg_xxx"]',
             optional: true,
           },
           topics: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief:
               'Topics JSON array e.g. [{"id":"topic_xxx","subscription":"opt_in"}]',
             optional: true,
@@ -385,25 +376,25 @@ export const contactsRouteMap = buildRouteMap({
         flags: {
           id: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Contact ID",
             optional: true,
           },
           email: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Contact email",
             optional: true,
           },
           firstName: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "First name",
             optional: true,
           },
           lastName: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Last name",
             optional: true,
           },
@@ -414,7 +405,7 @@ export const contactsRouteMap = buildRouteMap({
           },
           properties: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Properties JSON",
             optional: true,
           },
@@ -428,7 +419,7 @@ export const contactsRouteMap = buildRouteMap({
           kind: "tuple",
           parameters: [
             {
-              parse: stringParse,
+              parse: parseString,
               brief: "Contact ID or email",
               placeholder: "id-or-email",
               optional: true,
@@ -528,7 +519,7 @@ export const contactsRouteMap = buildRouteMap({
           kind: "tuple",
           parameters: [
             {
-              parse: stringParse,
+              parse: parseString,
               brief: "Contact ID or email",
               placeholder: "id-or-email",
             },
@@ -562,19 +553,19 @@ export const contactsRouteMap = buildRouteMap({
             flags: {
               contactId: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Contact ID",
                 optional: true,
               },
               email: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Contact email",
                 optional: true,
               },
               segmentId: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Segment ID to add contact to",
                 optional: true,
               },
@@ -588,13 +579,13 @@ export const contactsRouteMap = buildRouteMap({
               kind: "tuple",
               parameters: [
                 {
-                  parse: stringParse,
+                  parse: parseString,
                   brief: "Contact ID or email",
                   placeholder: "id-or-email",
                   optional: true,
                 },
                 {
-                  parse: stringParse,
+                  parse: parseString,
                   brief: "Segment ID",
                   placeholder: "segment-id",
                   optional: true,
@@ -647,31 +638,31 @@ export const contactsRouteMap = buildRouteMap({
             flags: {
               contactId: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Contact ID",
                 optional: true,
               },
               email: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Contact email",
                 optional: true,
               },
               limit: {
                 kind: "parsed",
-                parse: limitParse,
+                parse: parseLimit,
                 brief: "Max items (1-100)",
                 optional: true,
               },
               after: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Cursor after",
                 optional: true,
               },
               before: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Cursor before",
                 optional: true,
               },
@@ -685,7 +676,7 @@ export const contactsRouteMap = buildRouteMap({
               kind: "tuple",
               parameters: [
                 {
-                  parse: stringParse,
+                  parse: parseString,
                   brief: "Contact ID or email",
                   placeholder: "id-or-email",
                   optional: true,
@@ -769,19 +760,19 @@ export const contactsRouteMap = buildRouteMap({
             flags: {
               contactId: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Contact ID",
                 optional: true,
               },
               email: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Contact email",
                 optional: true,
               },
               segmentId: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Segment ID to remove from",
                 optional: true,
               },
@@ -795,13 +786,13 @@ export const contactsRouteMap = buildRouteMap({
               kind: "tuple",
               parameters: [
                 {
-                  parse: stringParse,
+                  parse: parseString,
                   brief: "Contact ID or email",
                   placeholder: "id-or-email",
                   optional: true,
                 },
                 {
-                  parse: stringParse,
+                  parse: parseString,
                   brief: "Segment ID",
                   placeholder: "segment-id",
                   optional: true,
@@ -860,31 +851,31 @@ export const contactsRouteMap = buildRouteMap({
             flags: {
               id: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Contact ID",
                 optional: true,
               },
               email: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Contact email",
                 optional: true,
               },
               limit: {
                 kind: "parsed",
-                parse: limitParse,
+                parse: parseLimit,
                 brief: "Max items (1-100)",
                 optional: true,
               },
               after: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Cursor after",
                 optional: true,
               },
               before: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Cursor before",
                 optional: true,
               },
@@ -898,7 +889,7 @@ export const contactsRouteMap = buildRouteMap({
               kind: "tuple",
               parameters: [
                 {
-                  parse: stringParse,
+                  parse: parseString,
                   brief: "Contact ID or email",
                   placeholder: "id-or-email",
                   optional: true,
@@ -985,19 +976,19 @@ export const contactsRouteMap = buildRouteMap({
             flags: {
               id: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Contact ID",
                 optional: true,
               },
               email: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Contact email",
                 optional: true,
               },
               topics: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief:
                   'Topics JSON e.g. [{"id":"topic_xxx","subscription":"opt_in"}]',
                 optional: true,
@@ -1012,7 +1003,7 @@ export const contactsRouteMap = buildRouteMap({
               kind: "tuple",
               parameters: [
                 {
-                  parse: stringParse,
+                  parse: parseString,
                   brief: "Contact ID or email",
                   placeholder: "id-or-email",
                   optional: true,

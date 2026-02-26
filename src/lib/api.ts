@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { config } from "./config.js";
+import { MESSAGES } from "./constants/index.js";
 import { logger } from "./logger.js";
 
 let instance: Resend | null = null;
@@ -9,9 +10,7 @@ function getInstance(): Resend {
     const apiKey = config.apiKey;
     if (!apiKey) {
       logger.error({ msg: "API key not found" });
-      throw new Error(
-        "API key not found. Please run `resend auth login` or set RESEND_API_KEY environment variable.",
-      );
+      throw new Error(MESSAGES.apiKeyMissing);
     }
     logger.debug({ msg: "Resend client initialized" });
     instance = new Resend(apiKey);

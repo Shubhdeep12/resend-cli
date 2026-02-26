@@ -1,117 +1,83 @@
-import Conf from "conf";
-
-interface ConfigSchema {
-  keys?: Record<string, string>;
-  selectedKeyName?: string;
-  apiKey?: string;
-  defaultFrom?: string;
-  profile?: string;
-}
+import { KeyringService } from "./config/keyring.js";
+import { ConfigStore } from "./config/store.js";
+import { ENV } from "./constants/index.js";
+import type { SavedKey } from "./types/index.js";
 
 export class Config {
-  private conf: Conf<ConfigSchema>;
+  private readonly store: ConfigStore;
+  private readonly keyring: KeyringService;
 
   constructor() {
-    this.conf = new Conf<ConfigSchema>({
-      projectName: "resend-cli",
-      defaults: {
-        profile: "default",
-      },
-    });
+    this.store = new ConfigStore();
+    this.keyring = new KeyringService(this.store);
   }
 
   get apiKey(): string | undefined {
-    const envKey = process.env.RESEND_API_KEY;
+    const envKey = process.env[ENV.RESEND_API_KEY];
     if (envKey) return envKey;
 
-    const selected = this.selectedKeyName;
+    const selected = this.keyring.selectedKeyName;
     if (selected) {
-      const selectedKey = this.getKey(selected);
+      const selectedKey = this.keyring.getKey(selected);
       if (selectedKey) return selectedKey;
     }
 
-    return this.conf.get("apiKey");
+    return this.store.get("apiKey");
   }
 
   set apiKey(value: string | undefined) {
     if (!value) {
-      this.removeKey("default");
-      this.conf.delete("apiKey");
+      this.keyring.removeKey("default");
+      this.store.delete("apiKey");
       return;
     }
-    this.saveKey("default", value);
-    this.selectKey("default");
-    this.conf.set("apiKey", value);
+    this.keyring.saveKey("default", value);
+    this.keyring.selectKey("default");
+    this.store.set("apiKey", value);
   }
 
   get defaultFrom(): string | undefined {
-    return this.conf.get("defaultFrom");
+    return this.store.get("defaultFrom");
   }
 
   set defaultFrom(value: string | undefined) {
     if (value === undefined) {
-      this.conf.delete("defaultFrom");
+      this.store.delete("defaultFrom");
       return;
     }
-    this.conf.set("defaultFrom", value);
+    this.store.set("defaultFrom", value);
   }
 
   clear() {
-    this.conf.clear();
+    this.store.clear();
   }
 
   get selectedKeyName(): string | undefined {
-    return this.conf.get("selectedKeyName");
+    return this.keyring.selectedKeyName;
   }
 
   saveKey(name: string, key: string): void {
-    const keys = this.getKeysMap();
-    keys[name] = key;
-    this.conf.set("keys", keys);
+    this.keyring.saveKey(name, key);
   }
 
   getKey(name: string): string | undefined {
-    return this.getKeysMap()[name];
+    return this.keyring.getKey(name);
   }
 
-  listKeys(): Array<{ name: string; key: string }> {
-    return Object.entries(this.getKeysMap())
-      .map(([name, key]) => ({ name, key }))
-      .sort((a, b) => a.name.localeCompare(b.name));
+  listKeys(): SavedKey[] {
+    return this.keyring.listKeys();
   }
 
   selectKey(name: string): boolean {
-    const key = this.getKey(name);
-    if (!key) return false;
-    this.conf.set("selectedKeyName", name);
-    return true;
+    return this.keyring.selectKey(name);
   }
 
   removeKey(name: string): boolean {
-    const keys = this.getKeysMap();
-    if (!(name in keys)) return false;
-    delete keys[name];
-    this.conf.set("keys", keys);
-
-    if (this.selectedKeyName === name) {
-      const next = Object.keys(keys).sort()[0];
-      if (next) {
-        this.conf.set("selectedKeyName", next);
-      } else {
-        this.conf.delete("selectedKeyName");
-      }
-    }
-    return true;
+    return this.keyring.removeKey(name);
   }
 
   clearSavedKeys(): void {
-    this.conf.set("keys", {});
-    this.conf.delete("selectedKeyName");
-    this.conf.delete("apiKey");
-  }
-
-  private getKeysMap(): Record<string, string> {
-    return this.conf.get("keys") ?? {};
+    this.keyring.clearSavedKeys();
   }
 }
 

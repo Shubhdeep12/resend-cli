@@ -30,16 +30,7 @@ type AttachmentListItem = {
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
-
-const stringParse = (s: string) => s;
-
-const limitParse = (s: string) => {
-  const n = Number(s);
-  if (Number.isNaN(n) || n < 1 || n > 100) {
-    throw new Error("--limit must be a number between 1 and 100");
-  }
-  return n;
-};
+import { parseLimit, parseString } from "../lib/validators/index.js";
 
 /** In the send handler, split comma-separated lists (e.g. from variadic flags) into email arrays */
 function toEmailList(values: string[] | undefined): string[] {
@@ -79,101 +70,101 @@ export const emailsRouteMap = buildRouteMap({
         flags: {
           from: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Sender email address",
             optional: true,
           },
           to: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Recipient(s); comma-separated for multiple",
             optional: true,
           },
           subject: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Email subject",
             optional: true,
           },
           html: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "HTML content",
             optional: true,
           },
           text: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Plain text content",
             optional: true,
           },
           cc: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "CC address(es); comma-separated or repeat flag",
             optional: true,
             variadic: true,
           },
           bcc: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "BCC address(es); comma-separated or repeat flag",
             optional: true,
             variadic: true,
           },
           replyTo: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Reply-To address(es); comma-separated or repeat flag",
             optional: true,
             variadic: true,
           },
           tags: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: 'Tags as JSON array: [{"name":"key","value":"val"}]',
             optional: true,
           },
           scheduledAt: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Schedule send time (ISO 8601)",
             optional: true,
           },
           topicId: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Topic ID for subscription-based sending",
             optional: true,
           },
           headers: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Custom headers as JSON object",
             optional: true,
           },
           attach: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Path to file to attach (repeat for multiple)",
             optional: true,
             variadic: true,
           },
           template: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Template ID (use with template-variables)",
             optional: true,
           },
           templateVariables: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Template variables as JSON object",
             optional: true,
           },
           idempotencyKey: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Idempotency key for deduplication",
             optional: true,
           },
@@ -393,19 +384,19 @@ export const emailsRouteMap = buildRouteMap({
         flags: {
           limit: {
             kind: "parsed",
-            parse: limitParse,
+            parse: parseLimit,
             brief: "Max items to return (1-100)",
             optional: true,
           },
           after: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items after this email ID",
             optional: true,
           },
           before: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items before this email ID",
             optional: true,
           },
@@ -501,7 +492,7 @@ export const emailsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Email ID", placeholder: "id" },
+            { parse: parseString, brief: "Email ID", placeholder: "id" },
           ],
         },
       },
@@ -540,7 +531,7 @@ export const emailsRouteMap = buildRouteMap({
         flags: {
           scheduledAt: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief:
               "New scheduled time (ISO 8601, e.g. 2024-08-05T11:52:01.858Z)",
           },
@@ -554,7 +545,7 @@ export const emailsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Email ID", placeholder: "id" },
+            { parse: parseString, brief: "Email ID", placeholder: "id" },
           ],
         },
       },
@@ -603,7 +594,7 @@ export const emailsRouteMap = buildRouteMap({
           kind: "tuple",
           parameters: [
             {
-              parse: stringParse,
+              parse: parseString,
               brief: "Email ID (scheduled email to cancel)",
               placeholder: "id",
             },
@@ -635,19 +626,19 @@ export const emailsRouteMap = buildRouteMap({
         flags: {
           file: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Path to JSON file with array of email payloads",
             optional: true,
           },
           validation: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "strict or permissive",
             optional: true,
           },
           idempotencyKey: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Idempotency key for the batch",
             optional: true,
           },
@@ -761,19 +752,19 @@ export const emailsRouteMap = buildRouteMap({
             flags: {
               limit: {
                 kind: "parsed",
-                parse: limitParse,
+                parse: parseLimit,
                 brief: "Max items (1-100)",
                 optional: true,
               },
               after: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Cursor after ID",
                 optional: true,
               },
               before: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Cursor before ID",
                 optional: true,
               },
@@ -787,7 +778,7 @@ export const emailsRouteMap = buildRouteMap({
               kind: "tuple",
               parameters: [
                 {
-                  parse: stringParse,
+                  parse: parseString,
                   brief: "Sent email ID",
                   placeholder: "emailId",
                 },
@@ -878,12 +869,12 @@ export const emailsRouteMap = buildRouteMap({
               kind: "tuple",
               parameters: [
                 {
-                  parse: stringParse,
+                  parse: parseString,
                   brief: "Sent email ID",
                   placeholder: "emailId",
                 },
                 {
-                  parse: stringParse,
+                  parse: parseString,
                   brief: "Attachment ID",
                   placeholder: "attachmentId",
                 },
@@ -942,19 +933,19 @@ export const emailsRouteMap = buildRouteMap({
             flags: {
               limit: {
                 kind: "parsed",
-                parse: limitParse,
+                parse: parseLimit,
                 brief: "Max items (1-100)",
                 optional: true,
               },
               after: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Cursor after ID",
                 optional: true,
               },
               before: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Cursor before ID",
                 optional: true,
               },
@@ -1039,7 +1030,7 @@ export const emailsRouteMap = buildRouteMap({
               kind: "tuple",
               parameters: [
                 {
-                  parse: stringParse,
+                  parse: parseString,
                   brief: "Receiving email ID",
                   placeholder: "id",
                 },
@@ -1083,19 +1074,19 @@ export const emailsRouteMap = buildRouteMap({
             flags: {
               emailId: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Receiving email ID to forward",
                 optional: true,
               },
               to: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Recipient(s); comma-separated",
                 optional: true,
               },
               from: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Sender address",
                 optional: true,
               },
@@ -1106,13 +1097,13 @@ export const emailsRouteMap = buildRouteMap({
               },
               text: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Custom text body (if passthrough false)",
                 optional: true,
               },
               html: {
                 kind: "parsed",
-                parse: stringParse,
+                parse: parseString,
                 brief: "Custom HTML body (if passthrough false)",
                 optional: true,
               },
@@ -1190,19 +1181,19 @@ export const emailsRouteMap = buildRouteMap({
                 flags: {
                   limit: {
                     kind: "parsed",
-                    parse: limitParse,
+                    parse: parseLimit,
                     brief: "Max items (1-100)",
                     optional: true,
                   },
                   after: {
                     kind: "parsed",
-                    parse: stringParse,
+                    parse: parseString,
                     brief: "Cursor after ID",
                     optional: true,
                   },
                   before: {
                     kind: "parsed",
-                    parse: stringParse,
+                    parse: parseString,
                     brief: "Cursor before ID",
                     optional: true,
                   },
@@ -1216,7 +1207,7 @@ export const emailsRouteMap = buildRouteMap({
                   kind: "tuple",
                   parameters: [
                     {
-                      parse: stringParse,
+                      parse: parseString,
                       brief: "Receiving email ID",
                       placeholder: "emailId",
                     },
@@ -1306,12 +1297,12 @@ export const emailsRouteMap = buildRouteMap({
                   kind: "tuple",
                   parameters: [
                     {
-                      parse: stringParse,
+                      parse: parseString,
                       brief: "Receiving email ID",
                       placeholder: "emailId",
                     },
                     {
-                      parse: stringParse,
+                      parse: parseString,
                       brief: "Attachment ID",
                       placeholder: "attachmentId",
                     },

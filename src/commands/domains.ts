@@ -10,16 +10,7 @@ import type {
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
-
-const stringParse = (s: string) => s;
-
-const limitParse = (s: string) => {
-  const n = Number(s);
-  if (Number.isNaN(n) || n < 1 || n > 100) {
-    throw new Error("--limit must be a number between 1 and 100");
-  }
-  return n;
-};
+import { parseLimit, parseString } from "../lib/validators/index.js";
 
 const validRegions: DomainRegion[] = [
   "us-east-1",
@@ -36,19 +27,19 @@ export const domainsRouteMap = buildRouteMap({
         flags: {
           limit: {
             kind: "parsed",
-            parse: limitParse,
+            parse: parseLimit,
             brief: "Max items to return (1-100)",
             optional: true,
           },
           after: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items after this ID",
             optional: true,
           },
           before: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items before this ID",
             optional: true,
           },
@@ -129,7 +120,7 @@ export const domainsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Domain ID", placeholder: "id" },
+            { parse: parseString, brief: "Domain ID", placeholder: "id" },
           ],
         },
       },
@@ -169,19 +160,19 @@ export const domainsRouteMap = buildRouteMap({
         flags: {
           region: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Region (us-east-1, eu-west-1, sa-east-1, ap-northeast-1)",
             optional: true,
           },
           customReturnPath: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Custom return path subdomain",
             optional: true,
           },
           capabilities: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief:
               'Capabilities JSON e.g. {"sending":"enabled","receiving":"disabled"}',
             optional: true,
@@ -198,7 +189,7 @@ export const domainsRouteMap = buildRouteMap({
           },
           tls: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "TLS: enforced or opportunistic",
             optional: true,
           },
@@ -211,7 +202,7 @@ export const domainsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Domain name", placeholder: "name" },
+            { parse: parseString, brief: "Domain name", placeholder: "name" },
           ],
         },
       },
@@ -311,13 +302,13 @@ export const domainsRouteMap = buildRouteMap({
           },
           tls: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "TLS: enforced or opportunistic",
             optional: true,
           },
           capabilities: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief:
               'Capabilities JSON e.g. {"sending":"enabled","receiving":"disabled"}',
             optional: true,
@@ -331,7 +322,7 @@ export const domainsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Domain ID", placeholder: "id" },
+            { parse: parseString, brief: "Domain ID", placeholder: "id" },
           ],
         },
       },
@@ -407,7 +398,7 @@ export const domainsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Domain ID", placeholder: "id" },
+            { parse: parseString, brief: "Domain ID", placeholder: "id" },
           ],
         },
       },
@@ -443,7 +434,7 @@ export const domainsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Domain ID", placeholder: "id" },
+            { parse: parseString, brief: "Domain ID", placeholder: "id" },
           ],
         },
       },

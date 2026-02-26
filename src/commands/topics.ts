@@ -5,8 +5,7 @@ import type { Topic } from "resend";
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
-
-const stringParse = (s: string) => s;
+import { parseString } from "../lib/validators/index.js";
 
 export const topicsRouteMap = buildRouteMap({
   routes: {
@@ -70,7 +69,7 @@ export const topicsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Topic ID", placeholder: "id" },
+            { parse: parseString, brief: "Topic ID", placeholder: "id" },
           ],
         },
       },
@@ -110,19 +109,19 @@ export const topicsRouteMap = buildRouteMap({
         flags: {
           name: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Topic name",
             optional: true,
           },
           defaultSubscription: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "opt_in or opt_out",
             optional: true,
           },
           description: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Topic description",
             optional: true,
           },
@@ -188,13 +187,13 @@ export const topicsRouteMap = buildRouteMap({
         flags: {
           name: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Topic name",
             optional: true,
           },
           description: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Topic description",
             optional: true,
           },
@@ -208,7 +207,7 @@ export const topicsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Topic ID", placeholder: "id" },
+            { parse: parseString, brief: "Topic ID", placeholder: "id" },
           ],
         },
       },
@@ -259,7 +258,7 @@ export const topicsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Topic ID", placeholder: "id" },
+            { parse: parseString, brief: "Topic ID", placeholder: "id" },
           ],
         },
       },

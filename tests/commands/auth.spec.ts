@@ -14,6 +14,13 @@ describe("auth commands", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it("login: --help prints usage and does not call API", async () => {
+    await expect(
+      runApp(app, ["auth", "login", "--help"]),
+    ).resolves.toBeUndefined();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("list/whoami/select/logout run locally without API", async () => {
     await expect(runApp(app, ["auth", "list"])).resolves.toBeUndefined();
     await expect(runApp(app, ["auth", "whoami"])).resolves.toBeUndefined();

@@ -9,16 +9,7 @@ import type {
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
-
-const stringParse = (s: string) => s;
-
-const limitParse = (s: string) => {
-  const n = Number(s);
-  if (Number.isNaN(n) || n < 1 || n > 100) {
-    throw new Error("--limit must be a number between 1 and 100");
-  }
-  return n;
-};
+import { parseLimit, parseString } from "../lib/validators/index.js";
 
 export const apiKeysRouteMap = buildRouteMap({
   routes: {
@@ -27,19 +18,19 @@ export const apiKeysRouteMap = buildRouteMap({
         flags: {
           limit: {
             kind: "parsed",
-            parse: limitParse,
+            parse: parseLimit,
             brief: "Max items to return (1-100)",
             optional: true,
           },
           after: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items after this ID",
             optional: true,
           },
           before: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items before this ID",
             optional: true,
           },
@@ -117,16 +108,16 @@ export const apiKeysRouteMap = buildRouteMap({
     create: buildCommand({
       parameters: {
         flags: {
-          name: { kind: "parsed", parse: stringParse, brief: "API key name" },
+          name: { kind: "parsed", parse: parseString, brief: "API key name" },
           permission: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Permission level (full_access, sending_access)",
             optional: true,
           },
           domainId: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Domain ID to restrict key to",
             optional: true,
           },
@@ -195,7 +186,7 @@ export const apiKeysRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "API key ID", placeholder: "id" },
+            { parse: parseString, brief: "API key ID", placeholder: "id" },
           ],
         },
       },

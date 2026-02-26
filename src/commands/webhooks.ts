@@ -11,16 +11,7 @@ import type {
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
-
-const stringParse = (s: string) => s;
-
-const limitParse = (s: string) => {
-  const n = Number(s);
-  if (Number.isNaN(n) || n < 1 || n > 100) {
-    throw new Error("--limit must be a number between 1 and 100");
-  }
-  return n;
-};
+import { parseLimit, parseString } from "../lib/validators/index.js";
 
 const WEBHOOK_EVENTS =
   "email.sent, email.scheduled, email.delivered, email.delivery_delayed, email.complained, email.bounced, email.opened, email.clicked, email.received, email.failed, email.suppressed, contact.created, contact.updated, contact.deleted, domain.created, domain.updated, domain.deleted";
@@ -32,19 +23,19 @@ export const webhooksRouteMap = buildRouteMap({
         flags: {
           limit: {
             kind: "parsed",
-            parse: limitParse,
+            parse: parseLimit,
             brief: "Max items to return (1-100)",
             optional: true,
           },
           after: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items after this ID",
             optional: true,
           },
           before: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items before this ID",
             optional: true,
           },
@@ -134,7 +125,7 @@ export const webhooksRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Webhook ID", placeholder: "id" },
+            { parse: parseString, brief: "Webhook ID", placeholder: "id" },
           ],
         },
       },
@@ -174,19 +165,19 @@ export const webhooksRouteMap = buildRouteMap({
         flags: {
           url: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Webhook endpoint URL",
             optional: true,
           },
           endpoint: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Webhook endpoint URL (same as --url)",
             optional: true,
           },
           events: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: `Event types (variadic). Valid: ${WEBHOOK_EVENTS}`,
             optional: true,
             variadic: true,
@@ -243,19 +234,19 @@ export const webhooksRouteMap = buildRouteMap({
         flags: {
           endpoint: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "New webhook endpoint URL",
             optional: true,
           },
           status: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Status: enabled or disabled",
             optional: true,
           },
           events: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Event types to listen for",
             optional: true,
             variadic: true,
@@ -270,7 +261,7 @@ export const webhooksRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Webhook ID", placeholder: "id" },
+            { parse: parseString, brief: "Webhook ID", placeholder: "id" },
           ],
         },
       },
@@ -342,7 +333,7 @@ export const webhooksRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Webhook ID", placeholder: "id" },
+            { parse: parseString, brief: "Webhook ID", placeholder: "id" },
           ],
         },
       },

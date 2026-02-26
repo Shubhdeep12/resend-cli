@@ -6,16 +6,7 @@ import type { Broadcast, ListBroadcastsResponseSuccess } from "resend";
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
-
-const stringParse = (s: string) => s;
-
-const limitParse = (s: string) => {
-  const n = Number(s);
-  if (Number.isNaN(n) || n < 1 || n > 100) {
-    throw new Error("--limit must be a number between 1 and 100");
-  }
-  return n;
-};
+import { parseLimit, parseString } from "../lib/validators/index.js";
 
 export const broadcastsRouteMap = buildRouteMap({
   routes: {
@@ -24,19 +15,19 @@ export const broadcastsRouteMap = buildRouteMap({
         flags: {
           limit: {
             kind: "parsed",
-            parse: limitParse,
+            parse: parseLimit,
             brief: "Max items to return (1-100)",
             optional: true,
           },
           after: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items after this ID",
             optional: true,
           },
           before: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items before this ID",
             optional: true,
           },
@@ -124,7 +115,7 @@ export const broadcastsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Broadcast ID", placeholder: "id" },
+            { parse: parseString, brief: "Broadcast ID", placeholder: "id" },
           ],
         },
       },
@@ -161,67 +152,67 @@ export const broadcastsRouteMap = buildRouteMap({
         flags: {
           name: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Broadcast name",
             optional: true,
           },
           segmentId: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Segment ID to send to",
             optional: true,
           },
           audience: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "(Deprecated) Audience ID – use --segment-id",
             optional: true,
           },
           from: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Sender email address",
             optional: true,
           },
           subject: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Email subject",
             optional: true,
           },
           html: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "HTML content",
             optional: true,
           },
           text: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Plain text content",
             optional: true,
           },
           htmlFile: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Path to HTML file",
             optional: true,
           },
           replyTo: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Reply-to address(es), comma-separated",
             optional: true,
           },
           previewText: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Preview text snippet",
             optional: true,
           },
           topicId: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Topic ID",
             optional: true,
           },
@@ -232,7 +223,7 @@ export const broadcastsRouteMap = buildRouteMap({
           },
           scheduledAt: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Schedule send time (ISO 8601 or relative)",
             optional: true,
           },
@@ -343,7 +334,7 @@ export const broadcastsRouteMap = buildRouteMap({
         flags: {
           scheduledAt: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Schedule send time (ISO 8601 or relative)",
             optional: true,
           },
@@ -356,7 +347,7 @@ export const broadcastsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Broadcast ID", placeholder: "id" },
+            { parse: parseString, brief: "Broadcast ID", placeholder: "id" },
           ],
         },
       },
@@ -391,61 +382,61 @@ export const broadcastsRouteMap = buildRouteMap({
         flags: {
           name: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Broadcast name",
             optional: true,
           },
           segmentId: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Segment ID",
             optional: true,
           },
           from: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Sender email",
             optional: true,
           },
           subject: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Subject",
             optional: true,
           },
           html: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "HTML content",
             optional: true,
           },
           text: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Plain text content",
             optional: true,
           },
           htmlFile: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Path to HTML file",
             optional: true,
           },
           replyTo: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Reply-to, comma-separated",
             optional: true,
           },
           previewText: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Preview text",
             optional: true,
           },
           topicId: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Topic ID",
             optional: true,
           },
@@ -458,7 +449,7 @@ export const broadcastsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Broadcast ID", placeholder: "id" },
+            { parse: parseString, brief: "Broadcast ID", placeholder: "id" },
           ],
         },
       },
@@ -541,7 +532,7 @@ export const broadcastsRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Broadcast ID", placeholder: "id" },
+            { parse: parseString, brief: "Broadcast ID", placeholder: "id" },
           ],
         },
       },

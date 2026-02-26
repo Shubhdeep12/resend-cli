@@ -1,29 +1,30 @@
 import * as p from "@clack/prompts";
 import { buildCommand, buildRouteMap } from "@stricli/core";
 import pc from "picocolors";
+import {
+  getDefaultAddKeyName,
+  getDefaultLoginName,
+} from "../lib/auth/index.js";
 import { config } from "../lib/config.js";
+import { ENV, MESSAGES } from "../lib/constants/index.js";
+import { maskApiKey } from "../lib/formatters/index.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
-
-const stringParse = (s: string) => s;
-
-const maskKey = (key: string): string => {
-  if (key.length <= 10) return `${key.slice(0, 4)}***`;
-  return `${key.slice(0, 6)}...${key.slice(-4)}`;
-};
+import type { LoginAction } from "../lib/types/index.js";
+import { parseString } from "../lib/validators/index.js";
 
 export const loginCommand = buildCommand({
   parameters: {
     flags: {
       key: {
         kind: "parsed",
-        parse: stringParse,
+        parse: parseString,
         brief: "Resend API key (starts with re_)",
         optional: true,
       },
       name: {
         kind: "parsed",
-        parse: stringParse,
+        parse: parseString,
         brief: "Name for this saved key",
         optional: true,
       },
@@ -38,7 +39,7 @@ export const loginCommand = buildCommand({
     let apiKey = flags.key?.trim();
 
     if (!apiKey && saved.length > 0) {
-      const action = await p.select({
+      const actionResult = await p.select({
         message: "You already have saved keys. What do you want to do?",
         options: [
           { label: "Use existing key", value: "use" },
@@ -47,10 +48,11 @@ export const loginCommand = buildCommand({
         ],
       });
 
-      if (p.isCancel(action)) {
+      if (p.isCancel(actionResult)) {
         p.cancel("Login cancelled.");
         process.exit(0);
       }
+      const action = actionResult as LoginAction;
 
       if (action === "use") {
         if (name) {
@@ -89,19 +91,15 @@ export const loginCommand = buildCommand({
         return;
       }
 
-      if (action === "replace") {
-        if (!name) {
-          name = selected ?? saved[0]?.name ?? "default";
-        }
+      if (action === "replace" && !name) {
+        name = selected ?? saved[0]?.name ?? "default";
       }
 
       if (action === "add" && !name) {
-        const defaultName = saved.some((item) => item.name === "default")
-          ? `key-${saved.length + 1}`
-          : "default";
+        const defaultName = getDefaultAddKeyName(saved);
         const nameInput = await p.text({
           message: "Name for this key:",
-          initialValue: "defaultName",
+          initialValue: defaultName,
           validate: (value: string) => {
             if (!value.trim()) return "Key name is required";
           },
@@ -135,14 +133,14 @@ export const loginCommand = buildCommand({
     }
 
     if (!name) {
-      name = saved.length === 0 ? "default" : selected?.trim() || "default";
+      name = getDefaultLoginName(saved, selected);
     }
 
     config.saveKey(name, apiKey);
     config.selectKey(name);
 
     stdout(formatSuccess(`Saved key '${name}' and made it active.`));
-    stdout(`Active key: ${pc.cyan(name)} (${pc.dim(maskKey(apiKey))})`);
+    stdout(`Active key: ${pc.cyan(name)} (${pc.dim(maskApiKey(apiKey))})`);
   },
 });
 
@@ -151,7 +149,7 @@ export const logoutCommand = buildCommand({
     flags: {
       name: {
         kind: "parsed",
-        parse: stringParse,
+        parse: parseString,
         brief: "Remove a specific saved key name",
         optional: true,
       },
@@ -183,12 +181,8 @@ export const logoutCommand = buildCommand({
 
     const selected = config.selectedKeyName;
     if (!selected) {
-      if (process.env.RESEND_API_KEY) {
-        stdout(
-          pc.yellow(
-            "RESEND_API_KEY is currently active from environment. Unset it to log out from env-based auth.",
-          ),
-        );
+      if (process.env[ENV.RESEND_API_KEY]) {
+        stdout(pc.yellow(MESSAGES.envLogoutHint));
         return;
       }
       stdout(formatError("No active saved key to log out."));
@@ -206,16 +200,12 @@ export const whoamiCommand = buildCommand({
   },
   docs: { brief: "Show current auth source and selected key" },
   func: async () => {
-    const envKey = process.env.RESEND_API_KEY;
+    const envKey = process.env[ENV.RESEND_API_KEY];
     const selected = config.selectedKeyName;
     const current = config.apiKey;
 
     if (!current) {
-      stdout(
-        formatError(
-          "Not logged in. Run `resend auth login` or set RESEND_API_KEY.",
-        ),
-      );
+      stdout(formatError(MESSAGES.apiKeyMissing));
       return;
     }
 
@@ -225,7 +215,7 @@ export const whoamiCommand = buildCommand({
     if (selected) {
       stdout(`Selected key: ${selected}`);
     }
-    stdout(`Token: ${pc.dim(maskKey(current))}`);
+    stdout(`Token: ${pc.dim(maskApiKey(current))}`);
   },
 });
 
@@ -239,11 +229,10 @@ export const listCommand = buildCommand({
     const selected = config.selectedKeyName;
 
     if (!saved.length) {
-      stdout(pc.yellow("No saved keys. Run `resend auth login` to add one."));
-      if (process.env.RESEND_API_KEY) {
-        stdout(
-          `Environment key is set: ${pc.dim(maskKey(process.env.RESEND_API_KEY))}`,
-        );
+      stdout(pc.yellow(MESSAGES.noSavedKeys));
+      const envKey = process.env[ENV.RESEND_API_KEY];
+      if (envKey) {
+        stdout(`Environment key is set: ${pc.dim(maskApiKey(envKey))}`);
       }
       return;
     }
@@ -252,18 +241,14 @@ export const listCommand = buildCommand({
       ["Name", "Token", "Selected"],
       saved.map((item) => [
         item.name,
-        maskKey(item.key),
+        maskApiKey(item.key),
         item.name === selected ? "yes" : "",
       ]),
     );
     stdout(table);
 
-    if (process.env.RESEND_API_KEY) {
-      stdout(
-        pc.dim(
-          "\nRESEND_API_KEY is set and overrides saved keys for this process.",
-        ),
-      );
+    if (process.env[ENV.RESEND_API_KEY]) {
+      stdout(pc.dim(`\n${MESSAGES.envOverrideHint}`));
     }
   },
 });
@@ -274,7 +259,7 @@ export const selectCommand = buildCommand({
     positional: {
       kind: "tuple",
       parameters: [
-        { parse: stringParse, brief: "Saved key name", placeholder: "name" },
+        { parse: parseString, brief: "Saved key name", placeholder: "name" },
       ],
     },
   },
@@ -289,7 +274,7 @@ export const selectCommand = buildCommand({
     const key = config.getKey(name);
     stdout(formatSuccess(`Selected '${name}' as active key.`));
     if (key) {
-      stdout(`Active token: ${pc.dim(maskKey(key))}`);
+      stdout(`Active token: ${pc.dim(maskApiKey(key))}`);
     }
   },
 });

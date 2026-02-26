@@ -5,16 +5,7 @@ import type { ContactProperty, CreateContactPropertyOptions } from "resend";
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
-
-const stringParse = (s: string) => s;
-
-const limitParse = (s: string) => {
-  const n = Number(s);
-  if (Number.isNaN(n) || n < 1 || n > 100) {
-    throw new Error("--limit must be a number between 1 and 100");
-  }
-  return n;
-};
+import { parseLimit, parseString } from "../lib/validators/index.js";
 
 export const contactPropertiesRouteMap = buildRouteMap({
   routes: {
@@ -23,19 +14,19 @@ export const contactPropertiesRouteMap = buildRouteMap({
         flags: {
           limit: {
             kind: "parsed",
-            parse: limitParse,
+            parse: parseLimit,
             brief: "Max items to return (1-100)",
             optional: true,
           },
           after: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items after this ID",
             optional: true,
           },
           before: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items before this ID",
             optional: true,
           },
@@ -125,7 +116,7 @@ export const contactPropertiesRouteMap = buildRouteMap({
           kind: "tuple",
           parameters: [
             {
-              parse: stringParse,
+              parse: parseString,
               brief: "Contact property ID",
               placeholder: "id",
             },
@@ -168,19 +159,19 @@ export const contactPropertiesRouteMap = buildRouteMap({
         flags: {
           key: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Property key",
             optional: true,
           },
           type: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "string or number",
             optional: true,
           },
           fallbackValue: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Fallback value (string or number)",
             optional: true,
           },
@@ -249,7 +240,7 @@ export const contactPropertiesRouteMap = buildRouteMap({
         flags: {
           fallbackValue: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "New fallback value",
             optional: true,
           },
@@ -263,7 +254,7 @@ export const contactPropertiesRouteMap = buildRouteMap({
           kind: "tuple",
           parameters: [
             {
-              parse: stringParse,
+              parse: parseString,
               brief: "Contact property ID",
               placeholder: "id",
             },
@@ -312,7 +303,7 @@ export const contactPropertiesRouteMap = buildRouteMap({
           kind: "tuple",
           parameters: [
             {
-              parse: stringParse,
+              parse: parseString,
               brief: "Contact property ID",
               placeholder: "id",
             },

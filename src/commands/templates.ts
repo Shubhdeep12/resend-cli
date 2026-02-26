@@ -10,16 +10,7 @@ import type {
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
-
-const stringParse = (s: string) => s;
-
-const limitParse = (s: string) => {
-  const n = Number(s);
-  if (Number.isNaN(n) || n < 1 || n > 100) {
-    throw new Error("--limit must be a number between 1 and 100");
-  }
-  return n;
-};
+import { parseLimit, parseString } from "../lib/validators/index.js";
 
 export const templatesRouteMap = buildRouteMap({
   routes: {
@@ -28,19 +19,19 @@ export const templatesRouteMap = buildRouteMap({
         flags: {
           limit: {
             kind: "parsed",
-            parse: limitParse,
+            parse: parseLimit,
             brief: "Max items to return (1-100)",
             optional: true,
           },
           after: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items after this ID",
             optional: true,
           },
           before: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Cursor: get items before this ID",
             optional: true,
           },
@@ -131,7 +122,7 @@ export const templatesRouteMap = buildRouteMap({
           kind: "tuple",
           parameters: [
             {
-              parse: stringParse,
+              parse: parseString,
               brief: "Template ID",
               placeholder: "id",
             },
@@ -174,55 +165,55 @@ export const templatesRouteMap = buildRouteMap({
         flags: {
           name: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Template name",
             optional: true,
           },
           html: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "HTML content",
             optional: true,
           },
           htmlFile: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Path to HTML file",
             optional: true,
           },
           subject: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Default subject",
             optional: true,
           },
           text: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Plain text content",
             optional: true,
           },
           from: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Default from address",
             optional: true,
           },
           alias: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Template alias",
             optional: true,
           },
           replyTo: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Reply-To (comma-separated or JSON array)",
             optional: true,
           },
           variables: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Variables as JSON array",
             optional: true,
           },
@@ -340,55 +331,55 @@ export const templatesRouteMap = buildRouteMap({
         flags: {
           name: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Template name",
             optional: true,
           },
           html: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "HTML content",
             optional: true,
           },
           htmlFile: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Path to HTML file",
             optional: true,
           },
           subject: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Default subject",
             optional: true,
           },
           text: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Plain text content",
             optional: true,
           },
           from: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Default from address",
             optional: true,
           },
           alias: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Template alias",
             optional: true,
           },
           replyTo: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Reply-To",
             optional: true,
           },
           variables: {
             kind: "parsed",
-            parse: stringParse,
+            parse: parseString,
             brief: "Variables as JSON array",
             optional: true,
           },
@@ -402,7 +393,7 @@ export const templatesRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Template ID", placeholder: "id" },
+            { parse: parseString, brief: "Template ID", placeholder: "id" },
           ],
         },
       },
@@ -507,7 +498,7 @@ export const templatesRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Template ID", placeholder: "id" },
+            { parse: parseString, brief: "Template ID", placeholder: "id" },
           ],
         },
       },
@@ -543,7 +534,7 @@ export const templatesRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Template ID", placeholder: "id" },
+            { parse: parseString, brief: "Template ID", placeholder: "id" },
           ],
         },
       },
@@ -580,7 +571,7 @@ export const templatesRouteMap = buildRouteMap({
         positional: {
           kind: "tuple",
           parameters: [
-            { parse: stringParse, brief: "Template ID", placeholder: "id" },
+            { parse: parseString, brief: "Template ID", placeholder: "id" },
           ],
         },
       },

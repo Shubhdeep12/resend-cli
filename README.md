@@ -199,7 +199,7 @@ Pagination: `--limit` (1–100), `--after <id>` or `--before <id>` (don’t use 
 ## Config
 
 - **Config file**: After `resend auth login`, keys are in `~/.config/resend-cli/config.json` (Linux/macOS).
-- **Env**: `RESEND_API_KEY` (required unless saved via login), optional `RESEND_BASE_URL`, `RESEND_USER_AGENT`.
+- **Env**: `RESEND_API_KEY` (required unless saved via login).
 - **Logs**: Pino to stderr. `LOG_LEVEL`, `DEBUG=1`, `LOG_FORMAT=json`.
 
 ## Dev
