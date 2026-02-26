@@ -3,6 +3,7 @@
   "version": "0.4.0",
   "type": "module",
   "description": "CLI for Resend",
+  "license": "MIT",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
@@ -11,18 +12,11 @@
     "resend-cli": "dist/index.cjs",
     "resend": "dist/index.cjs"
   },
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**", "LICENSE", "README.md"],
   "engines": {
     "node": ">=20"
   },
-  "keywords": [
-    "resend",
-    "email",
-    "cli",
-    "command-line"
-  ],
+  "keywords": ["resend", "email", "cli", "command-line"],
   "author": "Shubhdeep (@shubhdeep12)",
   "repository": {
     "type": "git",
@@ -41,6 +35,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
+    "docs:generate": "pnpm run build && node scripts/generate-command-docs.mjs",
+    "docs:check": "pnpm run build && node scripts/generate-command-docs.mjs --check",
     "changeset": "changeset",
     "version-packages": "pnpm changeset version && pnpm install --no-frozen-lockfile",
     "release": "pnpm run version-packages && git add -A && (git diff --staged --quiet || (git commit -m \"chore: version packages\" && git push)) && pnpm publish --access public"
