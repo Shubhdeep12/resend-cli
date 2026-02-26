@@ -1,5 +1,12 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.0
+
+### Minor Changes
+
+- 316ce21: - Switched to `resend auth ...` commands with improved key management (`login/logout/whoami/list/select`) and removed legacy `init`.
+  - Refactored internals into constants/formatters/validators/types plus config/auth services for cleaner structure.
+
 ## 0.3.0
 
 ### Minor Changes

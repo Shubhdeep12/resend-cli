@@ -1,6 +1,6 @@
 {
   "name": "@shubhdeep12/resend-cli",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "description": "CLI for Resend",
   "main": "./dist/index.cjs",
@@ -11,11 +11,18 @@
     "resend-cli": "dist/index.cjs",
     "resend": "dist/index.cjs"
   },
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "engines": {
     "node": ">=20"
   },
-  "keywords": ["resend", "email", "cli", "command-line"],
+  "keywords": [
+    "resend",
+    "email",
+    "cli",
+    "command-line"
+  ],
   "author": "Shubhdeep (@shubhdeep12)",
   "repository": {
     "type": "git",
