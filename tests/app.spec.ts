@@ -4,6 +4,17 @@ import { ensureBuild, runCli } from "./test-utils/helpers.js";
 describe("Resend CLI (app)", () => {
   beforeAll(() => ensureBuild());
 
+  describe("welcome screen", () => {
+    it("no args prints logo and help hint", () => {
+      const { stdout, status } = runCli([]);
+      expect(status).toBe(0);
+      // Verify we have characters that make up the logo
+      expect(stdout).toMatch(/██████╗/);
+      // Verify the help hint is present
+      expect(stdout).toContain("resend --help");
+    });
+  });
+
   describe("help and version", () => {
     it("--help prints usage and lists commands", () => {
       const { stdout, status } = runCli(["--help"]);
