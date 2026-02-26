@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.1
+
+### Patch Changes
+
+- 61314e3: docs: restructure documentation and added script to generate command docs
+
 ## 0.4.0
 
 ### Minor Changes
