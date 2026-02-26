@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.2
+
+### Patch Changes
+
+- dea6d08: - Added logo
+
 ## 0.4.1
 
 ### Patch Changes

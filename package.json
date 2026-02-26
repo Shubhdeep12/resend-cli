@@ -1,6 +1,6 @@
 {
   "name": "@shubhdeep12/resend-cli",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "type": "module",
   "description": "CLI for Resend",
   "license": "MIT",
@@ -12,11 +12,20 @@
     "resend-cli": "dist/index.cjs",
     "resend": "dist/index.cjs"
   },
-  "files": ["dist/**", "LICENSE", "README.md"],
+  "files": [
+    "dist/**",
+    "LICENSE",
+    "README.md"
+  ],
   "engines": {
     "node": ">=20"
   },
-  "keywords": ["resend", "email", "cli", "command-line"],
+  "keywords": [
+    "resend",
+    "email",
+    "cli",
+    "command-line"
+  ],
   "author": "Shubhdeep (@shubhdeep12)",
   "repository": {
     "type": "git",
