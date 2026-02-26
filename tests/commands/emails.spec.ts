@@ -2,8 +2,15 @@ import { afterAll, afterEach, describe, expect, it } from "vitest";
 import { app } from "#/app.js";
 import { disableFetchMocks } from "../test-utils/cli-mocks.js";
 import { runApp, runAppWithOutput } from "../test-utils/helpers.js";
-import { mockErrorResponse, mockSuccessResponse } from "../test-utils/mock-fetch.js";
-import { emails as emailSnapshots, errors, listEmpty } from "../test-utils/snapshots.js";
+import {
+  mockErrorResponse,
+  mockSuccessResponse,
+} from "../test-utils/mock-fetch.js";
+import {
+  emails as emailSnapshots,
+  errors,
+  listEmpty,
+} from "../test-utils/snapshots.js";
 
 describe("Emails", () => {
   afterEach(() => fetchMock.resetMocks());
@@ -26,7 +33,9 @@ describe("Emails", () => {
         "--json",
       ]);
       expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(fetchMock.mock.calls[0]?.[0]).toBe("https://api.resend.com/emails");
+      expect(fetchMock.mock.calls[0]?.[0]).toBe(
+        "https://api.resend.com/emails",
+      );
       expect(fetchMock.mock.calls[0]?.[1]?.method).toBe("POST");
       const body = JSON.parse(
         (fetchMock.mock.calls[0]?.[1]?.body as string) ?? "{}",
@@ -98,8 +107,12 @@ describe("Emails", () => {
         (fetchMock.mock.calls[0]?.[1]?.body as string) ?? "{}",
       );
       expect(body.cc).toEqual(["cc1@x.com", "cc2@x.com"]);
-      expect(Array.isArray(body.bcc) ? body.bcc : [body.bcc]).toEqual(["bcc@x.com"]);
-      expect(Array.isArray(body.reply_to) ? body.reply_to : [body.reply_to]).toEqual(["r@x.com"]);
+      expect(Array.isArray(body.bcc) ? body.bcc : [body.bcc]).toEqual([
+        "bcc@x.com",
+      ]);
+      expect(
+        Array.isArray(body.reply_to) ? body.reply_to : [body.reply_to],
+      ).toEqual(["r@x.com"]);
     });
 
     it("returns CLI error output when API returns 422 (invalid from)", async () => {
@@ -174,14 +187,22 @@ describe("Emails", () => {
         "--json",
       ]);
       expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(fetchMock.mock.calls[0]?.[0]).toBe("https://api.resend.com/emails");
+      expect(fetchMock.mock.calls[0]?.[0]).toBe(
+        "https://api.resend.com/emails",
+      );
       expect(fetchMock.mock.calls[0]?.[1]?.method).toBe("GET");
       expect(output).toEqual(emailSnapshots.list);
     });
 
     it("calls endpoint with limit query param", async () => {
       mockSuccessResponse(listEmpty);
-      await runAppWithOutput(app, ["emails", "list", "--limit", "10", "--json"]);
+      await runAppWithOutput(app, [
+        "emails",
+        "list",
+        "--limit",
+        "10",
+        "--json",
+      ]);
       expect(fetchMock.mock.calls[0]?.[0]).toBe(
         "https://api.resend.com/emails?limit=10",
       );

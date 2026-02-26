@@ -1,12 +1,12 @@
 import { buildApplication, buildRouteMap } from "@stricli/core";
 import pkg from "../package.json" with { type: "json" };
 import { apiKeysRouteMap } from "./commands/api-keys.js";
+import { authRouteMap } from "./commands/auth.js";
 import { broadcastsRouteMap } from "./commands/broadcasts.js";
 import { contactPropertiesRouteMap } from "./commands/contact-properties.js";
 import { contactsRouteMap } from "./commands/contacts.js";
 import { domainsRouteMap } from "./commands/domains.js";
 import { emailsRouteMap } from "./commands/emails.js";
-import { initCommand } from "./commands/init.js";
 import { segmentsRouteMap } from "./commands/segments.js";
 import { templatesRouteMap } from "./commands/templates.js";
 import { topicsRouteMap } from "./commands/topics.js";
@@ -16,7 +16,7 @@ const version = (pkg as { version: string }).version;
 
 const root = buildRouteMap({
   routes: {
-    init: initCommand,
+    auth: authRouteMap,
     emails: emailsRouteMap,
     domains: domainsRouteMap,
     contacts: contactsRouteMap,

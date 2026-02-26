@@ -11,7 +11,7 @@ Use Resend from the terminal: send emails, manage domains, contacts, webhooks, A
 
 Built for use by AI agents (Cursor, Claude, Copilot, etc.):
 
-- **Non-interactive**: Set `RESEND_API_KEY` in the environment; no `resend init` prompts.
+- **Non-interactive**: Set `RESEND_API_KEY` in the environment; no `resend auth login` prompts.
 - **Structured output**: Use `--json` on every data command so stdout is a single JSON object (or one JSON line) you can parse.
 - **Discoverable**: Run `resend --help` and `resend <command> --help` for usage and flags.
 - **Exit codes**: `0` on success; non-zero on error. Errors with `--json` include a JSON object with an `error` field (`name`, `message`, `statusCode`).
@@ -39,13 +39,29 @@ Or with npx: `npx @shubhdeep12/resend-cli emails list --json`
 ## Auth
 
 ```bash
-# Interactive (saves to config)
-resend init
-# Optional: write to .env
-resend init --write-env
+# Save/select a local key
+resend auth login --key re_xxx --name default
+# or interactive
+resend auth login
+
+# Show current auth source
+resend auth whoami
+
+# List saved local keys
+resend auth list
+
+# Switch active saved key
+resend auth select <name>
+
+# Remove saved key(s)
+resend auth logout
+resend auth logout --name <name>
+resend auth logout --all
+
 ```
 
 Or set `RESEND_API_KEY`. For CI: `RESEND_API_KEY="re_xxx" resend emails list`.
+If `RESEND_API_KEY` is set, it overrides saved keys for that process.
 
 ## Quick start
 
@@ -182,8 +198,8 @@ Pagination: `--limit` (1–100), `--after <id>` or `--before <id>` (don’t use 
 
 ## Config
 
-- **Config file**: After `resend init`, key is in `~/.config/resend-cli/config.json` (Linux/macOS).
-- **Env**: `RESEND_API_KEY` (required unless from init), optional `RESEND_BASE_URL`, `RESEND_USER_AGENT`.
+- **Config file**: After `resend auth login`, keys are in `~/.config/resend-cli/config.json` (Linux/macOS).
+- **Env**: `RESEND_API_KEY` (required unless saved via login), optional `RESEND_BASE_URL`, `RESEND_USER_AGENT`.
 - **Logs**: Pino to stderr. `LOG_LEVEL`, `DEBUG=1`, `LOG_FORMAT=json`.
 
 ## Dev
@@ -199,7 +215,7 @@ resend --version
 
 | Issue | Fix |
 |-------|-----|
-| API key not found | `resend init` or `export RESEND_API_KEY="re_..."` |
+| API key not found | `resend auth login` or `export RESEND_API_KEY="re_..."` |
 | Invalid key format | Keys start with `re_`. Get from [Resend Dashboard](https://resend.com/api-keys). |
 | Domain not verified | `resend domains list --json \| jq '.data[] \| .records'` then add DNS and `resend domains verify <id>` |
 | Rate limits | Add delays between calls in scripts. |

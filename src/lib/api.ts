@@ -10,7 +10,7 @@ function getInstance(): Resend {
     if (!apiKey) {
       logger.error({ msg: "API key not found" });
       throw new Error(
-        "API key not found. Please run `resend init` or set RESEND_API_KEY environment variable.",
+        "API key not found. Please run `resend auth login` or set RESEND_API_KEY environment variable.",
       );
     }
     logger.debug({ msg: "Resend client initialized" });

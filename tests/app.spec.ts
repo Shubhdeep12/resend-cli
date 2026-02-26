@@ -9,7 +9,7 @@ describe("Resend CLI (app)", () => {
       const { stdout, status } = runCli(["--help"]);
       expect(status).toBe(0);
       expect(stdout).toContain("USAGE");
-      expect(stdout).toContain("resend init");
+      expect(stdout).toContain("resend auth");
       expect(stdout).toContain("resend emails");
       expect(stdout).toContain("resend domains");
       expect(stdout).toContain("resend contacts");

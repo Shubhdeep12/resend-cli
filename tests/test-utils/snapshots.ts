@@ -28,21 +28,21 @@ import type {
   UpdateWebhookResponseSuccess,
 } from "resend";
 import type {
-  GetBroadcastResponseSuccess,
-  ListContactPropertiesResponseSuccess,
-  GetContactPropertyResponseSuccess,
   CreateContactPropertyResponseSuccess,
-  RemoveSegmentResponseSuccess,
-  RemoveTopicResponseSuccess,
-  CreateTopicResponseSuccess,
-  GetTopicResponseSuccess,
-  VerifyDomainsResponseSuccess,
   CreateTemplateResponseSuccess,
-  GetTemplateResponseSuccess,
+  CreateTopicResponseSuccess,
   DuplicateTemplateResponseSuccess,
+  GetBroadcastResponseSuccess,
+  GetContactPropertyResponseSuccess,
+  GetTemplateResponseSuccess,
+  GetTopicResponseSuccess,
+  ListContactPropertiesResponseSuccess,
   PublishTemplateResponseSuccess,
+  RemoveSegmentResponseSuccess,
   RemoveTemplateResponseSuccess,
+  RemoveTopicResponseSuccess,
   UpdateTemplateResponseSuccess,
+  VerifyDomainsResponseSuccess,
 } from "resend";
 
 /** API error payloads (Resend ErrorResponse). */
@@ -50,7 +50,7 @@ export const errors = {
   invalidParameter: {
     name: "invalid_parameter",
     message:
-      'Invalid `from` field. The email address needs to follow the `email@example.com` or `Name <email@example.com>` format',
+      "Invalid `from` field. The email address needs to follow the `email@example.com` or `Name <email@example.com>` format",
     statusCode: 422,
   } satisfies ErrorResponse,
   notFound: {
@@ -79,8 +79,12 @@ export const listEmpty = {
 
 /** Emails */
 export const emails = {
-  sendId: { id: "71cdfe68-cf79-473a-a9d7-21f91db6a526" } satisfies CreateEmailResponseSuccess,
-  sendIdAlt: { id: "124dc0f1-e36c-417c-a65c-e33773abc768" } satisfies CreateEmailResponseSuccess,
+  sendId: {
+    id: "71cdfe68-cf79-473a-a9d7-21f91db6a526",
+  } satisfies CreateEmailResponseSuccess,
+  sendIdAlt: {
+    id: "124dc0f1-e36c-417c-a65c-e33773abc768",
+  } satisfies CreateEmailResponseSuccess,
   sendIdShort: { id: "em_1" } satisfies CreateEmailResponseSuccess,
   /** Matches Resend ListEmailsResponseSuccess shape (object, has_more, data). */
   list: {
@@ -120,7 +124,10 @@ export const emails = {
     id: "em_123",
     object: "email" as const,
   } satisfies UpdateEmailResponseSuccess,
-  cancel: { id: "em_123", object: "email" as const } satisfies CancelEmailResponseSuccess,
+  cancel: {
+    id: "em_123",
+    object: "email" as const,
+  } satisfies CancelEmailResponseSuccess,
   /** Batch response (data + errors when batchValidation is permissive). */
   batch: {
     data: [{ id: "em_1" }, { id: "em_2" }],
@@ -153,7 +160,10 @@ export const domains = {
     capabilities: { sending: "enabled", receiving: "enabled" },
     records: [],
   } satisfies CreateDomainResponseSuccess,
-  verify: { id: "dom_1", object: "domain" as const } satisfies VerifyDomainsResponseSuccess,
+  verify: {
+    id: "dom_1",
+    object: "domain" as const,
+  } satisfies VerifyDomainsResponseSuccess,
 };
 
 /** Contacts */
@@ -172,7 +182,10 @@ export const contacts = {
       },
     ],
   } satisfies ListContactsResponseSuccess,
-  create: { id: "c_new", object: "contact" as const } satisfies CreateContactResponseSuccess,
+  create: {
+    id: "c_new",
+    object: "contact" as const,
+  } satisfies CreateContactResponseSuccess,
 };
 
 /** API keys */
@@ -182,7 +195,10 @@ export const apiKeys = {
     has_more: false,
     data: [{ id: "k_1", name: "Key", created_at: "2025-01-01" }],
   } satisfies ListApiKeysResponseSuccess,
-  create: { id: "k_new", token: "re_secret_xxx" } satisfies CreateApiKeyResponseSuccess,
+  create: {
+    id: "k_new",
+    token: "re_secret_xxx",
+  } satisfies CreateApiKeyResponseSuccess,
   remove: {} satisfies RemoveApiKeyResponseSuccess,
 };
 
@@ -216,7 +232,11 @@ export const topics = {
 
 /** Webhooks */
 export const webhooks = {
-  list: { object: "list" as const, has_more: false, data: [] } satisfies ListWebhooksResponseSuccess,
+  list: {
+    object: "list" as const,
+    has_more: false,
+    data: [],
+  } satisfies ListWebhooksResponseSuccess,
   get: {
     id: "wh_1",
     object: "webhook" as const,
@@ -231,7 +251,10 @@ export const webhooks = {
     object: "webhook" as const,
     signing_secret: "re_secret_xxx",
   } satisfies CreateWebhookResponseSuccess,
-  update: { id: "wh_1", object: "webhook" as const } satisfies UpdateWebhookResponseSuccess,
+  update: {
+    id: "wh_1",
+    object: "webhook" as const,
+  } satisfies UpdateWebhookResponseSuccess,
   remove: {
     id: "wh_123",
     object: "webhook" as const,
@@ -274,15 +297,27 @@ export const templates = {
     has_unpublished_versions: false,
     current_version_id: "v1",
   } satisfies GetTemplateResponseSuccess,
-  create: { id: "tmpl_new", object: "template" as const } satisfies CreateTemplateResponseSuccess,
-  update: { id: "tmpl_123", object: "template" as const } satisfies UpdateTemplateResponseSuccess,
+  create: {
+    id: "tmpl_new",
+    object: "template" as const,
+  } satisfies CreateTemplateResponseSuccess,
+  update: {
+    id: "tmpl_123",
+    object: "template" as const,
+  } satisfies UpdateTemplateResponseSuccess,
   remove: {
     id: "tmpl_123",
     object: "template" as const,
     deleted: true,
   } satisfies RemoveTemplateResponseSuccess,
-  duplicate: { id: "tmpl_copy", object: "template" as const } satisfies DuplicateTemplateResponseSuccess,
-  publish: { id: "tmpl_123", object: "template" as const } satisfies PublishTemplateResponseSuccess,
+  duplicate: {
+    id: "tmpl_copy",
+    object: "template" as const,
+  } satisfies DuplicateTemplateResponseSuccess,
+  publish: {
+    id: "tmpl_123",
+    object: "template" as const,
+  } satisfies PublishTemplateResponseSuccess,
 };
 
 /** Segments */
@@ -298,7 +333,11 @@ export const segments = {
     created_at: "2025-01-01",
     object: "segment" as const,
   } satisfies GetSegmentResponseSuccess,
-  create: { id: "seg_new", object: "segment" as const, name: "Segment A" } satisfies CreateSegmentResponseSuccess,
+  create: {
+    id: "seg_new",
+    object: "segment" as const,
+    name: "Segment A",
+  } satisfies CreateSegmentResponseSuccess,
   remove: {
     id: "seg_123",
     object: "segment" as const,
@@ -329,7 +368,10 @@ export const contactProperties = {
     created_at: "2025-01-01",
     object: "contact_property" as const,
   } satisfies GetContactPropertyResponseSuccess,
-  create: { id: "cp_new", object: "contact_property" as const } satisfies CreateContactPropertyResponseSuccess,
+  create: {
+    id: "cp_new",
+    object: "contact_property" as const,
+  } satisfies CreateContactPropertyResponseSuccess,
   remove: {
     id: "cp_123",
     object: "contact_property" as const,

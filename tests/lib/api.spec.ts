@@ -26,7 +26,7 @@ describe("ResendClient", () => {
   it("getInstance throws when API key is not set", async () => {
     const { ResendClient } = await import("#/lib/api.js");
     expect(() => ResendClient.getInstance()).toThrow(
-      "API key not found. Please run `resend init` or set RESEND_API_KEY environment variable.",
+      "API key not found. Please run `resend auth login` or set RESEND_API_KEY environment variable.",
     );
   });
 

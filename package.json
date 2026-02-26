@@ -11,18 +11,11 @@
     "resend-cli": "dist/index.cjs",
     "resend": "dist/index.cjs"
   },
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "engines": {
     "node": ">=20"
   },
-  "keywords": [
-    "resend",
-    "email",
-    "cli",
-    "command-line"
-  ],
+  "keywords": ["resend", "email", "cli", "command-line"],
   "author": "Shubhdeep (@shubhdeep12)",
   "repository": {
     "type": "git",
