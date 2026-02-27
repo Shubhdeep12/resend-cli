@@ -1,7 +1,7 @@
 import { afterAll, afterEach, describe, expect, it } from "vitest";
 import { app } from "#/app.js";
 import { disableFetchMocks } from "../test-utils/cli-mocks.js";
-import { runApp, runAppWithOutput } from "../test-utils/helpers.js";
+import { runApp, runAppWithOutput, runAppWithStdout } from "../test-utils/helpers.js";
 import {
   mockErrorResponse,
   mockSuccessResponse,
@@ -234,6 +234,13 @@ describe("Emails", () => {
       expect(fetchMock.mock.calls[0]?.[0]).toBe(
         "https://api.resend.com/emails?before=cursor123",
       );
+    });
+
+    it("on API error prints error message (no --json)", async () => {
+      mockErrorResponse(errors.invalidApiKey);
+      const { stdout } = await runAppWithStdout(app, ["emails", "list"]);
+      expect(fetchMock).toHaveBeenCalled();
+      expect(stdout).toContain("Invalid API key");
     });
   });
 

@@ -26,3 +26,4 @@ yarn-debug.log*
 pnpm-debug.log*
 .cache/
 .tmp/
+docs/ignored/

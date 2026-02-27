@@ -1,9 +1,9 @@
 import { afterAll, afterEach, describe, expect, it } from "vitest";
 import { app } from "#/app.js";
 import { disableFetchMocks } from "../test-utils/cli-mocks.js";
-import { runAppWithOutput } from "../test-utils/helpers.js";
-import { mockSuccessResponse } from "../test-utils/mock-fetch.js";
-import { domains as domainSnapshots } from "../test-utils/snapshots.js";
+import { runAppWithOutput, runAppWithStdout } from "../test-utils/helpers.js";
+import { mockErrorResponse, mockSuccessResponse } from "../test-utils/mock-fetch.js";
+import { domains as domainSnapshots, errors } from "../test-utils/snapshots.js";
 
 describe("domains", () => {
   afterEach(() => fetchMock.resetMocks());
@@ -48,5 +48,12 @@ describe("domains", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0]?.[0]).toContain("/domains/dom_123/verify");
     expect(output).toMatchObject({ id: "dom_1" });
+  });
+
+  it("list: on API error prints error message", async () => {
+    mockErrorResponse(errors.invalidApiKey);
+    const { stdout } = await runAppWithStdout(app, ["domains", "list"]);
+    expect(fetchMock).toHaveBeenCalled();
+    expect(stdout).toContain("Invalid API key");
   });
 });
