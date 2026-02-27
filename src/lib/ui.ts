@@ -21,4 +21,3 @@ export function createSpinner(options?: { enabled?: boolean }): Spinner {
   if (!enabled) return noopSpinner;
   return p.spinner();
 }
-

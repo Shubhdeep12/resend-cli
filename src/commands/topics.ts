@@ -5,8 +5,8 @@ import type { Topic } from "resend";
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
-import { parseString } from "../lib/validators/index.js";
 import { createSpinner } from "../lib/ui.js";
+import { parseString } from "../lib/validators/index.js";
 
 export const topicsRouteMap = buildRouteMap({
   routes: {
