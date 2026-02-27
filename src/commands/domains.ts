@@ -9,6 +9,7 @@ import type {
 } from "resend";
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
+import { createSpinner } from "../lib/ui.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
 import { parseLimit, parseString } from "../lib/validators/index.js";
 
@@ -66,7 +67,7 @@ export const domainsRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Fetching domains...");
         try {
           const resend = ResendClient.getInstance();
@@ -126,7 +127,7 @@ export const domainsRouteMap = buildRouteMap({
       },
       docs: { brief: "Get domain details" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Fetching domain ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -219,7 +220,7 @@ export const domainsRouteMap = buildRouteMap({
         },
         name: string,
       ) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Adding domain ${name}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -337,7 +338,7 @@ export const domainsRouteMap = buildRouteMap({
         },
         id: string,
       ) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Updating domain ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -404,7 +405,7 @@ export const domainsRouteMap = buildRouteMap({
       },
       docs: { brief: "Remove a domain" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Removing domain ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -440,7 +441,7 @@ export const domainsRouteMap = buildRouteMap({
       },
       docs: { brief: "Verify a domain" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Verifying domain ${id}...`);
         try {
           const resend = ResendClient.getInstance();

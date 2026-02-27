@@ -6,6 +6,7 @@ import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
 import { parseString } from "../lib/validators/index.js";
+import { createSpinner } from "../lib/ui.js";
 
 export const topicsRouteMap = buildRouteMap({
   routes: {
@@ -21,7 +22,7 @@ export const topicsRouteMap = buildRouteMap({
       },
       docs: { brief: "List all topics" },
       func: async (flags: { json?: boolean }) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Fetching topics...");
         try {
           const resend = ResendClient.getInstance();
@@ -75,7 +76,7 @@ export const topicsRouteMap = buildRouteMap({
       },
       docs: { brief: "Get topic by ID" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Fetching topic ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -157,7 +158,7 @@ export const topicsRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Creating topic...");
         try {
           const resend = ResendClient.getInstance();
@@ -222,7 +223,7 @@ export const topicsRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Updating topic ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -264,7 +265,7 @@ export const topicsRouteMap = buildRouteMap({
       },
       docs: { brief: "Remove a topic" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Removing topic ${id}...`);
         try {
           const resend = ResendClient.getInstance();

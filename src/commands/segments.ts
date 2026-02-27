@@ -4,6 +4,7 @@ import pc from "picocolors";
 import type { Segment } from "resend";
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
+import { createSpinner } from "../lib/ui.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
 import { parseLimit, parseString } from "../lib/validators/index.js";
 
@@ -53,7 +54,7 @@ export const segmentsRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Fetching segments...");
         try {
           const resend = ResendClient.getInstance();
@@ -115,7 +116,7 @@ export const segmentsRouteMap = buildRouteMap({
       },
       docs: { brief: "Get segment by ID" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Fetching segment ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -163,7 +164,7 @@ export const segmentsRouteMap = buildRouteMap({
           stdout(formatError("--name is required"));
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Creating segment...");
         try {
           const resend = ResendClient.getInstance();
@@ -201,7 +202,7 @@ export const segmentsRouteMap = buildRouteMap({
       },
       docs: { brief: "Remove a segment" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Removing segment ${id}...`);
         try {
           const resend = ResendClient.getInstance();

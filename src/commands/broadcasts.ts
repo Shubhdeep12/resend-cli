@@ -5,6 +5,7 @@ import pc from "picocolors";
 import type { Broadcast, ListBroadcastsResponseSuccess } from "resend";
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
+import { createSpinner } from "../lib/ui.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
 import { parseLimit, parseString } from "../lib/validators/index.js";
 
@@ -54,7 +55,7 @@ export const broadcastsRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Fetching broadcasts...");
         try {
           const resend = ResendClient.getInstance();
@@ -121,7 +122,7 @@ export const broadcastsRouteMap = buildRouteMap({
       },
       docs: { brief: "Get broadcast details" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Fetching broadcast ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -272,7 +273,7 @@ export const broadcastsRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Creating broadcast...");
         try {
           const resend = ResendClient.getInstance();
@@ -356,7 +357,7 @@ export const broadcastsRouteMap = buildRouteMap({
         flags: { scheduledAt?: string; json?: boolean },
         id: string,
       ) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Sending broadcast ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -470,7 +471,7 @@ export const broadcastsRouteMap = buildRouteMap({
         },
         id: string,
       ) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Updating broadcast ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -538,7 +539,7 @@ export const broadcastsRouteMap = buildRouteMap({
       },
       docs: { brief: "Remove a broadcast" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Removing broadcast ${id}...`);
         try {
           const resend = ResendClient.getInstance();

@@ -29,6 +29,7 @@ type AttachmentListItem = {
 
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
+import { createSpinner } from "../lib/ui.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
 import { parseLimit, parseString } from "../lib/validators/index.js";
 
@@ -209,7 +210,7 @@ export const emailsRouteMap = buildRouteMap({
           stdout(formatError("--subject is required when using --html/--text"));
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Sending email...");
         try {
           const resend = ResendClient.getInstance();
@@ -426,7 +427,7 @@ export const emailsRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Fetching emails...");
         try {
           const resend = ResendClient.getInstance();
@@ -498,7 +499,7 @@ export const emailsRouteMap = buildRouteMap({
       },
       docs: { brief: "Get email details" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Fetching email ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -556,7 +557,7 @@ export const emailsRouteMap = buildRouteMap({
         flags: { scheduledAt: string; json?: boolean },
         id: string,
       ) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Updating scheduled email ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -603,7 +604,7 @@ export const emailsRouteMap = buildRouteMap({
       },
       docs: { brief: "Cancel a scheduled email (not yet sent)" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Cancelling scheduled email ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -697,7 +698,7 @@ export const emailsRouteMap = buildRouteMap({
         }
         const validation =
           flags.validation === "permissive" ? "permissive" : "strict";
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Sending batch of ${payload.length} emails...`);
         try {
           const resend = ResendClient.getInstance();
@@ -799,7 +800,7 @@ export const emailsRouteMap = buildRouteMap({
               stdout(formatError("Use only one of --after or --before"));
               return;
             }
-            const s = p.spinner();
+            const s = createSpinner({ enabled: !flags.json });
             s.start("Fetching attachments...");
             try {
               const resend = ResendClient.getInstance();
@@ -889,7 +890,7 @@ export const emailsRouteMap = buildRouteMap({
             emailId: string,
             attachmentId: string,
           ) => {
-            const s = p.spinner();
+            const s = createSpinner({ enabled: !flags.json });
             s.start("Fetching attachment...");
             try {
               const resend = ResendClient.getInstance();
@@ -967,7 +968,7 @@ export const emailsRouteMap = buildRouteMap({
               stdout(formatError("Use only one of --after or --before"));
               return;
             }
-            const s = p.spinner();
+            const s = createSpinner({ enabled: !flags.json });
             s.start("Fetching receiving emails...");
             try {
               const resend = ResendClient.getInstance();
@@ -1039,7 +1040,7 @@ export const emailsRouteMap = buildRouteMap({
           },
           docs: { brief: "Get a received/inbound email" },
           func: async (flags: { json?: boolean }, id: string) => {
-            const s = p.spinner();
+            const s = createSpinner({ enabled: !flags.json });
             s.start(`Fetching receiving email ${id}...`);
             try {
               const resend = ResendClient.getInstance();
@@ -1138,7 +1139,7 @@ export const emailsRouteMap = buildRouteMap({
               );
               return;
             }
-            const s = p.spinner();
+            const s = createSpinner({ enabled: !flags.json });
             s.start("Forwarding email...");
             try {
               const resend = ResendClient.getInstance();
@@ -1228,7 +1229,7 @@ export const emailsRouteMap = buildRouteMap({
                   stdout(formatError("Use only one of --after or --before"));
                   return;
                 }
-                const s = p.spinner();
+                const s = createSpinner({ enabled: !flags.json });
                 s.start("Fetching attachments...");
                 try {
                   const resend = ResendClient.getInstance();
@@ -1318,7 +1319,7 @@ export const emailsRouteMap = buildRouteMap({
                 emailId: string,
                 attachmentId: string,
               ) => {
-                const s = p.spinner();
+                const s = createSpinner({ enabled: !flags.json });
                 s.start("Fetching attachment...");
                 try {
                   const resend = ResendClient.getInstance();

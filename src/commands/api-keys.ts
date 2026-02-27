@@ -8,6 +8,7 @@ import type {
 } from "resend";
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
+import { createSpinner } from "../lib/ui.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
 import { parseLimit, parseString } from "../lib/validators/index.js";
 
@@ -57,7 +58,7 @@ export const apiKeysRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Fetching API keys...");
         try {
           const resend = ResendClient.getInstance();
@@ -136,7 +137,7 @@ export const apiKeysRouteMap = buildRouteMap({
         domainId?: string;
         json?: boolean;
       }) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Creating API key...");
         try {
           const resend = ResendClient.getInstance();
@@ -192,7 +193,7 @@ export const apiKeysRouteMap = buildRouteMap({
       },
       docs: { brief: "Delete an API key" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Deleting API key ${id}...`);
         try {
           const resend = ResendClient.getInstance();

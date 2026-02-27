@@ -4,6 +4,7 @@ import pc from "picocolors";
 import type { ContactProperty, CreateContactPropertyOptions } from "resend";
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
+import { createSpinner } from "../lib/ui.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
 import { parseLimit, parseString } from "../lib/validators/index.js";
 
@@ -53,7 +54,7 @@ export const contactPropertiesRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Fetching contact properties...");
         try {
           const resend = ResendClient.getInstance();
@@ -125,7 +126,7 @@ export const contactPropertiesRouteMap = buildRouteMap({
       },
       docs: { brief: "Get contact property by ID" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Fetching contact property ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -200,7 +201,7 @@ export const contactPropertiesRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Creating contact property...");
         try {
           const resend = ResendClient.getInstance();
@@ -270,7 +271,7 @@ export const contactPropertiesRouteMap = buildRouteMap({
           stdout(formatError("--fallback-value is required for update"));
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Updating contact property ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -312,7 +313,7 @@ export const contactPropertiesRouteMap = buildRouteMap({
       },
       docs: { brief: "Remove a contact property" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Removing contact property ${id}...`);
         try {
           const resend = ResendClient.getInstance();

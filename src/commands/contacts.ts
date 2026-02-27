@@ -8,6 +8,7 @@ import type {
 } from "resend";
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
+import { createSpinner } from "../lib/ui.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
 import { parseLimit, parseString } from "../lib/validators/index.js";
 
@@ -73,7 +74,7 @@ export const contactsRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Fetching contacts...");
         try {
           const resend = ResendClient.getInstance();
@@ -177,7 +178,7 @@ export const contactsRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Fetching contact ${identifier}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -271,7 +272,7 @@ export const contactsRouteMap = buildRouteMap({
         topics?: string;
         json?: boolean;
       }) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Adding contact ${flags.email}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -449,7 +450,7 @@ export const contactsRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Updating contact ${identifier}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -528,7 +529,7 @@ export const contactsRouteMap = buildRouteMap({
       },
       docs: { brief: "Remove a contact" },
       func: async (flags: { json?: boolean }, idOrEmail: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Removing contact ${idOrEmail}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -612,7 +613,7 @@ export const contactsRouteMap = buildRouteMap({
               );
               return;
             }
-            const s = p.spinner();
+            const s = createSpinner({ enabled: !flags.json });
             s.start(`Adding contact to segment ${segmentId}...`);
             try {
               const resend = ResendClient.getInstance();
@@ -705,7 +706,7 @@ export const contactsRouteMap = buildRouteMap({
               stdout(formatError("Cannot use both --after and --before."));
               return;
             }
-            const s = p.spinner();
+            const s = createSpinner({ enabled: !flags.json });
             s.start("Fetching contact segments...");
             try {
               const resend = ResendClient.getInstance();
@@ -819,7 +820,7 @@ export const contactsRouteMap = buildRouteMap({
               );
               return;
             }
-            const s = p.spinner();
+            const s = createSpinner({ enabled: !flags.json });
             s.start(`Removing contact from segment ${segmentId}...`);
             try {
               const resend = ResendClient.getInstance();
@@ -918,7 +919,7 @@ export const contactsRouteMap = buildRouteMap({
               stdout(formatError("Cannot use both --after and --before."));
               return;
             }
-            const s = p.spinner();
+            const s = createSpinner({ enabled: !flags.json });
             s.start("Fetching contact topics...");
             try {
               const resend = ResendClient.getInstance();
@@ -1059,7 +1060,7 @@ export const contactsRouteMap = buildRouteMap({
               );
               return;
             }
-            const s = p.spinner();
+            const s = createSpinner({ enabled: !flags.json });
             s.start("Updating contact topics...");
             try {
               const resend = ResendClient.getInstance();

@@ -9,6 +9,7 @@ import type {
 } from "resend";
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
+import { createSpinner } from "../lib/ui.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
 import { parseLimit, parseString } from "../lib/validators/index.js";
 
@@ -58,7 +59,7 @@ export const templatesRouteMap = buildRouteMap({
           );
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Fetching templates...");
         try {
           const resend = ResendClient.getInstance();
@@ -131,7 +132,7 @@ export const templatesRouteMap = buildRouteMap({
       },
       docs: { brief: "Get template by ID" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Fetching template ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -261,7 +262,7 @@ export const templatesRouteMap = buildRouteMap({
           stdout(formatError("Provide --html or --html-file"));
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start("Creating template...");
         try {
           const resend = ResendClient.getInstance();
@@ -439,7 +440,7 @@ export const templatesRouteMap = buildRouteMap({
           stdout(formatError("Provide at least one field to update"));
           return;
         }
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Updating template ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -504,7 +505,7 @@ export const templatesRouteMap = buildRouteMap({
       },
       docs: { brief: "Remove a template" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Removing template ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -540,7 +541,7 @@ export const templatesRouteMap = buildRouteMap({
       },
       docs: { brief: "Duplicate a template" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Duplicating template ${id}...`);
         try {
           const resend = ResendClient.getInstance();
@@ -577,7 +578,7 @@ export const templatesRouteMap = buildRouteMap({
       },
       docs: { brief: "Publish a template" },
       func: async (flags: { json?: boolean }, id: string) => {
-        const s = p.spinner();
+        const s = createSpinner({ enabled: !flags.json });
         s.start(`Publishing template ${id}...`);
         try {
           const resend = ResendClient.getInstance();
