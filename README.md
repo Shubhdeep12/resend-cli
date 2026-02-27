@@ -20,6 +20,18 @@ npm install -g @shubhdeep12/resend-cli
 npx @shubhdeep12/resend-cli --help
 ```
 
+## Updating
+
+```bash
+# Update the globally installed CLI
+npm install -g @shubhdeep12/resend-cli
+
+# or, with pnpm
+pnpm add -g @shubhdeep12/resend-cli
+```
+
+The CLI periodically checks npm for a newer version and prints a notice when one is available. To disable this check for a single run, pass `--no-check-version`, or set `RESEND_CLI_NO_VERSION_CHECK=1` to disable it via environment variable.
+
 ## Quick Start
 
 ```bash

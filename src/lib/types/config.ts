@@ -4,4 +4,5 @@ export interface ConfigSchema {
   apiKey?: string;
   defaultFrom?: string;
   profile?: string;
+  lastVersionCheckAt?: number;
 }
