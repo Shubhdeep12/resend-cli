@@ -96,10 +96,22 @@ pnpm changeset
 
 Follow the prompts to describe your change and select a semver bump.
 
-## Pull Request Checklist
+## Pull Request Guidelines
+
+Before opening a PR, run these locally. CI will run the same steps on every PR.
+
+| Step | Command | Required |
+|------|---------|----------|
+| Lint | `pnpm lint` | Yes |
+| Typecheck | `pnpm typecheck` | Yes |
+| Tests | `pnpm test` | Yes |
+| Coverage | `pnpm test:coverage` | Yes (must meet thresholds) |
+| Changeset | `pnpm changeset` | Yes, for user-facing changes |
+
+**Checklist**
 
 - [ ] Code passes `pnpm lint` and `pnpm typecheck`
-- [ ] Tests pass (`pnpm test`)
+- [ ] Tests pass (`pnpm test`) and coverage passes (`pnpm test:coverage`)
 - [ ] Docs regenerated if commands changed (`pnpm docs:generate`)
 - [ ] Changeset added for user-facing changes (`pnpm changeset`)
 
