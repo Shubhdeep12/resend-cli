@@ -18,6 +18,7 @@ pnpm test:watch     # watch mode
 | `tests/lib/*.spec.ts` | Unit tests for `src/lib` (config, output, api). |
 | `tests/commands/*.spec.ts` | One file per command; mocked API. |
 | `tests/app.spec.ts` | Help, version, unknown command (runs built CLI). |
+| `tests/smoke.spec.ts` | Basic smoke tests (optional, not always present).
 
 ## Adding tests
 
