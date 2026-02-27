@@ -14,6 +14,8 @@ export default defineConfig({
     globals: true,
     environment: "node",
     include: ["tests/**/*.spec.ts"],
+    setupFiles: ["tests/setup.ts"],
+    fileParallelism: false,
     coverage: {
       provider: "v8",
       reporter: ["text", "text-summary", "lcov"],

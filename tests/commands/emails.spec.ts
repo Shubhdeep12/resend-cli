@@ -1,6 +1,6 @@
-import { afterAll, afterEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeEach, describe, expect, it } from "vitest";
 import { app } from "#/app.js";
-import { disableFetchMocks } from "../test-utils/cli-mocks.js";
+import { disableFetchMocks, resetConfigMock } from "../test-utils/cli-mocks.js";
 import {
   runApp,
   runAppWithOutput,
@@ -17,6 +17,7 @@ import {
 } from "../test-utils/snapshots.js";
 
 describe("Emails", () => {
+  beforeEach(resetConfigMock);
   afterEach(() => fetchMock.resetMocks());
   afterAll(disableFetchMocks);
 

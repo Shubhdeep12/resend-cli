@@ -3,9 +3,9 @@
  * Uses mocked fetch and config; no real API calls.
  * Run with: pnpm test tests/smoke.spec.ts
  */
-import { afterAll, afterEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeEach, describe, expect, it } from "vitest";
 import { app } from "#/app.js";
-import { disableFetchMocks } from "./test-utils/cli-mocks.js";
+import { disableFetchMocks, resetConfigMock } from "./test-utils/cli-mocks.js";
 import { runApp, runAppWithOutput } from "./test-utils/helpers.js";
 import { mockSuccessResponse } from "./test-utils/mock-fetch.js";
 import {
@@ -22,6 +22,7 @@ import {
 } from "./test-utils/snapshots.js";
 
 describe("Smoke (one happy path per group)", () => {
+  beforeEach(resetConfigMock);
   afterEach(() => fetchMock.resetMocks());
   afterAll(disableFetchMocks);
 

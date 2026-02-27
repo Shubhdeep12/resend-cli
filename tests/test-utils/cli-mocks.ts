@@ -1,16 +1,30 @@
 import { vi } from "vitest";
-import createFetchMock from "vitest-fetch-mock";
+import * as fetchMockSetup from "./enable-fetch-mock.js";
 import { DUMMY_API_KEY } from "./helpers.js";
+
+export function disableFetchMocks(): void {
+  fetchMockSetup.disableFetchMocks();
+}
 
 const inMemoryKeys: Record<string, string> = { default: DUMMY_API_KEY };
 let selectedKeyName: string | undefined = "default";
 
+export function resetConfigMock(): void {
+  for (const k of Object.keys(inMemoryKeys)) {
+    delete inMemoryKeys[k];
+  }
+  inMemoryKeys.default = DUMMY_API_KEY;
+  selectedKeyName = "default";
+}
+
 vi.mock("#/lib/config.js", () => ({
   config: {
     get apiKey() {
+      const keys = Object.keys(inMemoryKeys);
       return (
         process.env.RESEND_API_KEY ??
-        (selectedKeyName ? inMemoryKeys[selectedKeyName] : undefined)
+        (selectedKeyName ? inMemoryKeys[selectedKeyName] : undefined) ??
+        (keys.length > 0 ? inMemoryKeys[keys[0] ?? ""] : DUMMY_API_KEY)
       );
     },
     set apiKey(value: string | undefined) {
@@ -68,14 +82,10 @@ vi.mock("@clack/prompts", () => ({
   isCancel: vi.fn(() => false),
   text: vi.fn().mockResolvedValue(DUMMY_API_KEY),
   note: vi.fn(),
-  spinner: () => ({ start: vi.fn(), stop: vi.fn() }),
+  spinner: () => ({
+    start: vi.fn(),
+    stop: vi.fn((msg?: string) => {
+      if (typeof msg === "string") process.stdout.write(msg);
+    }),
+  }),
 }));
-
-const fetchMocker = createFetchMock(
-  vi as Parameters<typeof createFetchMock>[0],
-);
-fetchMocker.enableMocks();
-
-export function disableFetchMocks(): void {
-  fetchMocker.disableMocks();
-}
