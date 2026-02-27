@@ -43,6 +43,28 @@ export async function runAppWithOutput(
   return { output: JSON.parse(trimmed) as unknown };
 }
 
+/** Run CLI and return full stdout as string (for error-path or non-JSON output). */
+export async function runAppWithStdout(
+  app: Application<CommandContext>,
+  argv: string[],
+): Promise<{ stdout: string }> {
+  const writeSpy = vi
+    .spyOn(process.stdout, "write")
+    .mockImplementation(() => true);
+  await run(app, argv, { process });
+  const calls = writeSpy.mock.calls;
+  writeSpy.mockRestore();
+  const stdout = calls
+    .map((args) => {
+      const arg = args?.[0];
+      return typeof arg === "string"
+        ? arg
+        : (arg as Buffer | Uint8Array)?.toString?.() ?? "";
+    })
+    .join("");
+  return { stdout };
+}
+
 /** Run the built CLI binary (used by app.spec for --help, --version). */
 export function runCli(args: string[]): {
   stdout: string;
