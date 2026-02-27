@@ -34,7 +34,7 @@ export async function runAppWithOutput(
       const arg = args?.[0];
       return typeof arg === "string"
         ? arg
-        : (arg as Buffer | Uint8Array)?.toString?.() ?? "";
+        : ((arg as Buffer | Uint8Array)?.toString?.() ?? "");
     })
     .join("");
   const trimmed = full.trimEnd();
@@ -59,7 +59,7 @@ export async function runAppWithStdout(
       const arg = args?.[0];
       return typeof arg === "string"
         ? arg
-        : (arg as Buffer | Uint8Array)?.toString?.() ?? "";
+        : ((arg as Buffer | Uint8Array)?.toString?.() ?? "");
     })
     .join("");
   return { stdout };

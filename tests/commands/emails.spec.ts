@@ -1,7 +1,11 @@
 import { afterAll, afterEach, describe, expect, it } from "vitest";
 import { app } from "#/app.js";
 import { disableFetchMocks } from "../test-utils/cli-mocks.js";
-import { runApp, runAppWithOutput, runAppWithStdout } from "../test-utils/helpers.js";
+import {
+  runApp,
+  runAppWithOutput,
+  runAppWithStdout,
+} from "../test-utils/helpers.js";
 import {
   mockErrorResponse,
   mockSuccessResponse,

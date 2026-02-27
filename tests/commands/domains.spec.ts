@@ -2,7 +2,10 @@ import { afterAll, afterEach, describe, expect, it } from "vitest";
 import { app } from "#/app.js";
 import { disableFetchMocks } from "../test-utils/cli-mocks.js";
 import { runAppWithOutput, runAppWithStdout } from "../test-utils/helpers.js";
-import { mockErrorResponse, mockSuccessResponse } from "../test-utils/mock-fetch.js";
+import {
+  mockErrorResponse,
+  mockSuccessResponse,
+} from "../test-utils/mock-fetch.js";
 import { domains as domainSnapshots, errors } from "../test-utils/snapshots.js";
 
 describe("domains", () => {

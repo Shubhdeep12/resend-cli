@@ -87,11 +87,7 @@ describe("Smoke (one happy path per group)", () => {
 
   it("keys list --json", async () => {
     mockSuccessResponse(apiKeys.list);
-    const { output } = await runAppWithOutput(app, [
-      "keys",
-      "list",
-      "--json",
-    ]);
+    const { output } = await runAppWithOutput(app, ["keys", "list", "--json"]);
     expect(fetchMock).toHaveBeenCalled();
     expect(output).toEqual(apiKeys.list);
   });

@@ -5,8 +5,8 @@ import pc from "picocolors";
 import type { Broadcast, ListBroadcastsResponseSuccess } from "resend";
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
-import { createSpinner } from "../lib/ui.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
+import { createSpinner } from "../lib/ui.js";
 import { parseLimit, parseString } from "../lib/validators/index.js";
 
 export const broadcastsRouteMap = buildRouteMap({
