@@ -29,22 +29,18 @@ export async function runAppWithOutput(
   await run(app, argv, { process });
   const calls = writeSpy.mock.calls;
   writeSpy.mockRestore();
-  for (let i = calls.length - 1; i >= 0; i--) {
-    const arg = calls[i]?.[0];
-    const str =
-      typeof arg === "string"
+  const full = calls
+    .map((args) => {
+      const arg = args?.[0];
+      return typeof arg === "string"
         ? arg
-        : (arg as Buffer | Uint8Array)?.toString?.();
-    if (typeof str === "string") {
-      const trimmed = str.trimEnd();
-      try {
-        return { output: JSON.parse(trimmed) as unknown };
-      } catch {
-        // not JSON
-      }
-    }
-  }
-  return { output: undefined };
+        : (arg as Buffer | Uint8Array)?.toString?.() ?? "";
+    })
+    .join("");
+  const trimmed = full.trimEnd();
+  if (!trimmed) return { output: undefined };
+  // In --json mode, stdout must be a single JSON document with no extra noise.
+  return { output: JSON.parse(trimmed) as unknown };
 }
 
 /** Run the built CLI binary (used by app.spec for --help, --version). */
