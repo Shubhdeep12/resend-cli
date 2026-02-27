@@ -11,6 +11,12 @@ const fetchMocker = createFetchMock(
 );
 fetchMocker.enableMocks();
 
+// Ensure all HTTP clients (including the Resend SDK and any code that
+// captured global fetch early) use the mocked fetch implementation.
+// vitest-fetch-mock exposes `fetchMock` on the global scope.
+// biome-ignore lint/suspicious/noExplicitAny: fetchMock is a global variable
+(globalThis as any).fetch = (globalThis as any).fetchMock;
+
 export function disableFetchMocks(): void {
   fetchMocker.disableMocks();
 }
