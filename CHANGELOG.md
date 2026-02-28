@@ -1,5 +1,12 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.6
+
+### Patch Changes
+
+- 588739d: - cosmetic changes
+  - Added upgrade command and version checks
+
 ## 0.4.5
 
 ### Patch Changes
