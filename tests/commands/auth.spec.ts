@@ -8,7 +8,11 @@ import {
   vi,
 } from "vitest";
 import { app } from "#/app.js";
-import { disableFetchMocks, enableFetchMocks, resetConfigMock } from "../test-utils/cli-mocks.js";
+import {
+  disableFetchMocks,
+  enableFetchMocks,
+  resetConfigMock,
+} from "../test-utils/cli-mocks.js";
 import { runApp } from "../test-utils/helpers.js";
 
 describe("auth commands", () => {
