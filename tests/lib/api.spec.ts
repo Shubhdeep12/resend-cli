@@ -4,7 +4,7 @@ const configStore = vi.hoisted(() => ({
   apiKey: undefined as string | undefined,
 }));
 
-vi.mock("#/lib/config.js", () => ({
+vi.mock("#/lib/config/index.js", () => ({
   config: {
     get apiKey(): string | undefined {
       return configStore.apiKey;

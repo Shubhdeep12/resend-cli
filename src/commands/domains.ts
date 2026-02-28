@@ -1,4 +1,3 @@
-import * as p from "@clack/prompts";
 import { buildCommand, buildRouteMap } from "@stricli/core";
 import pc from "picocolors";
 import type {
@@ -10,6 +9,7 @@ import type {
 import { ResendClient } from "../lib/api.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
+import * as p from "../lib/prompts.js";
 import { createSpinner } from "../lib/ui.js";
 import { parseLimit, parseString } from "../lib/validators/index.js";
 

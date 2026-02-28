@@ -1,15 +1,15 @@
-import * as p from "@clack/prompts";
 import { buildCommand, buildRouteMap } from "@stricli/core";
 import pc from "picocolors";
 import {
   getDefaultAddKeyName,
   getDefaultLoginName,
 } from "../lib/auth/index.js";
-import { config } from "../lib/config.js";
+import { config } from "../lib/config/index.js";
 import { ENV, MESSAGES } from "../lib/constants/index.js";
 import { maskApiKey } from "../lib/formatters/index.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
+import * as p from "../lib/prompts.js";
 import type { LoginAction } from "../lib/types/index.js";
 import { parseString } from "../lib/validators/index.js";
 
@@ -50,7 +50,7 @@ export const loginCommand = buildCommand({
 
       if (p.isCancel(actionResult)) {
         p.cancel("Login cancelled.");
-        process.exit(0);
+        process.exit(p.CANCEL_EXIT_CODE);
       }
       const action = actionResult as LoginAction;
 
@@ -84,7 +84,7 @@ export const loginCommand = buildCommand({
         });
         if (p.isCancel(picked)) {
           p.cancel("Login cancelled.");
-          process.exit(0);
+          process.exit(p.CANCEL_EXIT_CODE);
         }
         config.selectKey(picked as string);
         stdout(formatSuccess(`Selected '${picked as string}' as active key.`));
@@ -106,7 +106,7 @@ export const loginCommand = buildCommand({
         });
         if (p.isCancel(nameInput)) {
           p.cancel("Login cancelled.");
-          process.exit(0);
+          process.exit(p.CANCEL_EXIT_CODE);
         }
         name = (nameInput as string).trim();
       }
@@ -122,7 +122,7 @@ export const loginCommand = buildCommand({
       });
       if (p.isCancel(entered)) {
         p.cancel("Login cancelled.");
-        process.exit(0);
+        process.exit(p.CANCEL_EXIT_CODE);
       }
       apiKey = entered as string;
     }

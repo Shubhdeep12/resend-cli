@@ -1,4 +1,3 @@
-import * as p from "@clack/prompts";
 import { buildCommand, buildRouteMap } from "@stricli/core";
 import pc from "picocolors";
 import type {
@@ -7,6 +6,7 @@ import type {
   LegacyCreateContactOptions,
 } from "resend";
 import { ResendClient } from "../lib/api.js";
+import { CliError } from "../lib/errors.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
 import { createSpinner } from "../lib/ui.js";
@@ -1050,7 +1050,7 @@ export const contactsRouteMap = buildRouteMap({
                       t.subscription === "opt_out"),
                 )
               ) {
-                throw new Error("Invalid");
+                throw new CliError("Invalid");
               }
             } catch {
               stdout(

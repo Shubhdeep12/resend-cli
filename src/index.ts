@@ -2,8 +2,11 @@
 import { run } from "@stricli/core";
 import pkg from "../package.json" with { type: "json" };
 import { app } from "./app.js";
-import { logger } from "./lib/logger.js";
+import { setupCliExitHandler } from "./lib/cli-exit.js";
+import { formatAndWriteError } from "./lib/errors.js";
 import { printWelcome } from "./lib/logo.js";
+
+setupCliExitHandler();
 
 const args = process.argv.slice(2);
 
@@ -13,9 +16,6 @@ if (args.length === 0) {
 }
 
 run(app, args, { process }).catch((err) => {
-  logger.error(
-    { err: err instanceof Error ? err.message : String(err) },
-    "Unhandled error",
-  );
+  formatAndWriteError(err);
   process.exitCode = process.exitCode ?? 1;
 });

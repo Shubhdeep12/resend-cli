@@ -49,7 +49,8 @@ describe("Config", () => {
 
   describe("apiKey", () => {
     it("returns selected saved key when present", async () => {
-      const { config } = await import("#/lib/config.js");
+      delete process.env[envKey];
+      const { config } = await import("#/lib/config/index.js");
       config.saveKey("work", "re_work");
       config.selectKey("work");
       expect(config.apiKey).toBe("re_work");
@@ -57,13 +58,13 @@ describe("Config", () => {
 
     it("returns RESEND_API_KEY from env when store is empty", async () => {
       process.env[envKey] = "re_from_env";
-      const { config } = await import("#/lib/config.js");
+      const { config } = await import("#/lib/config/index.js");
       expect(config.apiKey).toBe("re_from_env");
     });
 
     it("prefers env over saved key when both are set", async () => {
       process.env[envKey] = "re_env";
-      const { config } = await import("#/lib/config.js");
+      const { config } = await import("#/lib/config/index.js");
       config.saveKey("work", "re_store");
       config.selectKey("work");
       expect(config.apiKey).toBe("re_env");
@@ -71,7 +72,7 @@ describe("Config", () => {
 
     it("returns undefined when neither store nor env set", async () => {
       delete process.env[envKey];
-      const { config } = await import("#/lib/config.js");
+      const { config } = await import("#/lib/config/index.js");
       config.clear();
       expect(config.apiKey).toBeUndefined();
     });
@@ -79,13 +80,13 @@ describe("Config", () => {
 
   describe("defaultFrom", () => {
     it("returns value when set", async () => {
-      const { config } = await import("#/lib/config.js");
+      const { config } = await import("#/lib/config/index.js");
       config.defaultFrom = "sender@example.com";
       expect(config.defaultFrom).toBe("sender@example.com");
     });
 
     it("returns undefined when not set", async () => {
-      const { config } = await import("#/lib/config.js");
+      const { config } = await import("#/lib/config/index.js");
       config.clear();
       expect(config.defaultFrom).toBeUndefined();
     });
@@ -93,7 +94,7 @@ describe("Config", () => {
 
   describe("clear", () => {
     it("clears stored values", async () => {
-      const { config } = await import("#/lib/config.js");
+      const { config } = await import("#/lib/config/index.js");
       config.apiKey = "re_xxx";
       config.defaultFrom = "a@b.com";
       config.clear();
@@ -105,7 +106,7 @@ describe("Config", () => {
 
   describe("saved keys", () => {
     it("stores and lists named keys", async () => {
-      const { config } = await import("#/lib/config.js");
+      const { config } = await import("#/lib/config/index.js");
       config.saveKey("work", "re_work");
       config.saveKey("personal", "re_personal");
       expect(config.listKeys()).toEqual([
@@ -115,7 +116,7 @@ describe("Config", () => {
     });
 
     it("selects and removes keys", async () => {
-      const { config } = await import("#/lib/config.js");
+      const { config } = await import("#/lib/config/index.js");
       config.saveKey("work", "re_work");
       config.selectKey("work");
       expect(config.selectedKeyName).toBe("work");
@@ -124,7 +125,8 @@ describe("Config", () => {
     });
 
     it("clearSavedKeys clears keys and selected key without set(undefined)", async () => {
-      const { config } = await import("#/lib/config.js");
+      delete process.env[envKey];
+      const { config } = await import("#/lib/config/index.js");
       config.saveKey("work", "re_work");
       config.selectKey("work");
       config.clearSavedKeys();

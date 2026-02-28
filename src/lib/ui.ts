@@ -1,4 +1,4 @@
-import * as p from "@clack/prompts";
+import * as p from "./prompts.js";
 
 type Spinner = {
   start: (message: string) => void;

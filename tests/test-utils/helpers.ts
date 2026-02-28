@@ -1,3 +1,4 @@
+import { mkdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,6 +10,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.join(__dirname, "..", "..");
 
 export const DUMMY_API_KEY = "re_test_dummy_key";
+
+/** Temp config dir for runCli so the spawned CLI never writes to the user's real config. */
+const TEST_CONFIG_DIR = path.join(projectRoot, "node_modules", ".cache", "resend-cli-test-config");
 
 /** Run CLI in-process (fetch mocked in specs that import cli-mocks). */
 export function runApp(
@@ -65,12 +69,13 @@ export async function runAppWithStdout(
   return { stdout };
 }
 
-/** Run the built CLI binary (used by app.spec for --help, --version). */
+/** Run the built CLI binary (app.spec). Uses RESEND_CLI_CONFIG_DIR so the spawned process never touches the user's real config. */
 export function runCli(args: string[]): {
   stdout: string;
   stderr: string;
   status: number | null;
 } {
+  mkdirSync(TEST_CONFIG_DIR, { recursive: true });
   const cliPath = path.join(projectRoot, "dist", "index.cjs");
   const result = spawnSync("node", [cliPath, ...args], {
     encoding: "utf8",
@@ -78,6 +83,7 @@ export function runCli(args: string[]): {
     env: {
       ...process.env,
       RESEND_API_KEY: process.env.RESEND_API_KEY ?? DUMMY_API_KEY,
+      RESEND_CLI_CONFIG_DIR: TEST_CONFIG_DIR,
     },
   });
   return {

@@ -1,4 +1,3 @@
-import * as p from "@clack/prompts";
 import { buildCommand, buildRouteMap } from "@stricli/core";
 import pc from "picocolors";
 import type { Topic } from "resend";

@@ -17,7 +17,7 @@ export function resetConfigMock(): void {
   selectedKeyName = "default";
 }
 
-vi.mock("#/lib/config.js", () => ({
+vi.mock("#/lib/config/index.js", () => ({
   config: {
     get apiKey() {
       const keys = Object.keys(inMemoryKeys);
@@ -81,6 +81,9 @@ vi.mock("@clack/prompts", () => ({
   cancel: vi.fn(),
   isCancel: vi.fn(() => false),
   text: vi.fn().mockResolvedValue(DUMMY_API_KEY),
+  select: vi.fn().mockResolvedValue("use"),
+  confirm: vi.fn().mockResolvedValue(true),
+  multiselect: vi.fn().mockResolvedValue([]),
   note: vi.fn(),
   spinner: () => ({
     start: vi.fn(),
