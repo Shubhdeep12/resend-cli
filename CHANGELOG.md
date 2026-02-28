@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.5
+
+### Patch Changes
+
+- 99b7e9d: Fixed Skills and release script
+
 ## 0.4.4
 
 ### Patch Changes

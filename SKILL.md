@@ -4,7 +4,7 @@ description: Use when the user wants to run Resend operations from the command l
 license: MIT
 metadata:
   author: Shubhdeep
-  version: "0.4.3"
+  version: "0.4.5"
   homepage: https://github.com/Shubhdeep12/resend-cli
   source: https://github.com/Shubhdeep12/resend-cli
 inputs:
