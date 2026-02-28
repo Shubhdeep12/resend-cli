@@ -10,6 +10,7 @@ import { emailsRouteMap } from "./commands/emails.js";
 import { segmentsRouteMap } from "./commands/segments.js";
 import { templatesRouteMap } from "./commands/templates.js";
 import { topicsRouteMap } from "./commands/topics.js";
+import { upgradeRouteMap } from "./commands/upgrade.js";
 import { webhooksRouteMap } from "./commands/webhooks.js";
 
 const version = (pkg as { version: string }).version;
@@ -27,6 +28,7 @@ const root = buildRouteMap({
     topics: topicsRouteMap,
     "contact-properties": contactPropertiesRouteMap,
     templates: templatesRouteMap,
+    upgrade: upgradeRouteMap,
   },
   docs: {
     brief: "CLI for Resend - Power your emails with code",

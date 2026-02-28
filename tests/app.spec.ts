@@ -28,6 +28,7 @@ describe("Resend CLI (app)", () => {
       expect(stdout).toContain("resend keys");
       expect(stdout).toContain("resend segments");
       expect(stdout).toContain("resend templates");
+      expect(stdout).toContain("resend upgrade");
       expect(stdout).toContain("--help");
       expect(stdout).toContain("--version");
     });

@@ -4,4 +4,6 @@ export interface ConfigSchema {
   apiKey?: string;
   defaultFrom?: string;
   profile?: string;
+  /** Timestamp of last version check (for upgrade notice throttle). */
+  lastVersionCheckAt?: number;
 }

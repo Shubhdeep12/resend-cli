@@ -1840,3 +1840,41 @@ resend templates publish --help
 [--json/--no-json]  Output results as JSON
 -h  --help             Print help information and exit
 ```
+
+## resend upgrade
+
+Check for updates and show upgrade instructions
+
+**Usage**
+
+```bash
+resend upgrade check
+resend upgrade --help
+```
+
+**Flags**
+
+```text
+-h --help  Print help information and exit
+```
+
+**Subcommands**
+
+- `check`: Check for a new version and show upgrade instructions
+
+## resend upgrade check
+
+Check for a new version and show upgrade instructions
+
+**Usage**
+
+```bash
+resend upgrade check
+resend upgrade check --help
+```
+
+**Flags**
+
+```text
+-h --help  Print help information and exit
+```

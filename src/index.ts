@@ -5,17 +5,32 @@ import { app } from "./app.js";
 import { setupCliExitHandler } from "./lib/cli-exit.js";
 import { formatAndWriteError } from "./lib/errors.js";
 import { printWelcome } from "./lib/logo.js";
+import { notifyIfOutdated } from "./lib/version-check.js";
 
 setupCliExitHandler();
 
 const args = process.argv.slice(2);
+const version = (pkg as { version: string }).version;
 
 if (args.length === 0) {
-  printWelcome((pkg as { version: string }).version);
+  printWelcome(version);
   process.exit(0);
 }
 
-run(app, args, { process }).catch((err) => {
-  formatAndWriteError(err);
-  process.exitCode = process.exitCode ?? 1;
-});
+const isHelpOrVersion =
+  args.includes("--help") ||
+  args.includes("-h") ||
+  args.includes("--version") ||
+  args.includes("-V");
+const isUpgradeCommand = args[0] === "upgrade";
+
+run(app, args, { process })
+  .then(async () => {
+    if (!isHelpOrVersion && !isUpgradeCommand) {
+      await notifyIfOutdated(version).catch(() => {});
+    }
+  })
+  .catch((err) => {
+    formatAndWriteError(err);
+    process.exitCode = process.exitCode ?? 1;
+  });

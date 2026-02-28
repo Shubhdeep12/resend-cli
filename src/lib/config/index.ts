@@ -79,6 +79,19 @@ export class Config {
   clearSavedKeys(): void {
     this.keyring.clearSavedKeys();
   }
+
+  /** Timestamp of last version check (used to throttle upgrade notice). */
+  get lastVersionCheckAt(): number | undefined {
+    return this.store.get("lastVersionCheckAt");
+  }
+
+  set lastVersionCheckAt(value: number | undefined) {
+    if (value === undefined) {
+      this.store.delete("lastVersionCheckAt");
+      return;
+    }
+    this.store.set("lastVersionCheckAt", value);
+  }
 }
 
 export const config = new Config();
