@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.4
+
+### Patch Changes
+
+- 2da9f4e: Skills added
+
 ## 0.4.3
 
 ### Patch Changes
