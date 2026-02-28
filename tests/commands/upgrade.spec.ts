@@ -1,11 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { app } from "#/app.js";
-import { resetConfigMock } from "../test-utils/cli-mocks.js";
+import { enableFetchMocks, resetConfigMock } from "../test-utils/cli-mocks.js";
 import { runAppWithStdout } from "../test-utils/helpers.js";
 import { mockSuccessResponse } from "../test-utils/mock-fetch.js";
 
 describe("upgrade", () => {
-  beforeEach(resetConfigMock);
+  beforeEach(() => {
+    enableFetchMocks();
+    resetConfigMock();
+  });
   afterEach(() => fetchMock.resetMocks());
 
   it("upgrade check: when on latest, prints success", async () => {

@@ -6,11 +6,16 @@
 import { vi } from "vitest";
 import createFetchMock from "vitest-fetch-mock";
 
-const fetchMocker = createFetchMock(
+const fetchMock = createFetchMock(
   vi as Parameters<typeof createFetchMock>[0],
 );
-fetchMocker.enableMocks();
+fetchMock.enableMocks();
+
+/** Re-enable the fetch mock (e.g. in beforeEach) so it is active in the current context. */
+export function enableFetchMocks(): void {
+  fetchMock.enableMocks();
+}
 
 export function disableFetchMocks(): void {
-  fetchMocker.disableMocks();
+  fetchMock.disableMocks();
 }

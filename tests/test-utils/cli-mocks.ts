@@ -2,6 +2,10 @@ import { vi } from "vitest";
 import * as fetchMockSetup from "./enable-fetch-mock.js";
 import { DUMMY_API_KEY } from "./helpers.js";
 
+export function enableFetchMocks(): void {
+  fetchMockSetup.enableFetchMocks();
+}
+
 export function disableFetchMocks(): void {
   fetchMockSetup.disableFetchMocks();
 }

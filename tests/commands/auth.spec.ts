@@ -8,11 +8,14 @@ import {
   vi,
 } from "vitest";
 import { app } from "#/app.js";
-import { disableFetchMocks, resetConfigMock } from "../test-utils/cli-mocks.js";
+import { disableFetchMocks, enableFetchMocks, resetConfigMock } from "../test-utils/cli-mocks.js";
 import { runApp } from "../test-utils/helpers.js";
 
 describe("auth commands", () => {
-  beforeEach(resetConfigMock);
+  beforeEach(() => {
+    enableFetchMocks();
+    resetConfigMock();
+  });
   afterEach(() => fetchMock.resetMocks());
   afterAll(disableFetchMocks);
 

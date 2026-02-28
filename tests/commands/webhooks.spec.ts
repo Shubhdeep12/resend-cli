@@ -1,12 +1,15 @@
 import { afterAll, afterEach, beforeEach, describe, expect, it } from "vitest";
 import { app } from "#/app.js";
-import { disableFetchMocks, resetConfigMock } from "../test-utils/cli-mocks.js";
+import { disableFetchMocks, enableFetchMocks, resetConfigMock } from "../test-utils/cli-mocks.js";
 import { runAppWithOutput } from "../test-utils/helpers.js";
 import { mockSuccessResponse } from "../test-utils/mock-fetch.js";
 import { webhooks as webhookSnapshots } from "../test-utils/snapshots.js";
 
 describe("webhooks", () => {
-  beforeEach(resetConfigMock);
+  beforeEach(() => {
+    enableFetchMocks();
+    resetConfigMock();
+  });
   afterEach(() => fetchMock.resetMocks());
   afterAll(disableFetchMocks);
 

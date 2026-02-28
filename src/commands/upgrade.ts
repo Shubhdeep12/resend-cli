@@ -1,13 +1,10 @@
 import { buildCommand, buildRouteMap } from "@stricli/core";
-import pkg from "../../package.json" with { type: "json" };
 import pc from "picocolors";
+import pkg from "../../package.json" with { type: "json" };
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess } from "../lib/output.js";
 import { createSpinner } from "../lib/ui.js";
-import {
-  getLatestVersion,
-  isNewer,
-} from "../lib/version-check.js";
+import { getLatestVersion, isNewer } from "../lib/version-check.js";
 
 const currentVersion = (pkg as { version: string }).version;
 const PACKAGE_NAME = "@shubhdeep12/resend-cli";
