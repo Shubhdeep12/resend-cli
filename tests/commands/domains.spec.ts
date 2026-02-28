@@ -1,6 +1,10 @@
 import { afterAll, afterEach, beforeEach, describe, expect, it } from "vitest";
 import { app } from "#/app.js";
-import { disableFetchMocks, enableFetchMocks, resetConfigMock } from "../test-utils/cli-mocks.js";
+import {
+  disableFetchMocks,
+  enableFetchMocks,
+  resetConfigMock,
+} from "../test-utils/cli-mocks.js";
 import { runAppWithOutput, runAppWithStdout } from "../test-utils/helpers.js";
 import {
   mockErrorResponse,

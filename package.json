@@ -1,6 +1,6 @@
 {
   "name": "@shubhdeep12/resend-cli",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "type": "module",
   "description": "CLI for Resend",
   "license": "MIT",
