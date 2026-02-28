@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.3
+
+### Patch Changes
+
+- f3cfb1c: Binaries Support
+
 ## 0.4.2
 
 ### Patch Changes
