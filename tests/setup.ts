@@ -3,7 +3,7 @@
  * - Enables fetch mock so the Resend SDK (loaded via app) uses it.
  * - Uses a temp config dir and dummy API key so (1) first run has a key, (2) no test writes to user config.
  */
-import { rmSync, mkdirSync } from "node:fs";
+import { mkdirSync, rmSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import "./test-utils/enable-fetch-mock.js";

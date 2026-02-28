@@ -1,5 +1,5 @@
-import { mkdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import { mkdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { run } from "@stricli/core";
@@ -12,7 +12,12 @@ const projectRoot = path.join(__dirname, "..", "..");
 export const DUMMY_API_KEY = "re_test_dummy_key";
 
 /** Temp config dir for runCli so the spawned CLI never writes to the user's real config. */
-const TEST_CONFIG_DIR = path.join(projectRoot, "node_modules", ".cache", "resend-cli-test-config");
+const TEST_CONFIG_DIR = path.join(
+  projectRoot,
+  "node_modules",
+  ".cache",
+  "resend-cli-test-config",
+);
 
 /** Run CLI in-process (fetch mocked in specs that import cli-mocks). */
 export function runApp(
