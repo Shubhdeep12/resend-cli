@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import { createRequire } from "node:module";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -105,9 +106,28 @@ if (process.platform === "darwin" && exists("codesign")) {
 }
 
 const fuse = "NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2";
+
+const require = createRequire(import.meta.url);
+const postjectPkgPath = require.resolve("postject/package.json", {
+  paths: [repoRoot],
+});
+const postjectPkg = JSON.parse(fs.readFileSync(postjectPkgPath, "utf8"));
+const postjectBinRel =
+  typeof postjectPkg.bin === "string"
+    ? postjectPkg.bin
+    : (postjectPkg.bin?.postject ??
+      postjectPkg.bin?.Postject ??
+      postjectPkg.bin?.[Object.keys(postjectPkg.bin ?? {})[0]]);
+if (!postjectBinRel) {
+  throw new Error("Unable to resolve postject binary entry");
+}
+const postjectBinAbs = path.resolve(
+  path.dirname(postjectPkgPath),
+  postjectBinRel,
+);
+
 const postjectArgs = [
-  "exec",
-  "postject",
+  postjectBinAbs,
   outExePath,
   "NODE_SEA_BLOB",
   blobPath,
@@ -119,7 +139,7 @@ if (process.platform === "darwin") {
   postjectArgs.push("--macho-segment-name", "NODE_SEA");
 }
 
-run("pnpm", postjectArgs);
+run(process.execPath, postjectArgs);
 
 // macOS: ad-hoc sign so Gatekeeper is happier (optional, best-effort)
 if (process.platform === "darwin" && exists("codesign")) {

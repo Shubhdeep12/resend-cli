@@ -28,9 +28,9 @@ jobs:
             platform_id: linux-x64
           - os: windows-latest
             platform_id: win-x64
-          - os: macos-latest
+          - os: macos-14
             platform_id: darwin-arm64
-          - os: macos-latest
+          - os: macos-15-intel
             platform_id: darwin-x64
 
     steps:
