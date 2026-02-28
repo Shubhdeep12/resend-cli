@@ -6,7 +6,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import esbuild from "esbuild";
 
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const repoRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+);
 
 function run(cmd, args, opts = {}) {
   const result = spawnSync(cmd, args, {
@@ -128,8 +131,7 @@ if (process.platform !== "darwin") {
 
 console.log(
   `SEA binary created: ${path.relative(repoRoot, outExePath)} (${(
-    fs.statSync(outExePath).size /
-    (1024 * 1024)
+    fs.statSync(outExePath).size / (1024 * 1024)
   ).toFixed(1)} MiB)`,
 );
 
