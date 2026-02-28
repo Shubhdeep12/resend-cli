@@ -3,6 +3,7 @@
 Unofficial CLI for [Resend](https://resend.com)
 
 [![npm version](https://img.shields.io/npm/v/@shubhdeep12/resend-cli.svg)](https://www.npmjs.com/package/@shubhdeep12/resend-cli)
+[![Latest release](https://img.shields.io/github/v/release/Shubhdeep12/resend-cli?label=Download%20latest&style=for-the-badge)](https://github.com/Shubhdeep12/resend-cli/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
@@ -14,11 +15,16 @@ Unofficial CLI for [Resend](https://resend.com)
 
 ## Install
 
+**With Node.js (npm):**
+
 ```bash
 npm install -g @shubhdeep12/resend-cli
 # or try without installing
 npx @shubhdeep12/resend-cli --help
 ```
+
+**Standalone binaries (no Node.js required):**  
+[![Download latest](https://img.shields.io/github/v/release/Shubhdeep12/resend-cli?label=Download%20latest%20binary&style=for-the-badge)](https://github.com/Shubhdeep12/resend-cli/releases/latest) — pick your OS/arch on the release page. Extract the archive and run the executable (e.g. `resend-cli-<version>-darwin-arm64` or `resend-cli-<version>-win-x64.exe`). See the release notes for checksums.
 
 ## Quick Start
 

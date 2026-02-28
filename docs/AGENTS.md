@@ -2,6 +2,11 @@
 
 Use JSON mode for deterministic output and parsing.
 
+## Obtaining the CLI
+
+- **With Node.js:** `npm install -g @shubhdeep12/resend-cli` (or `npx @shubhdeep12/resend-cli` for one-off runs).
+- **Without Node.js:** Download the latest standalone binary for your OS/arch from [GitHub Releases](https://github.com/Shubhdeep12/resend-cli/releases/latest). Assets are named e.g. `resend-cli-<version>-linux-x64.tar.gz`, `resend-cli-<version>-darwin-arm64.tar.gz`, `resend-cli-<version>-win-x64.zip`. Extract and run the executable; no runtime required.
+
 ## Recommended Pattern
 
 ```bash
