@@ -162,12 +162,6 @@ export const broadcastsRouteMap = buildRouteMap({
             brief: "Segment ID to send to",
             optional: true,
           },
-          audience: {
-            kind: "parsed",
-            parse: parseString,
-            brief: "(Deprecated) Audience ID – use --segment-id",
-            optional: true,
-          },
           from: {
             kind: "parsed",
             parse: parseString,
@@ -239,7 +233,6 @@ export const broadcastsRouteMap = buildRouteMap({
       func: async (flags: {
         name?: string;
         segmentId?: string;
-        audience?: string;
         from?: string;
         subject?: string;
         html?: string;
@@ -252,10 +245,8 @@ export const broadcastsRouteMap = buildRouteMap({
         scheduledAt?: string;
         json?: boolean;
       }) => {
-        if (!flags.segmentId && !flags.audience) {
-          stdout(
-            formatError("Provide --segment-id (or deprecated --audience)."),
-          );
+        if (!flags.segmentId) {
+          stdout(formatError("Provide --segment-id."));
           return;
         }
         if (!flags.from || !flags.subject) {
@@ -298,8 +289,6 @@ export const broadcastsRouteMap = buildRouteMap({
           const payload = {
             ...(flags.name && { name: flags.name }),
             ...(flags.segmentId && { segmentId: flags.segmentId }),
-            ...(flags.audience &&
-              !flags.segmentId && { audienceId: flags.audience }),
             from: flags.from,
             subject: flags.subject,
             ...(html && { html }),

@@ -220,5 +220,5 @@ export const segmentsRouteMap = buildRouteMap({
       },
     }),
   },
-  docs: { brief: "Manage segments (audiences)" },
+  docs: { brief: "Manage segments" },
 });

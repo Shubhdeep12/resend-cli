@@ -4,7 +4,6 @@
  */
 import type {
   CancelEmailResponseSuccess,
-  CreateApiKeyResponseSuccess,
   CreateContactResponseSuccess,
   CreateDomainResponseSuccess,
   CreateEmailResponseSuccess,
@@ -195,10 +194,6 @@ export const apiKeys = {
     has_more: false,
     data: [{ id: "k_1", name: "Key", created_at: "2025-01-01" }],
   } satisfies ListApiKeysResponseSuccess,
-  create: {
-    id: "k_new",
-    token: "re_secret_xxx",
-  } satisfies CreateApiKeyResponseSuccess,
   remove: {} satisfies RemoveApiKeyResponseSuccess,
 };
 

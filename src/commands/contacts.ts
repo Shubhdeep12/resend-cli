@@ -1,10 +1,6 @@
 import { buildCommand, buildRouteMap } from "@stricli/core";
 import pc from "picocolors";
-import type {
-  Contact,
-  CreateContactOptions,
-  LegacyCreateContactOptions,
-} from "resend";
+import type { Contact, CreateContactOptions } from "resend";
 import { ResendClient } from "../lib/api.js";
 import { CliError } from "../lib/errors.js";
 import { stdout } from "../lib/logger.js";
@@ -21,12 +17,6 @@ export const contactsRouteMap = buildRouteMap({
             kind: "parsed",
             parse: parseString,
             brief: "Segment ID to list contacts in",
-            optional: true,
-          },
-          audience: {
-            kind: "parsed",
-            parse: parseString,
-            brief: "(Deprecated) Audience ID – use --segment-id",
             optional: true,
           },
           limit: {
@@ -53,14 +43,13 @@ export const contactsRouteMap = buildRouteMap({
             optional: true,
           },
         },
-        aliases: { s: "segmentId", a: "audience", l: "limit" },
+        aliases: { s: "segmentId", l: "limit" },
       },
       docs: {
         brief: "List contacts (optionally in a segment); supports pagination",
       },
       func: async (flags: {
         segmentId?: string;
-        audience?: string;
         limit?: number;
         after?: string;
         before?: string;
@@ -82,23 +71,17 @@ export const contactsRouteMap = buildRouteMap({
             flags.after != null
               ? {
                   ...(flags.segmentId && { segmentId: flags.segmentId }),
-                  ...(flags.audience &&
-                    !flags.segmentId && { audienceId: flags.audience }),
                   ...(flags.limit != null && { limit: flags.limit }),
                   after: flags.after,
                 }
               : flags.before != null
                 ? {
                     ...(flags.segmentId && { segmentId: flags.segmentId }),
-                    ...(flags.audience &&
-                      !flags.segmentId && { audienceId: flags.audience }),
                     ...(flags.limit != null && { limit: flags.limit }),
                     before: flags.before,
                   }
                 : {
                     ...(flags.segmentId && { segmentId: flags.segmentId }),
-                    ...(flags.audience &&
-                      !flags.segmentId && { audienceId: flags.audience }),
                     ...(flags.limit != null && { limit: flags.limit }),
                   };
           const { data, error } = await resend.contacts.list(listParams);
@@ -209,12 +192,6 @@ export const contactsRouteMap = buildRouteMap({
     create: buildCommand({
       parameters: {
         flags: {
-          audience: {
-            kind: "parsed",
-            parse: parseString,
-            brief: "(Deprecated) Audience ID – use segments",
-            optional: true,
-          },
           email: { kind: "parsed", parse: parseString, brief: "Contact email" },
           firstName: {
             kind: "parsed",
@@ -258,11 +235,10 @@ export const contactsRouteMap = buildRouteMap({
             optional: true,
           },
         },
-        aliases: { a: "audience", e: "email", f: "firstName", l: "lastName" },
+        aliases: { e: "email", f: "firstName", l: "lastName" },
       },
-      docs: { brief: "Create a contact (use --segments or legacy --audience)" },
+      docs: { brief: "Create a contact (use --segments to add to segments)" },
       func: async (flags: {
-        audience?: string;
         email: string;
         firstName?: string;
         lastName?: string;
@@ -276,32 +252,6 @@ export const contactsRouteMap = buildRouteMap({
         s.start(`Adding contact ${flags.email}...`);
         try {
           const resend = ResendClient.getInstance();
-          if (flags.audience) {
-            const payload: LegacyCreateContactOptions = {
-              audienceId: flags.audience,
-              email: flags.email,
-              ...(flags.firstName && { firstName: flags.firstName }),
-              ...(flags.lastName && { lastName: flags.lastName }),
-              ...(flags.unsubscribed !== undefined && {
-                unsubscribed: flags.unsubscribed,
-              }),
-              ...(flags.properties && {
-                properties: JSON.parse(flags.properties) as Record<
-                  string,
-                  string | number | null
-                >,
-              }),
-            };
-            const { data, error } = await resend.contacts.create(payload);
-            if (error) {
-              s.stop(formatError(error.message));
-              if (flags.json) stdout(JSON.stringify({ error }, null, 2));
-              return;
-            }
-            s.stop(formatSuccess(`Contact added! ID: ${data?.id}`));
-            if (flags.json) stdout(JSON.stringify(data, null, 2));
-            return;
-          }
           let segments: { id: string }[] | undefined;
           if (flags.segments) {
             try {

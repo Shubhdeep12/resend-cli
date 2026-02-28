@@ -661,9 +661,9 @@ Manage contacts and segment/topic membership
 **Usage**
 
 ```bash
-resend contacts list [--segment-id value] [--audience value] [--limit value] [--after value] [--before value] [--json]
+resend contacts list [--segment-id value] [--limit value] [--after value] [--before value] [--json]
 resend contacts get [--id value] [--email value] [--json] [<id-or-email>]
-resend contacts create [--audience value] (--email value) [--first-name value] [--last-name value] [--unsubscribed] [--properties value] [--segments value] [--topics value] [--json]
+resend contacts create (--email value) [--first-name value] [--last-name value] [--unsubscribed] [--properties value] [--segments value] [--topics value] [--json]
 resend contacts update [--id value] [--email value] [--first-name value] [--last-name value] [--unsubscribed] [--properties value] [--json] [<id-or-email>]
 resend contacts remove [--json] <id-or-email>
 resend contacts segments add|list|remove ...
@@ -681,7 +681,7 @@ resend contacts --help
 
 - `list`: List contacts (optionally in a segment); supports pagination
 - `get`: Get a contact by ID or email
-- `create`: Create a contact (use --segments or legacy --audience)
+- `create`: Create a contact (use --segments to add to segments)
 - `update`: Update a contact
 - `remove`: Remove a contact
 - `segments`: Manage contact segment membership
@@ -694,7 +694,7 @@ List contacts (optionally in a segment); supports pagination
 **Usage**
 
 ```bash
-resend contacts list [--segment-id value] [--audience value] [--limit value] [--after value] [--before value] [--json]
+resend contacts list [--segment-id value] [--limit value] [--after value] [--before value] [--json]
 resend contacts list --help
 ```
 
@@ -702,7 +702,6 @@ resend contacts list --help
 
 ```text
 -s [--segment-id]      Segment ID to list contacts in
--a [--audience]        (Deprecated) Audience ID – use --segment-id
 -l [--limit]           Max items to return (1-100)
 [--after]           Cursor: get items after this ID
 [--before]          Cursor: get items before this ID
@@ -732,19 +731,18 @@ resend contacts get --help
 
 ## resend contacts create
 
-Create a contact (use --segments or legacy --audience)
+Create a contact (use --segments to add to segments)
 
 **Usage**
 
 ```bash
-resend contacts create [--audience value] (--email value) [--first-name value] [--last-name value] [--unsubscribed] [--properties value] [--segments value] [--topics value] [--json]
+resend contacts create (--email value) [--first-name value] [--last-name value] [--unsubscribed] [--properties value] [--segments value] [--topics value] [--json]
 resend contacts create --help
 ```
 
 **Flags**
 
 ```text
--a [--audience]                        (Deprecated) Audience ID – use segments
 -e  --email                            Contact email
 -f [--first-name]                      First name
 -l [--last-name]                       Last name
@@ -964,7 +962,7 @@ Manage marketing broadcasts
 ```bash
 resend broadcasts list [--limit value] [--after value] [--before value] [--json]
 resend broadcasts get [--json] <id>
-resend broadcasts create [--name value] [--segment-id value] [--audience value] [--from value] [--subject value] [--html value] [--text value] [--html-file value] [--reply-to value] [--preview-text value] [--topic-id value] [--send] [--scheduled-at value] [--json]
+resend broadcasts create [--name value] [--segment-id value] [--from value] [--subject value] [--html value] [--text value] [--html-file value] [--reply-to value] [--preview-text value] [--topic-id value] [--send] [--scheduled-at value] [--json]
 resend broadcasts send [--scheduled-at value] [--json] <id>
 resend broadcasts update [--name value] [--segment-id value] [--from value] [--subject value] [--html value] [--text value] [--html-file value] [--reply-to value] [--preview-text value] [--topic-id value] [--json] <id>
 resend broadcasts remove [--json] <id>
@@ -1032,7 +1030,7 @@ Create a broadcast (draft or send now)
 **Usage**
 
 ```bash
-resend broadcasts create [--name value] [--segment-id value] [--audience value] [--from value] [--subject value] [--html value] [--text value] [--html-file value] [--reply-to value] [--preview-text value] [--topic-id value] [--send] [--scheduled-at value] [--json]
+resend broadcasts create [--name value] [--segment-id value] [--from value] [--subject value] [--html value] [--text value] [--html-file value] [--reply-to value] [--preview-text value] [--topic-id value] [--send] [--scheduled-at value] [--json]
 resend broadcasts create --help
 ```
 
@@ -1041,7 +1039,6 @@ resend broadcasts create --help
 ```text
 [--name]            Broadcast name
 [--segment-id]      Segment ID to send to
-[--audience]        (Deprecated) Audience ID – use --segment-id
 -f [--from]            Sender email address
 -s [--subject]         Email subject
 [--html]            HTML content
@@ -1257,7 +1254,6 @@ Manage API keys
 
 ```bash
 resend keys list [--limit value] [--after value] [--before value] [--json]
-resend keys create (--name value) [--permission value] [--domain-id value] [--json]
 resend keys delete [--json] <id>
 resend keys --help
 ```
@@ -1271,7 +1267,6 @@ resend keys --help
 **Subcommands**
 
 - `list`: List all API keys (supports pagination)
-- `create`: Create a new API key
 - `delete`: Delete an API key
 
 ## resend keys list
@@ -1291,27 +1286,6 @@ resend keys list --help
 -l [--limit]           Max items to return (1-100)
 [--after]           Cursor: get items after this ID
 [--before]          Cursor: get items before this ID
-[--json/--no-json]  Output results as JSON
--h  --help             Print help information and exit
-```
-
-## resend keys create
-
-Create a new API key
-
-**Usage**
-
-```bash
-resend keys create (--name value) [--permission value] [--domain-id value] [--json]
-resend keys create --help
-```
-
-**Flags**
-
-```text
--n  --name             API key name
--p [--permission]      Permission level (full_access, sending_access)
--d [--domain-id]       Domain ID to restrict key to
 [--json/--no-json]  Output results as JSON
 -h  --help             Print help information and exit
 ```
@@ -1336,7 +1310,7 @@ resend keys delete --help
 
 ## resend segments
 
-Manage segments (audiences)
+Manage segments
 
 **Usage**
 

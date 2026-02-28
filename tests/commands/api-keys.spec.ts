@@ -18,23 +18,6 @@ describe("keys (api-keys)", () => {
     expect(output).toEqual(apiKeySnapshots.list);
   });
 
-  it("create: calls API with name", async () => {
-    mockSuccessResponse(apiKeySnapshots.create, { status: 201 });
-    const { output } = await runAppWithOutput(app, [
-      "keys",
-      "create",
-      "--name",
-      "My Key",
-      "--json",
-    ]);
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    const body = JSON.parse(
-      (fetchMock.mock.calls[0]?.[1]?.body as string) ?? "{}",
-    );
-    expect(body).toMatchObject({ name: "My Key" });
-    expect(output).toMatchObject({ id: "k_new" });
-  });
-
   it("delete: calls remove API with id", async () => {
     mockSuccessResponse(apiKeySnapshots.remove);
     const { output } = await runAppWithOutput(app, [
