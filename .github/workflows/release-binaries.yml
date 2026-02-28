@@ -1,0 +1,110 @@
+name: Release Binaries
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to build/attach binaries for (e.g. v0.4.3)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }} / ${{ matrix.platform_id }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform_id: linux-x64
+          - os: windows-latest
+            platform_id: win-x64
+          - os: macos-13
+            platform_id: darwin-x64
+          - os: macos-14
+            platform_id: darwin-arm64
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build SEA binary
+        run: node scripts/build-sea.mjs
+
+      - name: Package (tar.gz)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          BIN="$(ls -1 bin/resend-cli-*-"${{ matrix.platform_id }}" 2>/dev/null | head -n 1)"
+          if [ -z "${BIN}" ]; then
+            echo "No binary found matching platform_id=${{ matrix.platform_id }}"
+            ls -la bin || true
+            exit 1
+          fi
+          TAR="release/$(basename "${BIN}").tar.gz"
+          tar -C "$(dirname "${BIN}")" -czf "${TAR}" "$(basename "${BIN}")"
+          if command -v shasum >/dev/null 2>&1; then
+            shasum -a 256 "${TAR}" > "${TAR}.sha256"
+          else
+            sha256sum "${TAR}" > "${TAR}.sha256"
+          fi
+
+      - name: Package (zip)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path release | Out-Null
+          $bin = Get-ChildItem -Path bin -Filter "resend-cli-*.exe" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+          if (-not $bin) { throw "No exe found in bin/" }
+          $zip = Join-Path release ($bin.BaseName + ".zip")
+          Compress-Archive -Path $bin.FullName -DestinationPath $zip -Force
+          $hash = (Get-FileHash -Algorithm SHA256 $zip).Hash.ToLower()
+          Set-Content -NoNewline -Path ($zip + ".sha256") -Value ("$hash  " + (Split-Path -Leaf $zip) + "`n")
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sea-${{ matrix.platform_id }}
+          path: release/*
+
+  publish:
+    name: Attach to GitHub Release
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create SHA256SUMS
+        shell: bash
+        run: |
+          set -euo pipefail
+          find artifacts -name "*.sha256" -type f -print0 | xargs -0 cat > SHA256SUMS
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          files: |
+            artifacts/**/*
+            SHA256SUMS
