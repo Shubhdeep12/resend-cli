@@ -12,20 +12,11 @@
     "resend-cli": "dist/index.cjs",
     "resend": "dist/index.cjs"
   },
-  "files": [
-    "dist/**",
-    "LICENSE",
-    "README.md"
-  ],
+  "files": ["dist/**", "LICENSE", "README.md"],
   "engines": {
     "node": ">=20"
   },
-  "keywords": [
-    "resend",
-    "email",
-    "cli",
-    "command-line"
-  ],
+  "keywords": ["resend", "email", "cli", "command-line"],
   "author": "Shubhdeep (@shubhdeep12)",
   "repository": {
     "type": "git",
@@ -77,8 +68,6 @@
     "vitest-fetch-mock": "0.4.5"
   },
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
+    "onlyBuiltDependencies": ["esbuild"]
   }
 }
