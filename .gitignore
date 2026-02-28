@@ -29,3 +29,6 @@ pnpm-debug.log*
 .tmp/
 docs/ignored/
 
+# skills (local install from npx skills add)
+.agents
+skills-lock.json

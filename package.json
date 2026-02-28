@@ -40,7 +40,7 @@
     "docs:check": "pnpm run build && node scripts/generate-command-docs.mjs --check",
     "changeset": "changeset",
     "version-packages": "pnpm changeset version && pnpm install --no-frozen-lockfile",
-    "release": "pnpm run version-packages && git add -A && (git diff --staged --quiet || (git commit -m \"chore: version packages\" && git push)) && pnpm publish --access public"
+    "release": "bash scripts/release.sh"
   },
   "dependencies": {
     "@clack/prompts": "0.2.2",
@@ -68,6 +68,6 @@
     "vitest-fetch-mock": "0.4.5"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
   }
 }

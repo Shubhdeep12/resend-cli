@@ -38,6 +38,8 @@ npx @shubhdeep12/resend-cli <group> <command> [options]
 
 **No Node.js:** Download the binary for your OS from [Releases](https://github.com/Shubhdeep12/resend-cli/releases/latest), extract, and run the executable.
 
+**Binaries:** Standalone executables (darwin arm64/x64, linux x64, windows x64) are built per release. No Node or npm required; download the archive for your platform, extract, and run (e.g. `resend-cli-<version>-darwin-arm64` or `resend-cli-<version>-win-x64.exe`). Checksums are on the release page.
+
 ## Behavior contract
 
 - **Exit code:** `0` on success, non-zero on failure.
