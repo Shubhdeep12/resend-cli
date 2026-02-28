@@ -3,9 +3,14 @@ name: Release Binaries
 on:
   workflow_dispatch:
     inputs:
-      tag:
-        description: "Tag to build/attach binaries for (e.g. v0.4.3)"
-        required: true
+      ref:
+        description: "Git ref to build from (branch, tag, or sha). Example: main or v0.4.3"
+        required: false
+        default: "main"
+        type: string
+      release_tag:
+        description: "If set, attach assets to this GitHub Release tag (e.g. v0.4.3). Leave empty to only upload workflow artifacts."
+        required: false
         type: string
 
 permissions:
@@ -23,15 +28,15 @@ jobs:
             platform_id: linux-x64
           - os: windows-latest
             platform_id: win-x64
-          - os: macos-13
-            platform_id: darwin-x64
-          - os: macos-14
+          - os: macos-latest
             platform_id: darwin-arm64
+          - os: macos-latest
+            platform_id: darwin-x64
 
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.tag }}
+          ref: ${{ inputs.ref }}
 
       - uses: pnpm/action-setup@v4
         with:
@@ -39,7 +44,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "20.18.2"
           cache: "pnpm"
 
       - name: Install dependencies
@@ -47,6 +52,31 @@ jobs:
 
       - name: Build SEA binary
         run: node scripts/build-sea.mjs
+
+      - name: Smoke test (unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          BIN="$(ls -1 bin/resend-cli-*-"${{ matrix.platform_id }}" 2>/dev/null | head -n 1)"
+          if [ -z "${BIN}" ]; then
+            echo "No binary found matching platform_id=${{ matrix.platform_id }}"
+            ls -la bin || true
+            exit 1
+          fi
+          chmod +x "${BIN}" || true
+          "${BIN}" --help >/dev/null
+
+      - name: Smoke test (windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $bin = Get-ChildItem -Path bin -Filter ("resend-cli-*-" + "${{ matrix.platform_id }}" + ".exe") | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+          if (-not $bin) {
+            $bin = Get-ChildItem -Path bin -Filter "resend-cli-*.exe" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+          }
+          if (-not $bin) { throw "No exe found in bin/" }
+          & $bin.FullName --help *> $null
 
       - name: Package (tar.gz)
         if: runner.os != 'Windows'
@@ -90,6 +120,7 @@ jobs:
     name: Attach to GitHub Release
     needs: [build]
     runs-on: ubuntu-latest
+    if: ${{ inputs.release_tag != '' }}
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -104,7 +135,7 @@ jobs:
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.tag }}
+          tag_name: ${{ inputs.release_tag }}
           files: |
             artifacts/**/*
             SHA256SUMS

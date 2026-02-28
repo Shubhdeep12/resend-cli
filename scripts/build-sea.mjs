@@ -4,7 +4,6 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import esbuild from "esbuild";
 
 const repoRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -40,17 +39,22 @@ function platformSuffix() {
   return `${plat}-${arch}`;
 }
 
+const skipBundle = process.argv.includes("--skip-bundle");
+
 const pkg = JSON.parse(
   fs.readFileSync(path.join(repoRoot, "package.json"), "utf8"),
 );
 const version = pkg.version;
 
 const outDir = path.join(repoRoot, "dist", "sea");
-const bundlePath = path.join(outDir, "resend-cli.bundle.cjs");
+const bundlePath = process.env.SEA_BUNDLE_PATH
+  ? path.resolve(repoRoot, process.env.SEA_BUNDLE_PATH)
+  : path.join(outDir, "resend-cli.bundle.cjs");
 const seaConfigPath = path.join(outDir, "sea-config.json");
 const blobPath = path.join(outDir, "sea-prep.blob");
 const binDir = path.join(repoRoot, "bin");
-const outBase = `resend-cli-${version}-${platformSuffix()}`;
+const targetSuffix = process.env.SEA_PLATFORM_SUFFIX || platformSuffix();
+const outBase = `resend-cli-${version}-${targetSuffix}`;
 const outExePath =
   process.platform === "win32"
     ? path.join(binDir, `${outBase}.exe`)
@@ -59,20 +63,23 @@ const outExePath =
 fs.mkdirSync(outDir, { recursive: true });
 fs.mkdirSync(binDir, { recursive: true });
 
-await esbuild.build({
-  entryPoints: [path.join(repoRoot, "src", "index.ts")],
-  outfile: bundlePath,
-  bundle: true,
-  platform: "node",
-  format: "cjs",
-  target: ["node20"],
-  minify: true,
-  sourcemap: false,
-  logLevel: "info",
-  define: {
-    "process.env.NODE_ENV": JSON.stringify("production"),
-  },
-});
+if (!skipBundle) {
+  const { default: esbuild } = await import("esbuild");
+  await esbuild.build({
+    entryPoints: [path.join(repoRoot, "src", "index.ts")],
+    outfile: bundlePath,
+    bundle: true,
+    platform: "node",
+    format: "cjs",
+    target: ["node20"],
+    minify: true,
+    sourcemap: false,
+    logLevel: "info",
+    define: {
+      "process.env.NODE_ENV": JSON.stringify("production"),
+    },
+  });
+}
 
 fs.writeFileSync(
   seaConfigPath,
@@ -84,9 +91,10 @@ fs.writeFileSync(
   "utf8",
 );
 
-run(process.execPath, ["--experimental-sea-config", seaConfigPath]);
+const seaExecutable = process.env.SEA_EXECUTABLE || process.execPath;
+run(seaExecutable, ["--experimental-sea-config", seaConfigPath]);
 
-fs.copyFileSync(process.execPath, outExePath);
+fs.copyFileSync(seaExecutable, outExePath);
 
 // macOS: remove existing signature before injection (best-effort)
 if (process.platform === "darwin" && exists("codesign")) {
