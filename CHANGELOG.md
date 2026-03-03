@@ -1,5 +1,12 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.7
+
+### Patch Changes
+
+- 670d6e4: fixed env support and auth logic.
+  added support for opening templates and broadcasts in browser editor
+
 ## 0.4.6
 
 ### Patch Changes
