@@ -26,7 +26,7 @@
     "url": "https://github.com/shubhdeep12/resend-cli/issues"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org/"
   },
   "homepage": "https://github.com/shubhdeep12/resend-cli#readme",
   "scripts": {
