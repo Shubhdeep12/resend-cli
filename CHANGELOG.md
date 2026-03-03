@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.12
+
+### Patch Changes
+
+- 5ee8395: updated release workflow and release commands
+
 ## 0.4.11
 
 ### Patch Changes
