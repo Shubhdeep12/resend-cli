@@ -33,3 +33,6 @@ jobs:
 
       - name: Test coverage
         run: pnpm run test:coverage
+
+      - name: Docs up to date
+        run: pnpm run docs:check

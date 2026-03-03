@@ -4,6 +4,7 @@ set -euo pipefail
 pnpm run version-packages
 node scripts/sync-skill-version.mjs
 pnpm run lint:fix
+pnpm run docs:generate
 
 git add -A
 
