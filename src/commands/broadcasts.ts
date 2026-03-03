@@ -3,7 +3,12 @@ import { buildCommand, buildRouteMap } from "@stricli/core";
 import pc from "picocolors";
 import type { Broadcast, ListBroadcastsResponseSuccess } from "resend";
 import { ResendClient } from "../lib/api.js";
-import { dashboardUrl, isLikelyId, openInBrowser } from "../lib/browser.js";
+import {
+  dashboardUrl,
+  isLikelyId,
+  openInBrowser,
+  waitForEnter,
+} from "../lib/browser.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
 import { createSpinner } from "../lib/ui.js";
@@ -231,8 +236,14 @@ export const broadcastsRouteMap = buildRouteMap({
         );
         stdout(url);
         const shouldOpen = flags.open !== false;
-        if (shouldOpen && openInBrowser(url)) {
-          stdout(pc.dim("Opened in browser."));
+        if (shouldOpen) {
+          if (process.stdin.isTTY) {
+            stdout(pc.dim("Press Enter to open in browser."));
+            await waitForEnter();
+          }
+          if (openInBrowser(url)) {
+            stdout(pc.dim("Opened in browser."));
+          }
         }
       },
     }),

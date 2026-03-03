@@ -3,6 +3,7 @@
  */
 import { spawn } from "node:child_process";
 import { platform } from "node:os";
+import * as readline from "node:readline";
 
 const DASHBOARD_BASE = "https://resend.com";
 
@@ -49,4 +50,17 @@ export function openInBrowser(url: string): boolean {
   } catch {
     return false;
   }
+}
+
+export function waitForEnter(): Promise<void> {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  return new Promise((resolve) => {
+    rl.question("", () => {
+      rl.close();
+      resolve();
+    });
+  });
 }
