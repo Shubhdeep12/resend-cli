@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.9
+
+### Patch Changes
+
+- ecc2c7b: added a confirmation step in between to open in browser
+
 ## 0.4.8
 
 ### Patch Changes
