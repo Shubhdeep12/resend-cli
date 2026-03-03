@@ -502,6 +502,109 @@ resend emails receiving attachments get --help
 -h  --help             Print help information and exit
 ```
 
+## resend metrics
+
+Metrics dashboard (emails, audience, broadcasts)
+
+**Usage**
+
+```bash
+resend metrics emails [--days value] [--json]
+resend metrics audience [--days value] [--json]
+resend metrics broadcasts [--days value] [--json]
+resend metrics dashboard [--days value] [--json]
+resend metrics --help
+```
+
+**Flags**
+
+```text
+-h --help  Print help information and exit
+```
+
+**Subcommands**
+
+- `emails`: Email metrics dashboard: totals + per-day graph (approximate dashboard view)
+- `audience`: Audience metrics: new contacts (subscribed) per day
+- `broadcasts`: Broadcast metrics: broadcasts sent per day
+- `dashboard`: Show 2–3 metrics charts: emails, audience, broadcasts
+
+## resend metrics emails
+
+Email metrics dashboard: totals + per-day graph (approximate dashboard view)
+
+**Usage**
+
+```bash
+resend metrics emails [--days value] [--json]
+resend metrics emails --help
+```
+
+**Flags**
+
+```text
+-d [--days]            Time window in days (1-30, default 15)
+[--json/--no-json]  Output results as JSON (for agents/scripts)
+-h  --help             Print help information and exit
+```
+
+## resend metrics audience
+
+Audience metrics: new contacts (subscribed) per day
+
+**Usage**
+
+```bash
+resend metrics audience [--days value] [--json]
+resend metrics audience --help
+```
+
+**Flags**
+
+```text
+-d [--days]            Time window in days (1-30, default 15)
+[--json/--no-json]  Output results as JSON
+-h  --help             Print help information and exit
+```
+
+## resend metrics broadcasts
+
+Broadcast metrics: broadcasts sent per day
+
+**Usage**
+
+```bash
+resend metrics broadcasts [--days value] [--json]
+resend metrics broadcasts --help
+```
+
+**Flags**
+
+```text
+-d [--days]            Time window in days (1-30, default 15)
+[--json/--no-json]  Output results as JSON
+-h  --help             Print help information and exit
+```
+
+## resend metrics dashboard
+
+Show 2–3 metrics charts: emails, audience, broadcasts
+
+**Usage**
+
+```bash
+resend metrics dashboard [--days value] [--json]
+resend metrics dashboard --help
+```
+
+**Flags**
+
+```text
+-d [--days]            Time window in days (1-30, default 15)
+[--json/--no-json]  Output results as JSON (emails + audience + broadcasts)
+-h  --help             Print help information and exit
+```
+
 ## resend domains
 
 Manage sending domains
@@ -962,6 +1065,7 @@ Manage marketing broadcasts
 ```bash
 resend broadcasts list [--limit value] [--after value] [--before value] [--json]
 resend broadcasts get [--json] <id>
+resend broadcasts open [--open] <id-or-name>
 resend broadcasts create [--name value] [--segment-id value] [--from value] [--subject value] [--html value] [--text value] [--html-file value] [--reply-to value] [--preview-text value] [--topic-id value] [--send] [--scheduled-at value] [--json]
 resend broadcasts send [--scheduled-at value] [--json] <id>
 resend broadcasts update [--name value] [--segment-id value] [--from value] [--subject value] [--html value] [--text value] [--html-file value] [--reply-to value] [--preview-text value] [--topic-id value] [--json] <id>
@@ -979,6 +1083,7 @@ resend broadcasts --help
 
 - `list`: List broadcasts (supports pagination)
 - `get`: Get broadcast details
+- `open`: Print editor URL and optionally open in browser (by ID or name)
 - `create`: Create a broadcast (draft or send now)
 - `send`: Send a draft broadcast
 - `update`: Update a draft broadcast
@@ -1020,6 +1125,24 @@ resend broadcasts get --help
 
 ```text
 [--json/--no-json]  Output results as JSON
+-h  --help             Print help information and exit
+```
+
+## resend broadcasts open
+
+Print editor URL and optionally open in browser (by ID or name)
+
+**Usage**
+
+```bash
+resend broadcasts open [--open] <id-or-name>
+resend broadcasts open --help
+```
+
+**Flags**
+
+```text
+[--open/--no-open]  Open URL in browser (default: true)
 -h  --help             Print help information and exit
 ```
 
@@ -1670,6 +1793,7 @@ Manage email templates (HTML only; no React)
 ```bash
 resend templates list [--limit value] [--after value] [--before value] [--json]
 resend templates get [--json] <id>
+resend templates open [--open] <id-or-name>
 resend templates create [--name value] [--html value] [--html-file value] [--subject value] [--text value] [--from value] [--alias value] [--reply-to value] [--variables value] [--json]
 resend templates update [--name value] [--html value] [--html-file value] [--subject value] [--text value] [--from value] [--alias value] [--reply-to value] [--variables value] [--json] <id>
 resend templates remove [--json] <id>
@@ -1688,6 +1812,7 @@ resend templates --help
 
 - `list`: List templates (supports pagination)
 - `get`: Get template by ID
+- `open`: Print editor URL and optionally open in browser (by ID or name)
 - `create`: Create a template (--name and --html or --html-file required)
 - `update`: Update a template
 - `remove`: Remove a template
@@ -1730,6 +1855,24 @@ resend templates get --help
 
 ```text
 [--json/--no-json]  Output results as JSON
+-h  --help             Print help information and exit
+```
+
+## resend templates open
+
+Print editor URL and optionally open in browser (by ID or name)
+
+**Usage**
+
+```bash
+resend templates open [--open] <id-or-name>
+resend templates open --help
+```
+
+**Flags**
+
+```text
+[--open/--no-open]  Open URL in browser (default: true)
 -h  --help             Print help information and exit
 ```
 
