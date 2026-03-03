@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.11
+
+### Patch Changes
+
+- 66a9efb: updated docs
+
 ## 0.4.10
 
 ### Patch Changes
