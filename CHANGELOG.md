@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.10
+
+### Patch Changes
+
+- 2e90081: - added metrics
+
 ## 0.4.9
 
 ### Patch Changes
