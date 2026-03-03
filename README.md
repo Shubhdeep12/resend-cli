@@ -38,6 +38,15 @@ resend emails list --json --limit 5
 RESEND_API_KEY="re_xxx" resend emails list --json
 ```
 
+## Authentication
+
+The CLI needs a Resend API key. It is resolved in this order:
+
+1. **`RESEND_API_KEY`** — Set in the environment or in a `.env` file in the current working directory. If set, this is always used.
+2. **Saved key** — From `resend auth login` (or `resend auth select`). Used only when `RESEND_API_KEY` is not set.
+
+So: **env (or `.env`) overrides saved keys.** Put `RESEND_API_KEY=re_xxx` in `.env` or export it; run from the directory that contains `.env` if you use a file.
+
 ## Documentation
 
 - [Commands](./docs/COMMANDS.md)

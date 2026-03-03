@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import "dotenv/config";
 import { run } from "@stricli/core";
 import pkg from "../package.json" with { type: "json" };
 import { app } from "./app.js";

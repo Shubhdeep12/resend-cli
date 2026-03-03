@@ -1,6 +1,6 @@
 export const MESSAGES = {
   apiKeyMissing:
-    "API key not found. Please run `resend auth login` or set RESEND_API_KEY environment variable.",
+    "API key not found. Set RESEND_API_KEY (env or .env) or run `resend auth login`.",
   noSavedKeys: "No saved keys. Run `resend auth login` to add one.",
   envOverrideHint:
     "RESEND_API_KEY is set and overrides saved keys for this process.",
