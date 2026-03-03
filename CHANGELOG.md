@@ -1,11 +1,5 @@
 # @shubhdeep12/resend-cli
 
-## 0.4.8
-
-### Patch Changes
-
-- 906f28c: added publish config
-
 ## 0.4.7
 
 ### Patch Changes
