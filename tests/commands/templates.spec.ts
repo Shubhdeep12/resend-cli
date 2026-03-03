@@ -1,13 +1,32 @@
-import { afterAll, afterEach, beforeEach, describe, expect, it } from "vitest";
+import {
+  afterAll,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 import { app } from "#/app.js";
 import {
   disableFetchMocks,
   enableFetchMocks,
   resetConfigMock,
 } from "../test-utils/cli-mocks.js";
-import { runAppWithOutput } from "../test-utils/helpers.js";
-import { mockSuccessResponse } from "../test-utils/mock-fetch.js";
+import { runAppWithOutput, runAppWithStdout } from "../test-utils/helpers.js";
+import {
+  mockErrorResponse,
+  mockSuccessResponse,
+} from "../test-utils/mock-fetch.js";
 import { templates as templateSnapshots } from "../test-utils/snapshots.js";
+
+vi.mock("#/lib/browser.js", async (importOriginal) => {
+  const mod = await importOriginal<typeof import("#/lib/browser.js")>();
+  return {
+    ...mod,
+    openInBrowser: vi.fn(() => true),
+  };
+});
 
 describe("templates", () => {
   beforeEach(() => {
@@ -120,5 +139,101 @@ describe("templates", () => {
       "/templates/tmpl_123/publish",
     );
     expect(output).toMatchObject({ id: "tmpl_123" });
+  });
+
+  describe("open", () => {
+    const validUuid = "883c4f07-a62e-4a13-9d84-7bf30b9cb8e7";
+
+    it("by ID: calls get, prints editor URL", async () => {
+      mockSuccessResponse(templateSnapshots.get);
+      const { stdout } = await runAppWithStdout(app, [
+        "templates",
+        "open",
+        validUuid,
+        "--no-open",
+      ]);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]?.[0]).toContain(`/templates/${validUuid}`);
+      expect(stdout).toContain(
+        `https://resend.com/templates/${validUuid}/editor`,
+      );
+    });
+
+    it("by ID: when get returns 404, prints error", async () => {
+      mockErrorResponse(
+        {
+          name: "not_found",
+          message: "Template not found",
+          statusCode: 404,
+        },
+        { status: 404 },
+      );
+      const { stdout } = await runAppWithStdout(app, [
+        "templates",
+        "open",
+        validUuid,
+        "--no-open",
+      ]);
+      expect(stdout).toContain(`No template found with ID "${validUuid}"`);
+    });
+
+    it("by name: resolves from list, prints editor URL", async () => {
+      mockSuccessResponse(templateSnapshots.list);
+      const { stdout } = await runAppWithStdout(app, [
+        "templates",
+        "open",
+        "Welcome",
+        "--no-open",
+      ]);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]?.[0]).toContain("/templates");
+      expect(stdout).toContain("https://resend.com/templates/tmpl_1/editor");
+    });
+
+    it("by name: when no match, prints error", async () => {
+      mockSuccessResponse(templateSnapshots.list);
+      const { stdout } = await runAppWithStdout(app, [
+        "templates",
+        "open",
+        "NonExistent",
+        "--no-open",
+      ]);
+      expect(stdout).toContain('No template found with name "NonExistent"');
+    });
+
+    it("by name: when multiple matches, prints error with hint", async () => {
+      mockSuccessResponse({
+        object: "list" as const,
+        has_more: false,
+        data: [
+          {
+            id: "tmpl_1",
+            name: "Dup",
+            status: "published" as const,
+            alias: null,
+            updated_at: "2025-01-01T00:00:00Z",
+            created_at: "2025-01-01T00:00:00Z",
+            published_at: "2025-01-01T00:00:00Z",
+          },
+          {
+            id: "tmpl_2",
+            name: "Dup",
+            status: "published" as const,
+            alias: null,
+            updated_at: "2025-01-01T00:00:00Z",
+            created_at: "2025-01-01T00:00:00Z",
+            published_at: "2025-01-01T00:00:00Z",
+          },
+        ],
+      });
+      const { stdout } = await runAppWithStdout(app, [
+        "templates",
+        "open",
+        "Dup",
+        "--no-open",
+      ]);
+      expect(stdout).toContain('Multiple templates named "Dup"');
+      expect(stdout).toContain("Use ID: tmpl_1");
+    });
   });
 });

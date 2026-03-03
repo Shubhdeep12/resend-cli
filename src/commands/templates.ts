@@ -7,6 +7,7 @@ import type {
   Template,
 } from "resend";
 import { ResendClient } from "../lib/api.js";
+import { dashboardUrl, isLikelyId, openInBrowser } from "../lib/browser.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess, formatTable } from "../lib/output.js";
 import { createSpinner } from "../lib/ui.js";
@@ -157,6 +158,92 @@ export const templatesRouteMap = buildRouteMap({
         } catch (err: unknown) {
           s.stop(formatError((err as Error).message));
           throw err;
+        }
+      },
+    }),
+    open: buildCommand({
+      parameters: {
+        flags: {
+          open: {
+            kind: "boolean",
+            brief: "Open URL in browser (default: true)",
+            optional: true,
+          },
+        },
+        positional: {
+          kind: "tuple",
+          parameters: [
+            {
+              parse: parseString,
+              brief: "Template ID or name",
+              placeholder: "id-or-name",
+            },
+          ],
+        },
+      },
+      docs: {
+        brief:
+          "Print editor URL and optionally open in browser (by ID or name)",
+      },
+      func: async (flags: { open?: boolean }, idOrName: string) => {
+        const resend = ResendClient.getInstance();
+        let id: string;
+
+        if (isLikelyId(idOrName)) {
+          const candidateId = idOrName.trim();
+          const { error } = await resend.templates.get(candidateId);
+          if (error) {
+            stdout(
+              formatError(
+                `No template found with ID "${candidateId}". ${error.message}`,
+              ),
+            );
+            return;
+          }
+          id = candidateId;
+        } else {
+          const name = idOrName.trim();
+          let after: string | undefined;
+          const matches: { id: string }[] = [];
+          let hasMore = true;
+          while (hasMore) {
+            const { data, error } = await resend.templates.list({
+              limit: 100,
+              ...(after && { after }),
+            });
+            if (error) {
+              stdout(formatError(error.message));
+              return;
+            }
+            const batch = data?.data ?? [];
+            const inBatch = batch.filter(
+              (t: { name?: string }) => (t.name ?? "").trim() === name,
+            );
+            matches.push(...inBatch);
+            hasMore = batch.length >= 100;
+            if (hasMore) after = batch[batch.length - 1].id;
+          }
+
+          if (matches.length === 0) {
+            stdout(formatError(`No template found with name "${name}".`));
+            return;
+          }
+          if (matches.length > 1) {
+            stdout(
+              formatError(
+                `Multiple templates named "${name}". Use ID: ${matches[0].id}`,
+              ),
+            );
+            return;
+          }
+          id = matches[0].id;
+        }
+
+        const url = dashboardUrl(`/templates/${encodeURIComponent(id)}/editor`);
+        stdout(url);
+        const shouldOpen = flags.open !== false;
+        if (shouldOpen && openInBrowser(url)) {
+          stdout(pc.dim("Opened in browser."));
         }
       },
     }),
