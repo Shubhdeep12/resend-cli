@@ -7,6 +7,7 @@ import { contactPropertiesRouteMap } from "./commands/contact-properties.js";
 import { contactsRouteMap } from "./commands/contacts.js";
 import { domainsRouteMap } from "./commands/domains.js";
 import { emailsRouteMap } from "./commands/emails.js";
+import { metricsRouteMap } from "./commands/metrics.js";
 import { segmentsRouteMap } from "./commands/segments.js";
 import { templatesRouteMap } from "./commands/templates.js";
 import { topicsRouteMap } from "./commands/topics.js";
@@ -19,6 +20,7 @@ const root = buildRouteMap({
   routes: {
     auth: authRouteMap,
     emails: emailsRouteMap,
+    metrics: metricsRouteMap,
     domains: domainsRouteMap,
     contacts: contactsRouteMap,
     broadcasts: broadcastsRouteMap,

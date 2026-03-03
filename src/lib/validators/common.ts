@@ -9,3 +9,11 @@ export const parseLimit = (value: string): number => {
   }
   return n;
 };
+
+export const parseDays = (value: string): number => {
+  const n = Number(value);
+  if (Number.isNaN(n) || n < 1 || n > 30) {
+    throw new CliError("--days must be a number between 1 and 30");
+  }
+  return n;
+};
