@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.13
+
+### Patch Changes
+
+- 016a2f9: added cross platforms installation methods
+
 ## 0.4.12
 
 ### Patch Changes
