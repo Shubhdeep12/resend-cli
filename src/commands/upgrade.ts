@@ -1,8 +1,11 @@
 import { buildCommand, buildRouteMap } from "@stricli/core";
 import pc from "picocolors";
-import { packageName, version as currentVersion } from "../lib/package-identity.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess } from "../lib/output.js";
+import {
+  version as currentVersion,
+  packageName,
+} from "../lib/package-identity.js";
 import { createSpinner } from "../lib/ui.js";
 import { getLatestVersion, isNewer } from "../lib/version-check.js";
 

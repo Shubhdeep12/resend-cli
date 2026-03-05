@@ -3,8 +3,8 @@
  * Throttles the check to once per 24h to avoid hitting the registry on every command.
  */
 import pc from "picocolors";
-import { npmRegistryLatestUrl } from "./package-identity.js";
 import { config } from "./config/index.js";
+import { npmRegistryLatestUrl } from "./package-identity.js";
 
 const THROTTLE_MS = 24 * 60 * 60 * 1000; // 24 hours
 

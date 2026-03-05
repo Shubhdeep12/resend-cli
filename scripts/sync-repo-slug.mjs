@@ -36,6 +36,14 @@ function updateInstallPs1(content) {
     );
 }
 
-fs.writeFileSync(installShPath, updateInstallSh(fs.readFileSync(installShPath, "utf8")), "utf8");
-fs.writeFileSync(installPs1Path, updateInstallPs1(fs.readFileSync(installPs1Path, "utf8")), "utf8");
+fs.writeFileSync(
+  installShPath,
+  updateInstallSh(fs.readFileSync(installShPath, "utf8")),
+  "utf8",
+);
+fs.writeFileSync(
+  installPs1Path,
+  updateInstallPs1(fs.readFileSync(installPs1Path, "utf8")),
+  "utf8",
+);
 console.log(`Install scripts updated: repo slug = ${slug}`);

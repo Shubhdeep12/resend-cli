@@ -1,10 +1,10 @@
 #!/usr/bin/env node
+import { spawnSync } from "node:child_process";
 /**
  * Updates Formula/resend-cli.rb with current version and sha256 from the packed npm tarball.
  * Run during release (before or after publish); uses local pnpm pack so sha256 matches published tarball.
  */
 import { createHash } from "node:crypto";
-import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -22,7 +22,10 @@ const unscopedName = packageName.replace(/^@[^/]+\//, "");
 const npmTarballUrl = `https://registry.npmjs.org/${packageName}/-/${unscopedName}-${version}.tgz`;
 
 // Pack and get the tgz path (pnpm pack creates e.g. shubhdeep12-resend-cli-0.4.12.tgz)
-const packResult = spawnSync("pnpm", ["pack"], { cwd: repoRoot, stdio: "inherit" });
+const packResult = spawnSync("pnpm", ["pack"], {
+  cwd: repoRoot,
+  stdio: "inherit",
+});
 if (packResult.status !== 0) {
   process.exit(1);
 }
@@ -40,10 +43,12 @@ fs.unlinkSync(tgzPath);
 
 let formula = fs.readFileSync(formulaPath, "utf8");
 formula = formula.replace(
-  /  url "https:\/\/registry\.npmjs\.org\/[^"]+"/,
+  / {2}url "https:\/\/registry\.npmjs\.org\/[^"]+"/,
   `  url "${npmTarballUrl}"`,
 );
-formula = formula.replace(/  sha256 "[a-f0-9]+"/, `  sha256 "${sha256}"`);
+formula = formula.replace(/ {2}sha256 "[a-f0-9]+"/, `  sha256 "${sha256}"`);
 fs.writeFileSync(formulaPath, formula, "utf8");
 
-console.log(`Formula/resend-cli.rb updated: version=${version}, sha256=${sha256.slice(0, 16)}...`);
+console.log(
+  `Formula/resend-cli.rb updated: version=${version}, sha256=${sha256.slice(0, 16)}...`,
+);
