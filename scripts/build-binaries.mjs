@@ -78,6 +78,7 @@ if (!skipBundle) {
     logLevel: "info",
     define: {
       "process.env.NODE_ENV": JSON.stringify("production"),
+      "process.env.RESEND_CLI_BUNDLED": JSON.stringify("true"),
     },
   });
 }

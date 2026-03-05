@@ -3,6 +3,7 @@ import pino from "pino";
 const level = process.env.LOG_LEVEL ?? (process.env.DEBUG ? "debug" : "info");
 
 const usePretty =
+  !process.env.RESEND_CLI_BUNDLED &&
   typeof process.stdout?.isTTY === "boolean" &&
   process.stdout.isTTY &&
   process.env.LOG_FORMAT !== "json";

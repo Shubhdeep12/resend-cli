@@ -72,13 +72,28 @@ test_npm_install() {
 # ---- 3. Formula: syntax and load check ----
 test_formula_valid() {
   ruby -c "$REPO_ROOT/Formula/resend-cli.rb" >/dev/null 2>&1 || { echo "ruby -c failed"; return 1; }
-  # Optional: ensure it has required fields
   grep -q "class ResendCli" "$REPO_ROOT/Formula/resend-cli.rb" || { echo "missing class ResendCli"; return 1; }
   grep -q "def install" "$REPO_ROOT/Formula/resend-cli.rb" || { echo "missing def install"; return 1; }
   return 0
 }
 
-# ---- 4. E2E curl (optional, needs network and a release with binaries) ----
+# ---- 4. SEA binary (curl-install scenario): build and run real binary ----
+# The curl offline test above uses a stub. This builds the actual SEA and runs it,
+# so we catch runtime bugs (e.g. pino-pretty in bundle). Platform-specific.
+test_sea_binary() {
+  (cd "$REPO_ROOT" && node scripts/build-binaries.mjs >/dev/null 2>&1) || { echo "build-binaries.mjs failed"; return 1; }
+  local bin
+  if [[ -d "$REPO_ROOT/bin" ]]; then
+    bin=$(find "$REPO_ROOT/bin" -maxdepth 1 -type f \( -name "resend-cli-*" ! -name "*.tar.gz" ! -name "*.sha256" \) 2>/dev/null | head -1)
+  fi
+  [[ -n "$bin" && -x "$bin" ]] || { echo "no SEA binary in bin/"; ls "$REPO_ROOT/bin" 2>/dev/null || true; return 1; }
+  "$bin" --version >/dev/null 2>&1 || { echo "SEA binary --version failed"; return 1; }
+  "$bin" -v >/dev/null 2>&1 || { echo "SEA binary -v failed"; return 1; }
+  "$bin" --help >/dev/null 2>&1 || { echo "SEA binary --help failed"; return 1; }
+  return 0
+}
+
+# ---- 5. E2E curl (optional, needs network and a release with binaries) ----
 test_curl_e2e() {
   local tmp
   tmp="$(mktemp -d)"
@@ -94,8 +109,9 @@ test_curl_e2e() {
 # ---- Run ----
 echo "Unified install tests (goal: resend -v works for every path)"
 run_test "curl (offline): stub tarball -> install -> resend -v" test_curl_offline
-run_test "npm: install -g in temp prefix -> resend -v" test_npm_install
+run_test "npm: built package runs (node dist/index.cjs -v)" test_npm_install
 run_test "formula: Formula/resend-cli.rb valid" test_formula_valid
+run_test "SEA binary: build and run resend --version (curl-install scenario)" test_sea_binary
 
 if [[ "${RUN_E2E:-0}" == "1" ]]; then
   run_test "curl (e2e): real curl | bash -d temp -> resend -v" test_curl_e2e
