@@ -1,12 +1,12 @@
 # Install resend-cli from GitHub Releases (Windows).
-# Usage (PowerShell): irm https://raw.githubusercontent.com/shubhdeep12/resend-cli/main/scripts/install.ps1 | iex
+# Usage (PowerShell): irm https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/scripts/install.ps1 | iex
 # Or: irm ... | iex -InstallDir "$env:LOCALAPPDATA\Programs\resend-cli"
 param(
   [string]$InstallDir = ""
 )
 
 $ErrorActionPreference = "Stop"
-$Repo = "shubhdeep12/resend-cli"
+$Repo = "Shubhdeep12/resend-cli"
 $ApiUrl = "https://api.github.com/repos/$Repo/releases/latest"
 
 # Detect platform: win-x64 or win-arm64

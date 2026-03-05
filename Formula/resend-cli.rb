@@ -4,8 +4,8 @@
 class ResendCli < Formula
   desc "CLI for Resend (resend.com)"
   homepage "https://github.com/Shubhdeep12/resend-cli"
-  url "https://registry.npmjs.org/@shubhdeep12/resend-cli/-/resend-cli-0.4.13.tgz"
-  sha256 "10bbe96c4071887518a85d13f8412f23ed2483e9f1fca717081a44a3dc396ff4"
+  url "https://registry.npmjs.org/@shubhdeep12/resend-cli/-/resend-cli-0.4.12.tgz"
+  sha256 "f9fae8923dcb26f998d55a33ab280b2d5465bac61efd08e1a883bac940e38d81"
   license "MIT"
 
   depends_on "node"

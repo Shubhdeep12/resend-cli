@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Install resend-cli from GitHub Releases (macOS and Linux).
-# Usage: curl -fsSL https://raw.githubusercontent.com/shubhdeep12/resend-cli/main/scripts/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/scripts/install.sh | bash
 # Or: curl -fsSL ... | bash -s -- -d /usr/local/bin
 set -euo pipefail
 
-REPO="shubhdeep12/resend-cli"
+REPO="Shubhdeep12/resend-cli"
 INSTALL_DIR="${INSTALL_DIR:-}"
 # Default: /usr/local/bin if writable, else ~/.local/bin
 set_install_dir() {
