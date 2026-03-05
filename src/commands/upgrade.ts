@@ -1,14 +1,12 @@
 import { buildCommand, buildRouteMap } from "@stricli/core";
 import pc from "picocolors";
-import pkg from "../../package.json" with { type: "json" };
+import { packageName, version as currentVersion } from "../lib/package-identity.js";
 import { stdout } from "../lib/logger.js";
 import { formatError, formatSuccess } from "../lib/output.js";
 import { createSpinner } from "../lib/ui.js";
 import { getLatestVersion, isNewer } from "../lib/version-check.js";
 
-const currentVersion = (pkg as { version: string }).version;
-const PACKAGE_NAME = "@shubhdeep12/resend-cli";
-const UPGRADE_CMD = `npm install -g ${PACKAGE_NAME}@latest`;
+const UPGRADE_CMD = `npm install -g ${packageName}@latest`;
 
 export const upgradeRouteMap = buildRouteMap({
   routes: {
@@ -41,7 +39,7 @@ export const upgradeRouteMap = buildRouteMap({
           stdout(pc.cyan("Upgrade with:"));
           stdout(`  ${UPGRADE_CMD}`);
           stdout("");
-          stdout(pc.dim(`Or with pnpm: pnpm add -g ${PACKAGE_NAME}@latest`));
+          stdout(pc.dim(`Or with pnpm: pnpm add -g ${packageName}@latest`));
         } else {
           stdout(formatSuccess("You're on the latest version."));
         }

@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 import "dotenv/config";
 import { run } from "@stricli/core";
-import pkg from "../package.json" with { type: "json" };
 import { app } from "./app.js";
 import { setupCliExitHandler } from "./lib/cli-exit.js";
 import { formatAndWriteError } from "./lib/errors.js";
 import { printWelcome } from "./lib/logo.js";
+import { version } from "./lib/package-identity.js";
 import { notifyIfOutdated } from "./lib/version-check.js";
 
 setupCliExitHandler();
 
 const args = process.argv.slice(2);
-const version = (pkg as { version: string }).version;
 
 if (args.length === 0) {
   printWelcome(version);

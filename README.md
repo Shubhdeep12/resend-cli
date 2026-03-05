@@ -15,12 +15,34 @@ Unofficial CLI for [Resend](https://resend.com)
 
 ## Install
 
+**npm** (Node.js required):
+
 ```bash
 npm install -g @shubhdeep12/resend-cli
 npx @shubhdeep12/resend-cli --help
 ```
 
-No Node? [Download the latest binary](https://github.com/Shubhdeep12/resend-cli/releases/latest) for your OS, extract, and run.
+**macOS / Linux** (standalone binary via curl):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/scripts/install.sh | bash
+```
+
+**Homebrew** (macOS):
+
+```bash
+brew install https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/Formula/resend-cli.rb
+```
+
+Or with Node already from Homebrew: `brew install node` then `npm install -g @shubhdeep12/resend-cli`.
+
+**Windows** (PowerShell, standalone binary):
+
+```powershell
+irm https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/scripts/install.ps1 | iex
+```
+
+**Manual:** No Node? [Download the latest binary](https://github.com/Shubhdeep12/resend-cli/releases/latest) for your OS/arch, extract, and run.
 
 ## Quick Start
 

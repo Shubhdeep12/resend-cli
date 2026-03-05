@@ -3,10 +3,9 @@
  * Throttles the check to once per 24h to avoid hitting the registry on every command.
  */
 import pc from "picocolors";
+import { npmRegistryLatestUrl } from "./package-identity.js";
 import { config } from "./config/index.js";
 
-const NPM_REGISTRY_URL =
-  "https://registry.npmjs.org/@shubhdeep12/resend-cli/latest";
 const THROTTLE_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 /** Parse "x.y.z" or "x.y.z-pre" into [x, y, z]; missing parts are 0. */
@@ -34,7 +33,7 @@ export async function getLatestVersion(): Promise<string | null> {
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
-    const res = await fetch(NPM_REGISTRY_URL, {
+    const res = await fetch(npmRegistryLatestUrl, {
       signal: controller.signal,
       headers: { Accept: "application/json" },
     });

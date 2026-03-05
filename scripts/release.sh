@@ -3,6 +3,8 @@ set -euo pipefail
 
 pnpm run version-packages
 node scripts/sync-skill-version.mjs
+node scripts/sync-repo-slug.mjs
+node scripts/sync-formula-version.mjs
 pnpm run lint:fix
 pnpm run docs:generate
 

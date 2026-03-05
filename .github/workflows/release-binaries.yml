@@ -50,8 +50,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build SEA binary
-        run: node scripts/build-sea.mjs
+      - name: Build binaries
+        run: node scripts/build-binaries.mjs
 
       - name: Smoke test (unix)
         if: runner.os != 'Windows'

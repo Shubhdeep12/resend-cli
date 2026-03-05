@@ -75,6 +75,7 @@ src/
 ├── index.ts            # Entry point
 ├── commands/           # Command definitions (one file per resource)
 ├── lib/
+│   ├── package-identity.js  # Single source: package name, version, registry URL (from package.json; see package-identity.ts)
 │   ├── auth/           # API key storage & resolution
 │   ├── config/         # CLI configuration
 │   ├── constants/      # Shared constants
@@ -84,7 +85,14 @@ src/
 tests/                  # Unit tests (mirrors src/ structure)
 docs/                   # Generated & manual documentation
 scripts/                # Doc generation & tooling scripts
+Formula/                # Homebrew formula (version/sha synced at release)
 ```
+
+**Package name and version:** `package.json` is the single source of truth. Runtime code uses `src/lib/package-identity.ts` (reads name/version from package.json). Install scripts and the Homebrew formula are updated during release by:
+
+- `scripts/sync-skill-version.mjs` — updates `SKILL.md` version
+- `scripts/sync-repo-slug.mjs` — updates repo slug in `install.sh` / `install.ps1` from `repository.url`
+- `scripts/sync-formula-version.mjs` — updates `Formula/resend-cli.rb` version and sha256 from packed tarball
 
 ## Commit Messages
 
@@ -114,6 +122,58 @@ Before opening a PR, run these locally. CI will run the same steps on every PR.
 - [ ] Tests pass (`pnpm test`) and coverage passes (`pnpm test:coverage`)
 - [ ] Docs regenerated if commands changed (`pnpm docs:generate`)
 - [ ] Changeset added for user-facing changes (`pnpm changeset`)
+
+## Testing install methods
+
+These commands are what users run to install the CLI. Test them after changing install scripts or the Formula.
+
+**Prerequisites:** A GitHub release with binaries (e.g. run the “Release Binaries” workflow and attach assets to a tag). The install scripts fetch the **latest** release from the GitHub API.
+
+### 1. curl (macOS / Linux)
+
+From a **different directory** (so you don’t run the repo’s own binary):
+
+```bash
+# Install into default location (/usr/local/bin or ~/.local/bin)
+curl -fsSL https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/scripts/install.sh | bash
+
+# Or install into a test dir (no sudo)
+curl -fsSL https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/scripts/install.sh | bash -s -- -d /tmp/resend-cli-test
+export PATH="/tmp/resend-cli-test:$PATH"
+resend --version
+resend --help
+```
+
+If there is no release with binaries for your platform, the script will exit with a message to use npm instead.
+
+### 2. Homebrew (macOS)
+
+```bash
+# Install from the formula in this repo (uses current version in Formula)
+brew install --formula "$(pwd)/Formula/resend-cli.rb"
+
+# Or from the raw URL (what README suggests)
+brew install https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/Formula/resend-cli.rb
+
+resend --version
+brew uninstall resend-cli
+```
+
+### 3. Windows (PowerShell)
+
+In PowerShell (e.g. in a VM or CI):
+
+```powershell
+# Default install dir: $env:LOCALAPPDATA\Programs\resend-cli
+irm https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/scripts/install.ps1 | iex
+
+# Or with a custom dir
+$env:InstallDir = "C:\Tools\resend-cli"
+irm https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/scripts/install.ps1 | iex
+resend --version
+```
+
+**Note:** The curl and PowerShell installers need **GitHub Releases with assets** (e.g. `resend-cli-0.4.12-darwin-arm64.tar.gz`). If the latest release has no assets, they tell the user to use npm. The Homebrew formula uses the **npm tarball**, so it works as long as the package is published.
 
 ## Release
 
