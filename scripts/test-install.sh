@@ -69,14 +69,6 @@ test_npm_install() {
   return 0
 }
 
-# ---- 3. Formula: syntax and load check ----
-test_formula_valid() {
-  ruby -c "$REPO_ROOT/Formula/resend-cli.rb" >/dev/null 2>&1 || { echo "ruby -c failed"; return 1; }
-  grep -q "class ResendCli" "$REPO_ROOT/Formula/resend-cli.rb" || { echo "missing class ResendCli"; return 1; }
-  grep -q "def install" "$REPO_ROOT/Formula/resend-cli.rb" || { echo "missing def install"; return 1; }
-  return 0
-}
-
 # ---- 4. SEA binary (curl-install scenario): build and run real binary ----
 # The curl offline test above uses a stub. This builds the actual SEA and runs it,
 # so we catch runtime bugs (e.g. pino-pretty in bundle). Platform-specific.
@@ -110,7 +102,6 @@ test_curl_e2e() {
 echo "Unified install tests (goal: resend -v works for every path)"
 run_test "curl (offline): stub tarball -> install -> resend -v" test_curl_offline
 run_test "npm: built package runs (node dist/index.cjs -v)" test_npm_install
-run_test "formula: Formula/resend-cli.rb valid" test_formula_valid
 run_test "SEA binary: build and run resend --version (curl-install scenario)" test_sea_binary
 
 if [[ "${RUN_E2E:-0}" == "1" ]]; then

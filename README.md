@@ -31,14 +31,6 @@ curl -fsSL https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/scripts
 
 The script installs to `/usr/local/bin` (if writable) or `~/.local/bin`. Then run `resend --version`. If `resend` isn’t found, add the printed directory to your `PATH`.
 
-**Homebrew** (macOS):
-
-```bash
-brew install --formula "https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/Formula/resend-cli.rb"
-```
-
-Then run `resend --version`.
-
 **Windows** (PowerShell, standalone binary):
 
 ```powershell

@@ -85,14 +85,12 @@ src/
 tests/                  # Unit tests (mirrors src/ structure)
 docs/                   # Generated & manual documentation
 scripts/                # Doc generation & tooling scripts
-Formula/                # Homebrew formula (version/sha synced at release)
 ```
 
-**Package name and version:** `package.json` is the single source of truth. Runtime code uses `src/lib/package-identity.ts` (reads name/version from package.json). Install scripts and the Homebrew formula are updated during release by:
+**Package name and version:** `package.json` is the single source of truth. Runtime code uses `src/lib/package-identity.ts`. Install scripts are updated during release by:
 
 - `scripts/sync-skill-version.mjs` — updates `SKILL.md` version
 - `scripts/sync-repo-slug.mjs` — updates repo slug in `install.sh` / `install.ps1` from `repository.url`
-- `scripts/sync-formula-version.mjs` — updates `Formula/resend-cli.rb` version and sha256 from packed tarball
 
 ## Commit Messages
 
@@ -120,13 +118,13 @@ Before opening a PR, run these locally. CI will run the same steps on every PR.
 
 - [ ] Code passes `pnpm lint` and `pnpm typecheck`
 - [ ] Tests pass (`pnpm test`) and coverage passes (`pnpm test:coverage`)
-- [ ] Install paths verified: `pnpm test:install` (curl stub, npm build, formula)
+- [ ] Install paths verified: `pnpm test:install` (curl stub, npm build, SEA binary)
 - [ ] Docs regenerated if commands changed (`pnpm docs:generate`)
 - [ ] Changeset added for user-facing changes (`pnpm changeset`)
 
 ## Testing install methods
 
-**Before release**, run: `pnpm test:install` (curl stub → resend -v, npm build → resend -v, formula valid). Optional e2e: `RUN_E2E=1 pnpm test:install`. Manual checks when you change install scripts or the Formula:
+**Before release**, run: `pnpm test:install` (curl stub → resend -v, npm build → resend -v, SEA binary). Optional e2e: `RUN_E2E=1 pnpm test:install`. Manual checks when you change install scripts:
 
 **Prerequisites:** A GitHub release with binaries (e.g. run the “Release Binaries” workflow and attach assets to a tag). The install scripts fetch the **latest** release from the GitHub API.
 
@@ -147,22 +145,7 @@ resend --help
 
 If there is no release with binaries for your platform, the script will exit with a message to use npm instead.
 
-### 2. Homebrew (macOS)
-
-Homebrew no longer installs from a raw URL; formulae must live in a tap. Options:
-
-- **Use npm:** `brew install node` then `npm install -g @shubhdeep12/resend-cli` (recommended).
-- **With a tap:** Create a repo `homebrew-resend-cli` with `Formula/resend-cli.rb`, then:
-  `brew tap Shubhdeep12/resend-cli` and `brew install resend-cli`.
-
-```bash
-# If you have a local Formula (e.g. in a tap clone):
-brew install --formula "$(pwd)/Formula/resend-cli.rb"
-resend --version
-brew uninstall resend-cli
-```
-
-### 3. Windows (PowerShell)
+### 2. Windows (PowerShell)
 
 In PowerShell (e.g. in a VM or CI):
 
@@ -176,7 +159,7 @@ irm https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/scripts/instal
 resend --version
 ```
 
-**Note:** The curl and PowerShell installers need **GitHub Releases with assets** (e.g. `resend-cli-0.4.12-darwin-arm64.tar.gz`). If the latest release has no assets, they tell the user to use npm. The Homebrew formula uses the **npm tarball**, so it works as long as the package is published.
+**Note:** The curl and PowerShell installers need **GitHub Releases with assets**. If the latest release has no assets, they tell the user to use npm.
 
 ## Release
 

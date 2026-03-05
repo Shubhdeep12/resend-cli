@@ -7,7 +7,7 @@ node_modules/
 dist/
 bin/
 *.tsbuildinfo
-# npm pack output (created by sync-formula-version.mjs during release)
+# npm pack output
 *-resend-cli-*.tgz
 
 # tests
