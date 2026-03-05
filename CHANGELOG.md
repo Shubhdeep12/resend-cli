@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.15
+
+### Patch Changes
+
+- 9790b09: added test install script to verify installation
+
 ## 0.4.14
 
 ### Patch Changes
