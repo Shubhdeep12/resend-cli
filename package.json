@@ -35,6 +35,7 @@
     "lint": "biome check .",
     "lint:fix": "biome check . --write",
     "test": "vitest run",
+    "test:install": "bash scripts/test-install.sh",
     "test:smoke": "vitest run tests/smoke.spec.ts",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

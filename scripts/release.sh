@@ -6,6 +6,7 @@ node scripts/sync-skill-version.mjs
 node scripts/sync-repo-slug.mjs
 node scripts/sync-formula-version.mjs
 pnpm run lint:fix
+pnpm run test:install
 pnpm run docs:generate
 
 git add -A

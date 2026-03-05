@@ -91,18 +91,21 @@ curl -fsSL -o "$TMPDIR/$ASSET_NAME" "$DOWNLOAD_URL"
 BINARY_DEST="$INSTALL_DIR/resend"
 if [[ "$ASSET_NAME" == *.tar.gz ]]; then
   tar -xzf "$TMPDIR/$ASSET_NAME" -C "$TMPDIR"
-  # Find the binary (may be in a subdir or at root)
-  EXE=$(find "$TMPDIR" -maxdepth 2 -type f -executable 2>/dev/null | head -1)
-  [[ -z "$EXE" ]] && EXE=$(find "$TMPDIR" -maxdepth 2 -type f -name "resend-cli*" ! -name "*.tar.gz" 2>/dev/null | head -1)
+  # Find the binary: exclude archives and checksum files (BSD find on macOS doesn't support -executable)
+  EXE=$(find "$TMPDIR" -maxdepth 2 -type f \( -name "resend-cli-*" ! -name "*.tar.gz" ! -name "*.sha256" \) 2>/dev/null | head -1)
+  if [[ -z "$EXE" ]]; then
+    EXE=$(find "$TMPDIR" -maxdepth 2 -type f -executable 2>/dev/null | head -1)
+  fi
   if [[ -z "$EXE" ]]; then
     echo "Could not find executable in tarball." >&2
+    ls -la "$TMPDIR" >&2
     exit 1
   fi
   chmod +x "$EXE"
   cp "$EXE" "$BINARY_DEST"
 elif [[ "$ASSET_NAME" == *.zip ]]; then
   unzip -q -o "$TMPDIR/$ASSET_NAME" -d "$TMPDIR"
-  EXE=$(find "$TMPDIR" -maxdepth 2 -type f \( -name "resend-cli*" -o -name "resend*" \) ! -name "*.zip" 2>/dev/null | head -1)
+  EXE=$(find "$TMPDIR" -maxdepth 2 -type f \( -name "resend-cli*" -o -name "resend*" \) ! -name "*.zip" ! -name "*.sha256" 2>/dev/null | head -1)
   if [[ -z "$EXE" ]]; then
     echo "Could not find executable in zip." >&2
     exit 1
@@ -112,6 +115,11 @@ elif [[ "$ASSET_NAME" == *.zip ]]; then
 else
   cp "$TMPDIR/$ASSET_NAME" "$BINARY_DEST"
   chmod +x "$BINARY_DEST"
+fi
+
+if [[ ! -f "$BINARY_DEST" || ! -x "$BINARY_DEST" ]]; then
+  echo "Install failed: binary missing or not executable at $BINARY_DEST" >&2
+  exit 1
 fi
 
 echo "Installed to $BINARY_DEST"
