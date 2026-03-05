@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Install resend-cli from GitHub Releases (macOS and Linux).
-# Usage: curl -fsSL https://raw.githubusercontent.com/shubhdeep12/resend-cli/main/scripts/install.sh | bash
-# Or: curl -fsSL ... | bash -s -- -d /usr/local/bin
+# Usage: curl -fsSL https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/scripts/install.sh | bash
+# Custom dir (optional): curl ... | bash -s -- -d /path/to/dir   or  INSTALL_DIR=/path bash -c "curl ... | bash"
 set -euo pipefail
 
-REPO="shubhdeep12/resend-cli"
+REPO="Shubhdeep12/resend-cli"
 INSTALL_DIR="${INSTALL_DIR:-}"
-# Default: /usr/local/bin if writable, else ~/.local/bin
+
+# Default: /usr/local/bin if writable, else ~/.local/bin (standard for user installs without sudo)
 set_install_dir() {
   if [[ -n "${INSTALL_DIR}" ]]; then
     return
@@ -15,7 +16,6 @@ set_install_dir() {
     INSTALL_DIR="/usr/local/bin"
   else
     INSTALL_DIR="${HOME}/.local/bin"
-    mkdir -p "$INSTALL_DIR"
   fi
 }
 
@@ -40,15 +40,20 @@ detect_platform() {
   echo "${os}-${arch}"
 }
 
-# Parse -d /path
+# Optional: -d /path (custom install directory)
 while getopts "d:" opt; do
   case "$opt" in
     d) INSTALL_DIR="$OPTARG" ;;
     *) exit 1 ;;
   esac
 done
+# Expand ~ when user passes -d ~/something
+if [[ -n "${INSTALL_DIR}" && "${INSTALL_DIR}" == ~* ]]; then
+  INSTALL_DIR="${INSTALL_DIR/#\~/$HOME}"
+fi
 
 set_install_dir
+mkdir -p "$INSTALL_DIR"
 PLATFORM="$(detect_platform)"
 echo "Installing resend-cli for ${PLATFORM} into ${INSTALL_DIR}"
 
@@ -109,9 +114,11 @@ else
   chmod +x "$BINARY_DEST"
 fi
 
-echo "Installed: $BINARY_DEST"
-if ! command -v resend >/dev/null 2>&1; then
-  echo "Add ${INSTALL_DIR} to your PATH if needed, e.g.:"
+echo "Installed to $BINARY_DEST"
+if command -v resend >/dev/null 2>&1; then
+  resend --version
+else
+  echo "Run the following to use resend from anywhere (or add to your shell profile):"
   echo "  export PATH=\"${INSTALL_DIR}:\$PATH\""
+  "$BINARY_DEST" --version
 fi
-resend --version 2>/dev/null || true

@@ -19,22 +19,25 @@ Unofficial CLI for [Resend](https://resend.com)
 
 ```bash
 npm install -g @shubhdeep12/resend-cli
-npx @shubhdeep12/resend-cli --help
 ```
 
-**macOS / Linux** (standalone binary via curl):
+Then run `resend --version` to verify.
+
+**macOS / Linux** (standalone binary, no Node required):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/scripts/install.sh | bash
 ```
 
+The script installs to `/usr/local/bin` (if writable) or `~/.local/bin`. Then run `resend --version`. If `resend` isn’t found, add the printed directory to your `PATH`.
+
 **Homebrew** (macOS):
 
 ```bash
-brew install https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/Formula/resend-cli.rb
+brew install --formula "https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/Formula/resend-cli.rb"
 ```
 
-Or with Node already from Homebrew: `brew install node` then `npm install -g @shubhdeep12/resend-cli`.
+Then run `resend --version`.
 
 **Windows** (PowerShell, standalone binary):
 
@@ -42,7 +45,9 @@ Or with Node already from Homebrew: `brew install node` then `npm install -g @sh
 irm https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/scripts/install.ps1 | iex
 ```
 
-**Manual:** No Node? [Download the latest binary](https://github.com/Shubhdeep12/resend-cli/releases/latest) for your OS/arch, extract, and run.
+The script installs to `%LOCALAPPDATA%\Programs\resend-cli` and adds it to your user `PATH`. Restart the terminal, then run `resend --version`.
+
+**Manual:** [Download the latest binary](https://github.com/Shubhdeep12/resend-cli/releases/latest) for your OS/arch, extract, and run the executable.
 
 ## Quick Start
 

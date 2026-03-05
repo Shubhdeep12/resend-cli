@@ -153,7 +153,7 @@ If there is no release with binaries for your platform, the script will exit wit
 brew install --formula "$(pwd)/Formula/resend-cli.rb"
 
 # Or from the raw URL (what README suggests)
-brew install https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/Formula/resend-cli.rb
+brew install --formula "https://raw.githubusercontent.com/Shubhdeep12/resend-cli/main/Formula/resend-cli.rb"
 
 resend --version
 brew uninstall resend-cli
