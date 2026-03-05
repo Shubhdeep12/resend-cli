@@ -1,5 +1,11 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.14
+
+### Patch Changes
+
+- c45e29c: fixed install scripts
+
 ## 0.4.13
 
 ### Patch Changes
