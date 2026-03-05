@@ -1,5 +1,12 @@
 # @shubhdeep12/resend-cli
 
+## 0.4.16
+
+### Patch Changes
+
+- 790a606: remobe brew method
+- e3ac34d: - fixed isssues in installation methods
+
 ## 0.4.15
 
 ### Patch Changes
