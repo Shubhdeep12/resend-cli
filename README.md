@@ -1,3 +1,5 @@
+> **Note:** Resend now provides an official CLI. This project will no longer be the primary place for new CLI work; please use the official CLI instead (https://github.com/resend/resend-cli). I’ll be contributing to the official project going forward.
+
 # Resend CLI
 
 Unofficial CLI for [Resend](https://resend.com)
